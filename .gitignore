@@ -1,0 +1,14 @@
+# Runtimes (binarios de llama.cpp)
+runtimes/
+
+# Paquetes descargados (ZIPs de runtimes)
+packages/
+
+# Modelos GGUF (pesos binarios)
+/models/
+
+# Logs de validacion y referencia
+logs/
+
+# Assets de pruebas funcionales
+tests/
