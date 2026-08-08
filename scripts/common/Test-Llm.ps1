@@ -4,6 +4,8 @@ param(
     [string]$Profile,
     [int]$StartupTimeoutSeconds = 900,
     [string]$VisionImage,
+    [ValidateRange(0, 4)]
+    [int]$SpecDraftNMax = 0,
     [switch]$ConfigurationOnly,
     [switch]$IncludeDeferred
 )
@@ -62,7 +64,9 @@ function Get-ArgumentValue {
 function Get-LauncherPlan {
     param(
         [Parameter(Mandatory = $true)]
-        [System.IO.FileInfo]$Launcher
+        [System.IO.FileInfo]$Launcher,
+
+        [int]$SpecDraftNMax = 0
     )
 
     $content = Get-Content -LiteralPath $Launcher.FullName -Raw
@@ -124,6 +128,13 @@ function Get-LauncherPlan {
 
     $modelId = $Launcher.Directory.Name
     $profileName = $Launcher.BaseName.Substring('start-'.Length)
+    if ($modelId -eq 'qwen3.6-27b-mtp' -and $SpecDraftNMax -gt 0) {
+        $draftNMaxIndex = [array]::IndexOf($arguments.ToArray(), '--spec-draft-n-max')
+        if ($draftNMaxIndex -lt 0 -or $draftNMaxIndex + 1 -ge $arguments.Count) {
+            throw "Launcher does not define '--spec-draft-n-max': $($Launcher.FullName)"
+        }
+        $arguments[$draftNMaxIndex + 1] = [string]$SpecDraftNMax
+    }
     $contextSize = [int](Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--ctx-size')
     if ($modelId -eq 'lfm2.5-2.6b' -and $contextSize -ne 131072) {
         throw "LFM2.5-2.6B profile '$profileName' must use a 131072-token context."
@@ -153,6 +164,61 @@ function Get-LauncherPlan {
             throw "LFM2.5-8B-A1B profile '$profileName' must use the recommended sampling parameters."
         }
     }
+    if ($modelId -eq 'qwen3.6-27b-mtp') {
+        $isAgenticProfile = $profileName -like 'agentic*'
+        $isTextProfile = $profileName -like 'text*'
+        if (-not $isAgenticProfile -and -not $isTextProfile) {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must be agentic or text."
+        }
+        if ($isAgenticProfile -and $contextSize -ne 262144) {
+            throw "Qwen3.6-27B-MTP agentic profile '$profileName' must use a 262144-token context."
+        }
+        if ($isTextProfile -and $contextSize -ne 131072) {
+            throw "Qwen3.6-27B-MTP text profile '$profileName' must use a 131072-token context."
+        }
+        if (-not ($arguments -contains '--spec-type')) {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must enable MTP speculative decoding."
+        }
+        if ((Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--spec-type') -ne 'draft-mtp') {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must use draft-mtp."
+        }
+        $draftNMax = [int](Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--spec-draft-n-max')
+        if ($draftNMax -lt 1 -or $draftNMax -gt 4) {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must use --spec-draft-n-max between 1 and 4."
+        }
+        if ($arguments -contains '--mmproj' -or $arguments -contains '--n-cpu-moe' -or $arguments -contains '--cpu-moe') {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must not combine MTP with vision or MoE CPU offload."
+        }
+        $modelPath = Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--model'
+        $expectedFileName = if ($profileName -like '*-iq4-xs') {
+            'Qwen3.6-27B-IQ4_XS.gguf'
+        }
+        else {
+            'Qwen3.6-27B-Q4_K_M.gguf'
+        }
+        if ([System.IO.Path]::GetFileName($modelPath) -ne $expectedFileName) {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must use $expectedFileName."
+        }
+        $gpuLayerFlagCount = @($arguments | Where-Object { $_ -eq '--gpu-layers' }).Count
+        if ($gpuLayerFlagCount -ne 1) {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must contain exactly one '--gpu-layers' argument."
+        }
+        $gpuLayers = Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--gpu-layers'
+        if ($gpuLayers -notmatch '^(auto|[0-9]+)$') {
+            throw "Qwen3.6-27B-MTP profile '$profileName' has an invalid GPU layer value: $gpuLayers"
+        }
+        if ($gpuLayers -match '^[0-9]+$' -and ([int]$gpuLayers -lt 0 -or [int]$gpuLayers -gt 64)) {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must use between 0 and 64 GPU layers."
+        }
+        $fitValue = Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--fit'
+        $hasFitTarget = $arguments -contains '--fit-target'
+        if ($fitValue -eq 'on' -and -not $hasFitTarget) {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must define --fit-target while fit is enabled."
+        }
+        if ($fitValue -eq 'off' -and $hasFitTarget) {
+            throw "Qwen3.6-27B-MTP profile '$profileName' must not retain --fit-target after manual calibration."
+        }
+    }
 
     return [pscustomobject]@{
         Model = $modelId
@@ -173,8 +239,8 @@ $launchers = @(
     Get-ChildItem -LiteralPath $launcherDirectory -Filter 'start-*.cmd' -File -Recurse |
         Sort-Object FullName
 )
-if ($Model -eq 'all' -and -not $Profile -and $launchers.Count -ne 30) {
-    throw "Expected 30 launchers but found $($launchers.Count)."
+if ($Model -eq 'all' -and -not $Profile -and $launchers.Count -ne 34) {
+    throw "Expected 34 launchers but found $($launchers.Count)."
 }
 if ($Model -ne 'all') {
     $launchers = @($launchers | Where-Object { $_.Directory.Name -eq $Model })
@@ -193,7 +259,7 @@ foreach ($launcher in $launchers) {
         Write-Host "Skipping deferred inference model: $($launcher.Directory.Name)"
         continue
     }
-    $testCases.Add((Get-LauncherPlan -Launcher $launcher))
+    $testCases.Add((Get-LauncherPlan -Launcher $launcher -SpecDraftNMax $SpecDraftNMax))
 }
 
 if ($testCases.Count -eq 0) {
@@ -209,7 +275,8 @@ foreach ($testCase in $testCases) {
     $details = ''
     $process = $null
 
-    Write-Host "Testing $($testCase.Model)/$($testCase.Profile)..."
+    $draftSuffix = if ($SpecDraftNMax -gt 0) { " (spec-draft-n-max $SpecDraftNMax)" } else { '' }
+    Write-Host "Testing $($testCase.Model)/$($testCase.Profile)$draftSuffix..."
 
     $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
     $logPrefix = Join-Path $resultDirectory "$($testCase.Model)-$($testCase.Profile)-$timestamp"
@@ -335,6 +402,7 @@ foreach ($testCase in $testCases) {
         $results.Add([pscustomobject]@{
             Model = $testCase.Model
             Profile = $testCase.Profile
+            SpecDraftNMax = if ($SpecDraftNMax -gt 0) { $SpecDraftNMax } else { $null }
             Status = $status
             StartedAt = $startedAt.ToString('o')
             DurationSeconds = [math]::Round(((Get-Date) - $startedAt).TotalSeconds, 2)

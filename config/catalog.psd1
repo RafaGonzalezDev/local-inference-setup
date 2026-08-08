@@ -4,6 +4,7 @@
         'btl-4'
         'btl-4-compact'
         'qwen3.6-35b-a3b'
+        'qwen3.6-27b-mtp'
         'gemma-4-26b-a4b'
         'gemma-4-12b-v2'
         'qwen3.6-35b-a3b-uncensored'

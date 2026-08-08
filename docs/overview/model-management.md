@@ -31,7 +31,7 @@ Exit codes 0 to 7 from `robocopy` are acceptable; 8 or higher represents failure
 
 ## Validating Profiles
 
-Static validation of all 30 launchers, without loading weights:
+Static validation of all 34 launchers, without loading weights:
 
 ```powershell
 & scripts\common\Test-Llm.ps1 -ConfigurationOnly
