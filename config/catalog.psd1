@@ -12,5 +12,6 @@
         'ternary-bonsai-27b'
         'lfm2.5-2.6b'
         'lfm2.5-8b-a1b'
+        'nemotron-3.5-lightning-30b-a3b'
     )
 }

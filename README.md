@@ -30,6 +30,7 @@ The following specifications are relevant for language model inference:
 | `ternary-bonsai-27b` | `text`, `vision`, `agentic` |
 | `lfm2.5-2.6b` | `text`, `agentic` |
 | `lfm2.5-8b-a1b` | `text`, `agentic` |
+| `nemotron-3.5-lightning-30b-a3b` | `text`, `agentic` |
 
 ## Repository Structure
 
