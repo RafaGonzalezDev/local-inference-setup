@@ -31,6 +31,7 @@ The following specifications are relevant for language model inference:
 | `lfm2.5-2.6b` | `text`, `agentic` |
 | `lfm2.5-8b-a1b` | `text`, `agentic` |
 | `nemotron-3.5-lightning-30b-a3b` | `text`, `agentic` |
+| `muse-glimmer-30b` | `agentic-ud-q4-k-xl`, `agentic-ud-q3-k-xl` |
 
 ## Repository Structure
 
@@ -76,7 +77,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 
 ## Launchers
 
-The 34 launchers are grouped by model:
+The 38 launchers are grouped by model:
 
 ```bat
 scripts\models\qwen3.6-35b-a3b\start-text.cmd
@@ -84,6 +85,8 @@ scripts\models\gemma-4-26b-a4b\start-vision-mtp.cmd
 scripts\models\ternary-bonsai-27b\start-agentic.cmd
 scripts\models\lfm2.5-2.6b\start-text.cmd
 scripts\models\lfm2.5-8b-a1b\start-agentic.cmd
+scripts\models\muse-glimmer-30b\start-agentic-ud-q4-k-xl.cmd
+scripts\models\muse-glimmer-30b\start-agentic-ud-q3-k-xl.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
@@ -101,7 +104,7 @@ Profiles listen on `0.0.0.0:8080` without authentication. They should only be us
 
 ## Validation
 
-Validate all 34 launchers and their artifacts without loading weights:
+Validate all 38 launchers and their artifacts without loading weights:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -ConfigurationOnly
