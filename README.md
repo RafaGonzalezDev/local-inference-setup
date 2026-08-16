@@ -21,7 +21,7 @@ The following specifications are relevant for language model inference:
 | --- | --- |
 | `btl-4` | `text`, `agentic` |
 | `btl-4-compact` | `text`, `agentic` |
-| `qwen3.6-35b-a3b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-mtp`, `agentic-vision` |
+| `qwen3.6-35b-a3b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-mtp`, `agentic-vision`, `agentic-131k-4096`, `agentic-mtp-131k-4096` |
 | `qwen3.6-27b-mtp` | `text`, `agentic`, `text-iq4-xs`, `agentic-iq4-xs` |
 | `gemma-4-26b-a4b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-vision`, `vision-mtp` |
 | `gemma-4-12b-v2` | `text`, `vision` |
@@ -77,7 +77,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 
 ## Launchers
 
-The 38 launchers are grouped by model:
+The 40 launchers are grouped by model:
 
 ```bat
 scripts\models\qwen3.6-35b-a3b\start-text.cmd
@@ -104,7 +104,7 @@ Profiles listen on `0.0.0.0:8080` without authentication. They should only be us
 
 ## Validation
 
-Validate all 38 launchers and their artifacts without loading weights:
+Validate all 40 launchers and their artifacts without loading weights:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -ConfigurationOnly
