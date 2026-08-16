@@ -26,15 +26,8 @@ The default runtime is the official `llama.cpp`:
 - Validated GPU: NVIDIA RTX 5080
 - Validated driver: 610.47
 
-Ternary Bonsai 27B uses the PrismML fork because its `Q2_0` quantization with 128-element groups is not compatible with the main runtime:
-
-- Release: `prism-b9599-9ca265a`
-- Commit: `9ca265a57f85f2117942490f421f64a226dd9847`
-- Directory: `runtimes\llama.cpp\prism-b9599-9ca265a-cuda12.4`
-- Package SHA-256: `d6b473338a05a56b815044a7a02caeea04942bb6dda8b8de019a9a5252c6f50a`
-- CUDA runtime SHA-256: `8c79a9b226de4b3cacfd1f83d24f962d0773be79f1e7b75c6af4ded7e32ae1d6`
-
-The three Ternary launchers directly pin this runtime. DLLs are not mixed between installations and the global `PATH` is not modified.
+All retained profiles use the official runtime. Runtime DLLs remain isolated and
+the global `PATH` is not modified.
 
 ## Process and Logs
 

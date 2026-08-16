@@ -12,13 +12,6 @@ powershell.exe -NoProfile -ExecutionPolicy RemoteSigned `
 
 The script resumes `.partial` downloads, checks size and SHA-256, and never silently overwrites a different artifact.
 
-Ternary Bonsai 27B requires the Prism runtime first:
-
-```powershell
-& scripts\setup\Install-PrismRuntime.ps1
-& scripts\setup\Download-Model.ps1 -Model ternary-bonsai-27b
-```
-
 ## Copy from Another Storage
 
 Use a resumable copy without destructive synchronization. After verifying the artifact:
@@ -31,7 +24,7 @@ Exit codes 0 to 7 from `robocopy` are acceptable; 8 or higher represents failure
 
 ## Validating Profiles
 
-Static validation of all 39 launchers, without loading weights:
+Static validation of all 17 launchers, without loading weights:
 
 ```powershell
 & scripts\common\Test-Llm.ps1 -ConfigurationOnly
@@ -53,7 +46,9 @@ When testing the entire catalog, models with `DeferredInference` are skipped. Us
 
 Install each version in a new immutable directory and verify its packages and commit. After updating the `SERVER` value of all affected launchers, run configuration validation and test representative profiles before retiring the previous version.
 
-Specialized runtimes remain isolated. A Prism update requires changing the three Ternary launchers and also checking at least one profile that continues using the official runtime.
+The retained profiles use the official runtime. Install a new runtime version in
+an immutable directory, update affected launchers, and run configuration
+validation before retiring the previous version.
 
 ## Retiring a Model
 
