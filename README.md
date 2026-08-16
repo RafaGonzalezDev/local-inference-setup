@@ -30,7 +30,7 @@ The following specifications are relevant for language model inference:
 | `ternary-bonsai-27b` | `text`, `vision`, `agentic` |
 | `lfm2.5-2.6b` | `text`, `agentic` |
 | `lfm2.5-8b-a1b` | `text`, `agentic` |
-| `nemotron-3.5-lightning-30b-a3b` | `text`, `agentic` |
+| `nemotron-3.5-lightning-30b-a3b` | `agentic` |
 | `muse-glimmer-30b` | `agentic-ud-q4-k-xl`, `agentic-ud-q3-k-xl` |
 
 ## Repository Structure
@@ -77,7 +77,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 
 ## Launchers
 
-The 40 launchers are grouped by model:
+The 39 launchers are grouped by model:
 
 ```bat
 scripts\models\qwen3.6-35b-a3b\start-text.cmd
@@ -104,7 +104,7 @@ Profiles listen on `0.0.0.0:8080` without authentication. They should only be us
 
 ## Validation
 
-Validate all 40 launchers and their artifacts without loading weights:
+Validate all 39 launchers and their artifacts without loading weights:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -ConfigurationOnly
