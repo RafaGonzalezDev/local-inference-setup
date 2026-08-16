@@ -2,14 +2,14 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem This launcher is self-contained. Edit the literal values below to customize it.
+rem Validated 131k agentic profile for high-prefill workloads.
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b10273-cuda13.3\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\qwen3.6-35b-a3b\Qwen3.6-35B-A3B-UD-Q4_K_M.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 25 --ctx-size 262144 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 23 --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 4096 --ubatch-size 4096 --jinja"
 
 rem Network and API identity
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias qwen3.6-35b-a3b"
