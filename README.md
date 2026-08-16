@@ -19,19 +19,10 @@ The following specifications are relevant for language model inference:
 
 | Identifier | Profiles |
 | --- | --- |
-| `btl-4` | `text`, `agentic` |
-| `btl-4-compact` | `text`, `agentic` |
-| `qwen3.6-35b-a3b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-mtp`, `agentic-vision`, `agentic-131k-4096`, `agentic-mtp-131k-4096` |
-| `qwen3.6-27b-mtp` | `text`, `agentic`, `text-iq4-xs`, `agentic-iq4-xs` |
-| `gemma-4-26b-a4b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-vision`, `vision-mtp` |
 | `gemma-4-12b-v2` | `text`, `vision` |
-| `qwen3.6-35b-a3b-uncensored` | `text`, `agentic-vision` |
-| `ornith-1.0-35b` | `text`, `vision`, `agentic` |
-| `ternary-bonsai-27b` | `text`, `vision`, `agentic` |
-| `lfm2.5-2.6b` | `text`, `agentic` |
-| `lfm2.5-8b-a1b` | `text`, `agentic` |
+| `gemma-4-26b-a4b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-vision`, `vision-mtp` |
+| `qwen3.6-35b-a3b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-mtp`, `agentic-vision`, `agentic-131k-4096`, `agentic-mtp-131k-4096` |
 | `nemotron-3.5-lightning-30b-a3b` | `agentic` |
-| `muse-glimmer-30b` | `agentic-ud-q4-k-xl`, `agentic-ud-q3-k-xl` |
 
 ## Repository Structure
 
@@ -57,12 +48,6 @@ The following specifications are relevant for language model inference:
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-LlamaRuntime.ps1
 ```
 
-For Ternary Bonsai 27B (requires PrismML fork):
-
-```powershell
-powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-PrismRuntime.ps1
-```
-
 2. Download a model:
 
 ```powershell
@@ -77,16 +62,13 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 
 ## Launchers
 
-The 39 launchers are grouped by model:
+The 17 launchers are grouped by model:
 
 ```bat
-scripts\models\qwen3.6-35b-a3b\start-text.cmd
+scripts\models\gemma-4-12b-v2\start-text.cmd
 scripts\models\gemma-4-26b-a4b\start-vision-mtp.cmd
-scripts\models\ternary-bonsai-27b\start-agentic.cmd
-scripts\models\lfm2.5-2.6b\start-text.cmd
-scripts\models\lfm2.5-8b-a1b\start-agentic.cmd
-scripts\models\muse-glimmer-30b\start-agentic-ud-q4-k-xl.cmd
-scripts\models\muse-glimmer-30b\start-agentic-ud-q3-k-xl.cmd
+scripts\models\qwen3.6-35b-a3b\start-agentic-mtp.cmd
+scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
@@ -104,7 +86,7 @@ Profiles listen on `0.0.0.0:8080` without authentication. They should only be us
 
 ## Validation
 
-Validate all 39 launchers and their artifacts without loading weights:
+Validate all 17 launchers and their artifacts without loading weights:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -ConfigurationOnly
@@ -119,10 +101,10 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 Run a brief functional test:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -Model lfm2.5-2.6b -Profile text
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -Model qwen3.6-35b-a3b -Profile vision
 ```
 
-Functional tests control and close only the process tree they initiate. Ornith remains marked as deferred inference when testing the entire catalog, but can be run explicitly by name.
+Functional tests control and close only the process tree they initiate.
 
 ## Documentation
 
