@@ -9,7 +9,7 @@ rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\nemotron-3.5-lightning-30b-a3b\NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4.gguf""
 
 rem Context and performance; n-cpu-moe tuned for 800-1200 MiB free (WDDM)
-set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 21 --ctx-size 262144 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 512 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 23 --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 2048 --ubatch-size 2048 --jinja"
 
 rem Network and API identity
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias nemotron-3.5-lightning-30b-a3b"
