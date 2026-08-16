@@ -239,8 +239,8 @@ $launchers = @(
     Get-ChildItem -LiteralPath $launcherDirectory -Filter 'start-*.cmd' -File -Recurse |
         Sort-Object FullName
 )
-if ($Model -eq 'all' -and -not $Profile -and $launchers.Count -ne 38) {
-    throw "Expected 38 launchers but found $($launchers.Count)."
+if ($Model -eq 'all' -and -not $Profile -and $launchers.Count -ne 40) {
+    throw "Expected 40 launchers but found $($launchers.Count)."
 }
 if ($Model -ne 'all') {
     $launchers = @($launchers | Where-Object { $_.Directory.Name -eq $Model })
