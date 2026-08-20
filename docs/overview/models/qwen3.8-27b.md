@@ -16,7 +16,7 @@ Qwen3.8-27B is a dense vision-language model built on the Qwen3.5 architectural 
 | Profile | Context | CPU-MoE | Batch/UBatch | Vision | MTP |
 | --- | ---: | ---: | ---: | :---: | :---: |
 | `text` | 65,536 | — | 1,024/512 | no | no |
-| `text-mtp` | 32,768 | — | 1,024/512 | no | yes, n-max 3 |
+| `text-mtp` | 32,768 | — | 1,024/512 | no | yes, n-max 6 |
 | `vision` | 32,768 | — | 1,024/512 | yes | no |
 
 All profiles use eight threads, Q8 KV cache, Flash Attention, one slot, `--gpu-layers 999`, `--parallel 1`, `--cache-ram 0`, `--split-mode none`, `--fit off`, and `--jinja`. Text profiles use temperature 1.0 and presence penalty 0. MTP uses `--spec-type draft-mtp` with a complete draft model.

@@ -8,7 +8,7 @@
         @{
             File = 'Qwen3.8-27B-UD-IQ3_XXS.gguf'
             RemoteFile = 'Qwen3.8-27B-UD-IQ3_XXS.gguf'
-            Size = 10905190400
+            Size = 11701041664
             Sha256 = 'TODO-VERIFY'
             Repository = 'unsloth/Qwen3.8-27B-GGUF'
             Revision = 'main'
@@ -22,9 +22,9 @@
             Revision = 'main'
         }
         @{
-            File = 'mtp\mtp-Qwen3.8-27B-Q4_0.gguf'
+            File = 'MTP\mtp-Qwen3.8-27B-Q4_0.gguf'
             RemoteFile = 'mtp-Qwen3.8-27B-Q4_0.gguf'
-            Size = 550502400
+            Size = 1470184448
             Sha256 = 'TODO-VERIFY'
             Repository = 'unsloth/Qwen3.8-27B-GGUF'
             Revision = 'main'

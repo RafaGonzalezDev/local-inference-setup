@@ -27,7 +27,7 @@ rem Vision
 set "VISION_ARGS="
 
 rem MTP speculative decoding
-set "MTP_ARGS=--spec-draft-model "%LLM_ROOT%\models\qwen3.8-27b\MTP\mtp-Qwen3.8-27B-Q4_0.gguf" --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-ngl 999"
+set "MTP_ARGS=--spec-draft-model "%LLM_ROOT%\models\qwen3.8-27b\MTP\mtp-Qwen3.8-27B-Q4_0.gguf" --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-ngl 999"
 
 "%SERVER%" ^
   %MODEL_ARGS% ^
