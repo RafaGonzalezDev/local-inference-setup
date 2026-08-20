@@ -3,13 +3,13 @@ setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem This launcher is self-contained. Edit the literal values below to customize it.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b10273-cuda13.3\llama-server.exe"
+set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b10502-cuda13.3\llama-server.exe"
 
 rem Model
-set "MODEL_ARGS=--model "%LLM_ROOT%\models\qwen3.6-35b-a3b\mtp\Qwen3.6-35B-A3B-UD-Q4_K_M.gguf""
+set "MODEL_ARGS=--model "%LLM_ROOT%\models\qwen3.6-35b-a3b\Qwen3.6-35B-A3B-UD-Q4_K_M.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 26 --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 2048 --ubatch-size 2048 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 24 --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 2048 --ubatch-size 2048 --jinja"
 
 rem Network and API identity
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias qwen3.6-35b-a3b"
@@ -24,10 +24,10 @@ rem Runtime, cache, logging, and reasoning budget
 set "RUNTIME_ARGS=--log-verbosity 3 --load-mode none --cache-type-k q8_0 --cache-type-v q8_0 --reasoning-budget 8192"
 
 rem Vision
-set "VISION_ARGS="
+set "VISION_ARGS=--mmproj "%LLM_ROOT%\models\qwen3.6-35b-a3b\mmproj-F16.gguf" --image-min-tokens 2048"
 
 rem MTP speculative decoding
-set "MTP_ARGS=--spec-type draft-mtp --spec-draft-n-max 3"
+set "MTP_ARGS="
 
 "%SERVER%" ^
   %MODEL_ARGS% ^
