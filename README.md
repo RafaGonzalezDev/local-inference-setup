@@ -21,7 +21,10 @@ The following specifications are relevant for language model inference:
 | --- | --- |
 | `gemma-4-12b-v2` | `text`, `vision` |
 | `gemma-4-26b-a4b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-vision`, `vision-mtp` |
-| `qwen3.6-35b-a3b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-mtp`, `agentic-vision`, `agentic-131k-4096`, `agentic-mtp-131k-4096` |
+| `ornith-1.5-35b-a3b` | `agentic-131k-2048` |
+| `ornith-1.5-9b` | `agentic-262k-1024` |
+| `qwen3.6-35b-a3b` | `agentic-131k-2048`, `agentic-mtp-131k-2048`, `agentic-vision-131k-2048` |
+| `qwen3.8-27b` | `text`, `text-mtp`, `vision` |
 | `nemotron-3.5-lightning-30b-a3b` | `agentic` |
 
 ## Repository Structure

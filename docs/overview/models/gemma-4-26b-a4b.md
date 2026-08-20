@@ -2,7 +2,7 @@
 
 - Model: `gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf`
 - Repository: `unsloth/gemma-4-26B-A4B-it-qat-GGUF`
-- Revision: `7b92b5b28818151e8669af2e45e88d6086f490dd`
+- Revision: `7b92b5b28818151e8669af2e501a3e0f66a6365af3`
 - API alias: `gemma-4-26b-a4b`
 
 | Profile | Context | CPU-MoE | UBatch | Vision | MTP |

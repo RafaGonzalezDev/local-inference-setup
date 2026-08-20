@@ -1,7 +1,7 @@
 # Nemotron 3.5 Lightning 30B A3B
 
 Native Windows profile for `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF`,
-served with the official `llama.cpp b10361-cuda13.3` runtime. The model is a
+served with the `llama.cpp b10502-cuda13.3` runtime. The model is a
 hybrid Mamba-2 + MoE + Attention architecture (`nemotron_h_moe`) with 128
 experts, 6 active experts, and 1 shared expert. NVIDIA publishes it under the
 OpenMDW-1.1 license.
@@ -20,7 +20,7 @@ is 1,048,576 tokens.
 
 This model requires `llama.cpp b10361` or later. Its NVFP4 scale tensors and
 `nemotron_h_moe` architecture with the embedded NextN head are not compatible
-with the older `b10273` runtime.
+with runtimes prior to `b10361`.
 
 ## Profile
 

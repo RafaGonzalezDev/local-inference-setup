@@ -9,14 +9,9 @@
 
 | Profile | Context | CPU-MoE | Batch/UBatch | Vision | MTP |
 | --- | ---: | ---: | ---: | :---: | :---: |
-| `text` | 131,072 | 21 | 1,024/512 | no | no |
-| `text-mtp` | 131,072 | 23 | 1,024/512 | no | yes, n-max 3 |
-| `vision` | 65,536 | 23 | 1,024/1,024 | yes | no |
-| `agentic-vision` | 262,144 | 28 | 1,024/1,024 | yes | no |
-| `agentic` | 262,144 | 25 | 1,024/1,024 | no | no |
-| `agentic-mtp` | 262,144 | 28 | 1,024/1,024 | no | yes, n-max 3 |
-| `agentic-131k-4096` | 131,072 | 23 | 4,096/4,096 | no | no |
-| `agentic-mtp-131k-4096` | 131,072 | 26 | 2,048/2,048 | no | yes, n-max 3 |
+| `agentic-131k-2048` | 131,072 | 20 | 2,048/2,048 | no | no |
+| `agentic-mtp-131k-2048` | 131,072 | 25 | 2,048/2,048 | no | yes, n-max 3 |
+| `agentic-vision-131k-2048` | 131,072 | 24 | 2,048/2,048 | yes | no |
 
 The `Batch/UBatch` column corresponds to `--batch-size/--ubatch-size`. All
 profiles use eight threads, Q8 KV cache, Flash Attention, one slot,
@@ -24,20 +19,8 @@ profiles use eight threads, Q8 KV cache, Flash Attention, one slot,
 `--fit off`, and `--jinja`. MTP is a complete model and is served with
 `--spec-type draft-mtp`; it is not combined with vision.
 
-Agentic profiles use temperature 0.6 and presence penalty 0.
-`agentic-vision` inherits that sampling and the full `agentic` context, with
-vision and `batch/ubatch 1,024/1,024`; it does not use MTP. Vision profiles
-(`vision` and `agentic-vision`) also launch with `--image-min-tokens 1024`,
-the minimum recommended by llama.cpp for Qwen-VL grounding tasks (issue
-16842). The remaining profiles use temperature 1.0 and Qwen's
-thinking-oriented sampling.
+Agentic profiles use temperature 0.6 and presence penalty 0 (no presence-based repetition penalty). This setting allows the model to repeat tokens naturally when the context requires it, which is important for agentic coding workloads that may reference the same code snippets or identifiers multiple times.
 
-`agentic` and `agentic-mtp` are the full-context variants: they keep 262,144
-tokens and `batch/ubatch 1,024/1,024`. `agentic-131k-4096` uses the base GGUF,
-`CPU-MoE 23`, and `batch/ubatch 4,096/4,096` for agentic workloads with high
-prefill. `agentic-mtp-131k-4096` uses the MTP GGUF, `CPU-MoE 26`, and
-`batch/ubatch 2,048/2,048`, together with `--spec-draft-n-max 3`.
+`agentic-vision-131k-2048` uses `--image-min-tokens 2048` (higher than the default 1024) for improved grounding accuracy on vision tasks.
 
-The two 131,072-token profiles are final validated configurations for agentic
-coding. All agentic profiles share the `qwen3.6-35b-a3b` alias and port `8080`,
-so they must be run as alternatives rather than simultaneously.
+All three profiles share the `qwen3.6-35b-a3b` alias and port `8080`, so they must be run as alternatives rather than simultaneously.
