@@ -11,21 +11,21 @@ if ([string]::IsNullOrWhiteSpace($RootDirectory)) {
     $RootDirectory = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 }
 
-$version = 'b10273'
-$versionNumber = '10273'
-$commitPrefix = 'a6aa6f545'
-$runtimeDirectory = Join-Path $rootDirectory 'runtimes\llama.cpp\b10273-cuda13.3'
-$packageDirectory = Join-Path $rootDirectory 'packages\llama.cpp\b10273'
+$version = 'b10502'
+$versionNumber = '10502'
+$commitPrefix = '0adcc3bb5'
+$runtimeDirectory = Join-Path $rootDirectory 'runtimes\llama.cpp\b10502-cuda13.3'
+$packageDirectory = Join-Path $rootDirectory 'packages\llama.cpp\b10502'
 
 $assets = @(
     @{
-        Name = 'llama-b10273-bin-win-cuda-13.3-x64.zip'
-        Url = 'https://github.com/ggml-org/llama.cpp/releases/download/b10273/llama-b10273-bin-win-cuda-13.3-x64.zip'
-        Sha256 = '2354c37455b4371145589d87cdd468a19c1fe6420649aaec3cf3ed68b20a61c6'
+        Name = 'llama-b10502-bin-win-cuda-13.3-x64.zip'
+        Url = 'https://github.com/ggml-org/llama.cpp/releases/download/b10502/llama-b10502-bin-win-cuda-13.3-x64.zip'
+        Sha256 = '657ad104b7c2f3aaf9abac91b48ffb72a2556cb8a6a38d395eaaf64bc1f1f719'
     },
     @{
         Name = 'cudart-llama-bin-win-cuda-13.3-x64.zip'
-        Url = 'https://github.com/ggml-org/llama.cpp/releases/download/b10273/cudart-llama-bin-win-cuda-13.3-x64.zip'
+        Url = 'https://github.com/ggml-org/llama.cpp/releases/download/b10502/cudart-llama-bin-win-cuda-13.3-x64.zip'
         Sha256 = '1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e'
     }
 )
@@ -73,7 +73,12 @@ $versionOutput = $versionOutput.Trim()
 if ($versionProcess.ExitCode -ne 0) {
     throw "llama-server --version exited with code $($versionProcess.ExitCode). Output: $versionOutput"
 }
-if ($versionOutput -notmatch "version:\s*$versionNumber\s+\($commitPrefix" ) {
+$hasExpectedBuild = (
+    $versionOutput -match "version:\s*$versionNumber\s+\(" -or
+    $versionOutput -match "build\s+$versionNumber\b"
+)
+$hasExpectedCommit = $versionOutput -match "\b$commitPrefix\b"
+if (-not ($hasExpectedBuild -and $hasExpectedCommit)) {
     throw "Unexpected llama-server version. Expected $version at $commitPrefix. Output: $versionOutput"
 }
 
