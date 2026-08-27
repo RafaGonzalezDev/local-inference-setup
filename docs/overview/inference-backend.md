@@ -17,14 +17,19 @@ Each `start-*.cmd` resolves `LLM_ROOT` locally, pins the runtime, and materializ
 
 The default runtime is the official `llama.cpp`:
 
-- Version: `b10273`
-- Commit: `a6aa6f545`
-- Directory: `runtimes\llama.cpp\b10273-cuda13.3`
-- Package: `llama-b10273-bin-win-cuda-13.3-x64.zip`
-- SHA-256: `2354c37455b4371145589d87cdd468a19c1fe6420649aaec3cf3ed68b20a61c6`
+- Version: `b10502`
+- Commit: `0adcc3bb5`
+- Reported version: `0.1.2-dev (build 10502, commit 0adcc3bb5)`
+- Directory: `runtimes\llama.cpp\b10502-cuda13.3`
+- Package: `llama-b10502-bin-win-cuda-13.3-x64.zip`
+- SHA-256: `657ad104b7c2f3aaf9abac91b48ffb72a2556cb8a6a38d395eaaf64bc1f1f719`
 - CUDA runtime SHA-256: `1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e`
 - Validated GPU: NVIDIA RTX 5080
 - Validated driver: 610.47
+
+The previous `b10361-cuda13.3` runtime remains installed for rollback. The
+installer accepts both the legacy numeric version output and the current
+semantic-version output while still requiring the pinned build and commit.
 
 All retained profiles use the official runtime. Runtime DLLs remain isolated and
 the global `PATH` is not modified.

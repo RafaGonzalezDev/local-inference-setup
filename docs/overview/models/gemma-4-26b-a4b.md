@@ -1,21 +1,27 @@
-# Gemma 4 26B A4B
+﻿# Gemma 4 26B A4B
 
-- Model: `gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf`
-- Repository: `unsloth/gemma-4-26B-A4B-it-qat-GGUF`
-- Revision: `7b92b5b28818151e8669af2e501a3e0f66a6365af3`
-- API alias: `gemma-4-26b-a4b`
+- Modelo: `gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf`
+- Repositorio: `unsloth/gemma-4-26B-A4B-it-qat-GGUF`
+- Revisión: `7b92b5b28818151e8669af2e45e88d6086f490dd`
+- Alias API: `gemma-4-26b-a4b`
 
-| Profile | Context | CPU-MoE | UBatch | Vision | MTP |
+| Perfil | Contexto | CPU-MoE | Ubatch | Visión | MTP |
 | --- | ---: | ---: | ---: | :---: | :---: |
-| `text` | 131,072 | 5 | 256 | no | no |
-| `text-mtp` | 131,072 | 7 | 256 | no | yes |
-| `vision` | 65,536 | 8 | 1,024 | yes | no |
-| `agentic` | 262,144 | 12 | 1,024 | no | no |
-| `agentic-vision` | 262,144 | 16 | 1,024 | yes | no |
-| `vision-mtp` | 65,536 | 10 | 1,024 | yes | yes |
+| `text` | 131.072 | 5 | 256 | no | no |
+| `text-mtp` | 131.072 | 7 | 256 | no | sí |
+| `vision` | 65.536 | 8 | 1.024 | sí | no |
+| `agentic` | 262.144 | 12 | 1.024 | no | no |
+| `agentic-vision` | 262.144 | 16 | 1.024 | sí | no |
+| `vision-mtp` | 65.536 | 10 | 1.024 | sí | sí |
 
-MTP uses the separate drafter `mtp-gemma-4-26B-A4B-it.gguf`. The profiles keep eight threads, Q8 KV cache, temperature 1.0, `top_p=0.95`, and `top_k=64`.
+El MTP utiliza el drafter separado `mtp-gemma-4-26B-A4B-it.gguf`. Los perfiles
+mantienen ocho hilos, caché KV Q8, temperatura 1,0, `top_p=0.95` y `top_k=64`.
 
-`agentic-vision` combines the model's full window (262,144, the same as Qwen3.6-35B-A3B) with vision and the `vision` batch size (`UBatchSize` 1,024), using agentic sampling (temperature 0.6 and presence penalty 0); it does not use MTP.
+`agentic-vision` combina la ventana completa del modelo (262.144, la misma que
+Qwen3.6-35B-A3B) con la visión y el batch de `vision` (`UBatchSize` 1024),
+usando el muestreo agentic (temperatura 0,6 y penalización de presencia 0);
+no usa MTP.
 
-`agentic` without vision uses the same window and agentic sampling with 12 MoE layers on the CPU (2026-08-06): without the mmproj, 16 layers left approximately 2.3 GiB free; with 12, approximately 950 MiB remained free according to `nvidia-smi` (approximately 1.3 GB in Task Manager).
+`agentic` (sin visión) usa la misma ventana y muestreo agentic con 12 capas MoE
+en CPU (2026-08-06): sin el mmproj, 16 capas dejaban ~2,3 GiB libres; con 12
+queda ~950 MiB libres por nvidia-smi (~1,3 GB en el Administrador de tareas).

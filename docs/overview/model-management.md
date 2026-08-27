@@ -24,10 +24,16 @@ Exit codes 0 to 7 from `robocopy` are acceptable; 8 or higher represents failure
 
 ## Validating Profiles
 
-Static validation of all 17 launchers, without loading weights:
+Static validation of all 20 launchers, without requiring installed weights:
 
 ```powershell
 & scripts\common\Test-Llm.ps1 -ConfigurationOnly
+```
+
+To additionally require every runtime and launcher artifact to exist:
+
+```powershell
+& scripts\common\Test-Llm.ps1 -ConfigurationOnly -RequireInstalledFiles
 ```
 
 Individual functional test:
@@ -35,7 +41,7 @@ Individual functional test:
 ```powershell
 & scripts\common\Test-Llm.ps1 `
   -Model qwen3.6-35b-a3b `
-  -Profile vision
+  -Profile agentic-vision-131k-2048
 ```
 
 The test waits for `/health`, makes a request of up to 16 tokens, and stops the process tree it initiated. Vision profiles reuse `tests\assets\panels-1080p.png`. These are not benchmarks.

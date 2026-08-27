@@ -1,52 +1,78 @@
 # Nemotron 3.5 Lightning 30B A3B
 
-Native Windows profile for `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF`,
-served with the `llama.cpp b10502-cuda13.3` runtime. The model is a
-hybrid Mamba-2 + MoE + Attention architecture (`nemotron_h_moe`) with 128
-experts, 6 active experts, and 1 shared expert. NVIDIA publishes it under the
-OpenMDW-1.1 license.
+- Modelo: `NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4.gguf`
+- Repositorio: `ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF`
+- Revisión: `88d7ce0b0fa385c5108866ce5d33690927531a37`
+- Alias API: `nemotron-3.5-lightning-30b-a3b`
+- Arquitectura GGUF: `nemotron_h_moe`
 
-## Artifact
+El artefacto GGUF no es NVFP4 puro: los MLP usan `NVFP4` (93 tensores), mientras
+que atención, Mamba y embeddings permanecen en `BF16` (81 tensores) y las escalas
+y normalizaciones en `F32`. La RTX 5080 acelera el formato NVFP4 por hardware
+(FP4 nativo de Blackwell). El contexto nativo declarado en el GGUF es 1.048.576
+tokens.
 
-| Quantization | File | Size | SHA-256 |
-| --- | --- | ---: | --- |
-| `NVFP4` | `NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4.gguf` | 22.46 GB | `7827805ae9f2d20cc71e46bf05d9cb045e222d3fa0429363c324bbf6d3cab959` |
+Este artefacto requiere el runtime `b10361` o posterior: el esquema de tensores
+NVFP4 (escalas `.scale`) y la arquitectura `nemotron_h_moe` con cabeza NextN no
+cargan en `b10273` (`wrong number of tensors; expected 510, got 501`).
 
-The artifact is pinned to revision
-`88d7ce0b0fa385c5108866ce5d33690927531a37`. The GGUF combines NVFP4 MLP
-tensors with BF16 attention, Mamba, and embedding tensors; scales and
-normalization tensors remain in F32. The native context declared by the GGUF
-is 1,048,576 tokens.
+## MTP y DFlash
 
-This model requires `llama.cpp b10361` or later. Its NVFP4 scale tensors and
-`nemotron_h_moe` architecture with the embedded NextN head are not compatible
-with runtimes prior to `b10361`.
+El GGUF incorpora una cabeza NextN embebida (`nextn_predict_layers = 1`,
+`blk.52.nextn.*`), pero se descartó el uso de MTP tras la calibración: con
+`--spec-type draft-mtp` el decode pasó de ~88 a ~61-65 tok/s (draft a CPU,
+aceptación 0,80) y el grafo especulativo añadió ~2,5 GB de VRAM. Sin
+`--spec-type`, los tensores de la capa NextN se ignoran al cargar. NVIDIA
+publica además un checkpoint de draft DFlash
+(`NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4-DFlash`, safetensors, 833M
+parámetros); a fecha de integración no existe versión GGUF pública del sidecar.
 
-## Profile
+## Perfiles
 
-| Launcher | Context | CPU-MoE | Batch/UBatch | Vision | MTP |
-| --- | ---: | ---: | ---: | :---: | :---: |
-| `start-agentic.cmd` | 131,072 | 23 | 2,048/2,048 | no | no |
+| Lanzador | Contexto | `n-cpu-moe` | MTP |
+| --- | ---: | ---: | :---: |
+| `start-agentic-131k-2048.cmd` | 131.072 | 23 | no |
 
-The launcher uses `--gpu-layers 999`, Flash Attention, one slot, Q8 KV cache,
-eight CPU threads, `--cache-ram 0`, `--split-mode none`, and `--fit off`. It
-enables reasoning with an 8,192-token reasoning budget and exposes the
-`nemotron-3.5-lightning-30b-a3b` API alias on port `8080`.
+El lanzador `start-agentic-131k-2048.cmd` materializa un perfil agentic con
+131.072 tokens de contexto y `n-cpu-moe 23`. Conserva los parámetros comunes
+del entorno: ocho hilos, caché KV `q8_0`, Flash Attention, un slot, `--gpu-layers
+999`, `--cache-ram 0`, `--split-mode none`, `--fit off`, Jinja y presupuesto
+de razonamiento 8.192. El muestreo usa `temp 0.6`, `top-p 0.95`, `top-k 20`
+con `--reasoning on`.
 
-The current Windows model directory contains only this agentic launcher. The
-previous text launcher is intentionally not mirrored in this repository after
-being removed from the Windows source tree.
+La caché KV usa `q8_0` tanto para claves como para valores. El perfil materializa
+`--gpu-layers 999` y deja el resto de parámetros en su valor declarado.
 
-The embedded NextN head is not used for MTP in this profile. NVIDIA's DFlash
-draft is a separate safetensors checkpoint and is not part of this launcher.
+## Calibración histórica
 
-## Dependencies
+Las mediciones siguientes corresponden a los perfiles anteriores `text` y
+`agentic`, tal como se ejecutaban con `start-agentic.cmd` (contexto de 200.000
+tokens y `n-cpu-moe 25`). Se conservan como referencia histórica y no describen
+el lanzador actual de 131.072 tokens con `n-cpu-moe 23`.
 
-- `config/models/nemotron-3.5-lightning-30b-a3b.psd1`
-- `scripts/models/nemotron-3.5-lightning-30b-a3b/`
-- `scripts/common/Test-Llm.ps1`
+La memoria se comprueba con métricas nativas WDDM de Windows, no desde WSL, con
+el servidor cargado; el Administrador de tareas muestra el mismo contador.
+Objetivo de Rafa: entre 1,0 y 1,3 GB libres. El baseline del escritorio ocupa
+aproximadamente 1,5-2,5 GB de los 16.302 MiB totales, por lo que el margen
+efectivo varía con la sesión.
 
-## Source
+| Perfil | `n-cpu-moe` | WDDM usado | WDDM libre | prompt | decode |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `text` | 20 | ~14.982 MiB (14,6 GB) | ~1,3 GB | ~103 tok/s | ~88 tok/s |
+| `agentic` | 21 | ~15.082 MiB (14,7 GB) | ~1,2 GB | ~100 tok/s | ~81 tok/s |
 
-- [Hugging Face model repository](https://huggingface.co/ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF)
-- License declared by the model: OpenMDW-1.1.
+Mediciones con una petición de 192 tokens de generación (razonamiento activo).
+Cada capa MoE adicional en GPU libera ~0,65 GB de VRAM a costa de ~6 tok/s de
+decode. `n-cpu-moe 22` en `text` dejó ~2,0 GB libres (fuera de rango por
+exceso); `n-cpu-moe 20` en `agentic` dejó solo ~0,65 GB libres (fuera de rango
+por defecto).
+
+## Dependencias
+
+- `/mnt/d/LLM/config/models/nemotron-3.5-lightning-30b-a3b.psd1`
+- `/mnt/d/LLM/scripts/models/nemotron-3.5-lightning-30b-a3b/start-agentic-131k-2048.cmd`
+- `/mnt/d/LLM/scripts/common/Test-Llm.ps1`
+
+## Related ADRs
+
+- [ADR-0001: lanzadores autocontenidos](../../adr/ADR-0001-self-contained-model-launchers.md)

@@ -1,18 +1,18 @@
-# Adding a Model and Its Profiles
+# Añadir un modelo y sus perfiles
 
-## 1. Choose an Identifier
+## 1. Elegir un identificador
 
-Use a canonical identifier in lowercase, for example
-`vendor-model-size-variant`. The same identifier is used in:
+Use un identificador canónico en minúsculas, por ejemplo
+`vendor-model-size-variant`. El mismo identificador se utiliza en:
 
 - `models\<model-id>`
 - `config\models\<model-id>.psd1`
 - `scripts\models\<model-id>`
-- The `-Model` parameters for download and validation
+- Los parámetros `-Model` de descarga y validación
 
-## 2. Register the Artifacts
+## 2. Registrar los artefactos
 
-The manifest only contains catalog, download, and integrity metadata:
+El manifiesto solo contiene metadatos de catálogo, descarga e integridad:
 
 ```powershell
 @{
@@ -34,13 +34,13 @@ The manifest only contains catalog, download, and integrity metadata:
 }
 ```
 
-Mutable branches such as `main` are not accepted for a reproducible installation. The
-manifest does not contain profiles or inference parameters.
+No se admiten ramas móviles como `main` para una instalación reproducible. El
+manifiesto no contiene perfiles ni parámetros de inferencia.
 
-## 3. Create a Self-Contained Launcher per Profile
+## 3. Crear un lanzador autocontenido por perfil
 
-Copy an existing launcher and keep these group names because
-`Test-Llm.ps1` inspects them:
+Copie un lanzador existente y mantenga estos nombres de grupos porque
+`Test-Llm.ps1` los inspecciona:
 
 ```bat
 @echo off
@@ -68,23 +68,23 @@ set "MTP_ARGS="
   %MTP_ARGS%
 ```
 
-Materialize all effective values in the file. Do not delegate to another
-launcher and do not add `%*`. For vision use `VISION_ARGS`; for MTP use
-`MTP_ARGS`. If a model requires another fork, pin its executable in `SERVER`
-without mixing DLLs between runtimes.
+Materialice todos los valores efectivos en el archivo. No delegue en otro
+lanzador y no añada `%*`. Para visión use `VISION_ARGS`; para MTP use
+`MTP_ARGS`. Si un modelo requiere otro fork, fije su ejecutable en `SERVER`
+sin mezclar DLL entre runtimes.
 
-## 4. Register and Validate
+## 4. Registrar y validar
 
-1. Add the identifier to `config\catalog.psd1`.
-2. Create a `start-<profile>.cmd` per profile.
-3. Run `Test-ModelIntegrity.ps1 -Model <model-id>`.
-4. Run `Test-Llm.ps1 -ConfigurationOnly`.
-5. Test each profile with a brief request.
-6. Test the common image if vision exists.
-7. Confirm clean shutdown and port release.
-8. Document provenance, adapted values, and limitations.
-9. If using a specific runtime, also test at least one profile from the
-   default runtime.
+1. Añada el identificador a `config\catalog.psd1`.
+2. Cree un `start-<profile>.cmd` por perfil.
+3. Ejecute `Test-ModelIntegrity.ps1 -Model <model-id>`.
+4. Ejecute `Test-Llm.ps1 -ConfigurationOnly`.
+5. Pruebe cada perfil con una petición breve.
+6. Pruebe la imagen común si existe visión.
+7. Confirme el cierre limpio y la liberación del puerto.
+8. Documente procedencia, valores adaptados y limitaciones.
+9. Si usa un runtime específico, pruebe también al menos un perfil del runtime
+   predeterminado.
 
-Adapted values from another model should be identified as such and should not
-be presented as performance results without measurement.
+Los valores adaptados de otro modelo deben identificarse como tales y no deben
+presentarse como resultados de rendimiento sin una medición.

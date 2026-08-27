@@ -21,11 +21,12 @@ The following specifications are relevant for language model inference:
 | --- | --- |
 | `gemma-4-12b-v2` | `text`, `vision` |
 | `gemma-4-26b-a4b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-vision`, `vision-mtp` |
-| `ornith-1.5-35b-a3b` | `agentic-131k-2048` |
+| `qwen3.6-35b-a3b` | `agentic-131k-2048`, `agentic-262k-1024`, `agentic-mtp-131k-2048`, `agentic-vision-131k-2048` |
+| `qwen3.8-27b` | `text`, `vision`, `text-mtp` |
+| `nemotron-3.5-lightning-30b-a3b` | `agentic-131k-2048` |
+| `ornith-1.5-35b-a3b` | `agentic-131k-2048`, `agentic-262k-1024` |
+| `ling-3.0-tiny` | `agentic-131k-1024` |
 | `ornith-1.5-9b` | `agentic-262k-1024` |
-| `qwen3.6-35b-a3b` | `agentic-131k-2048`, `agentic-mtp-131k-2048`, `agentic-vision-131k-2048` |
-| `qwen3.8-27b` | `text`, `text-mtp`, `vision` |
-| `nemotron-3.5-lightning-30b-a3b` | `agentic` |
 
 ## Repository Structure
 
@@ -65,13 +66,17 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 
 ## Launchers
 
-The 17 launchers are grouped by model:
+The 20 launchers are grouped by model:
 
 ```bat
 scripts\models\gemma-4-12b-v2\start-text.cmd
 scripts\models\gemma-4-26b-a4b\start-vision-mtp.cmd
-scripts\models\qwen3.6-35b-a3b\start-agentic-mtp.cmd
-scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic.cmd
+scripts\models\qwen3.6-35b-a3b\start-agentic-mtp-131k-2048.cmd
+scripts\models\qwen3.8-27b\start-text.cmd
+scripts\models\ornith-1.5-35b-a3b\start-agentic-262k-1024.cmd
+scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-131k-2048.cmd
+scripts\models\ling-3.0-tiny\start-agentic-131k-1024.cmd
+scripts\models\ornith-1.5-9b\start-agentic-262k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
@@ -89,7 +94,7 @@ Profiles listen on `0.0.0.0:8080` without authentication. They should only be us
 
 ## Validation
 
-Validate all 17 launchers and their artifacts without loading weights:
+Validate all 20 launchers declaratively without loading weights:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -ConfigurationOnly
@@ -104,7 +109,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 Run a brief functional test:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -Model qwen3.6-35b-a3b -Profile vision
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -Model qwen3.6-35b-a3b -Profile agentic-vision-131k-2048
 ```
 
 Functional tests control and close only the process tree they initiate.

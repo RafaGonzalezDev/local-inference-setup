@@ -1,39 +1,41 @@
-# ADR-0001: Self-Contained Model Launchers
+# ADR-0001: Lanzadores de modelo autocontenidos
 
-- Status: accepted
-- Date: 2026-08-07
+- Estado: aceptado
+- Fecha: 2026-08-07
 
-## Context
+## Contexto
 
-The `.cmd` launchers delegated to `Start-Llm.ps1`, which combined values from
-runtime, model, and profile manifests. The design avoided duplication, but
-prevented knowing the effective command by inspecting a model's shortcut.
-Modifying a profile required understanding the precedence of three layers.
+Los lanzadores `.cmd` delegaban en `Start-Llm.ps1`, que combinaba valores de
+runtime, modelo y perfil desde varios manifiestos. El diseño evitaba duplicación,
+pero impedía conocer el comando efectivo inspeccionando el acceso directo de un
+modelo. Modificar un perfil requería entender la precedencia de tres capas.
 
-## Options Considered
+## Opciones consideradas
 
-1. Maintain legacy manifests and the common engine. Optimizes DRY and global
-   changes, but preserves opacity.
-2. Declare all arguments in each `.cmd` and reuse a helper only for
-   process, PID, and logs. Improves visibility, but maintains a common dependency.
-3. Invoke `llama-server.exe` directly from each `.cmd`. Maximizes
-   transparency and local editing at the cost of duplication.
+1. Mantener manifiestos heredados y el motor común. Optimiza DRY y cambios
+   globales, pero conserva la opacidad.
+2. Declarar todos los argumentos en cada `.cmd` y reutilizar un helper solo para
+   proceso, PID y logs. Mejora visibilidad, pero mantiene una dependencia común.
+3. Invocar `llama-server.exe` directamente desde cada `.cmd`. Maximiza
+   transparencia y edición local a cambio de duplicación.
 
-## Decision
+## Decisión
 
-Adopt the third option. Each profile materializes runtime, model, and all its
-flags in a single `.cmd`. Manifests are limited to catalog, download, and
-integrity metadata. `Test-Llm.ps1` validates launchers, but does not participate
-in normal execution.
+Adoptar la tercera opción. Cada perfil materializa runtime, modelo y todos sus
+flags en un único `.cmd`. Los manifiestos se limitan a metadatos de catálogo,
+descarga e integridad. `Test-Llm.ps1` valida los lanzadores, pero no participa
+en la ejecución normal.
 
-DRY is deliberately relaxed for launch configuration. Each file maintains a
-single responsibility: describe and execute an observable profile.
+Se relaja deliberadamente DRY para la configuración de lanzamiento. Cada archivo
+mantiene una única responsabilidad: describir y ejecutar un perfil observable.
 
-## Consequences
+## Consecuencias
 
-- A user can inspect and edit the effective command in a single file.
-- Paths and values do not depend on precedence or inherited values.
-- Global changes must be applied and validated across all catalog profiles.
-- The managed PID, background startup, and generic overrides are retired.
-- Interactive stop is performed with `Ctrl+C`.
-- Argument group names are an internal contract of `Test-Llm.ps1`.
+- Un usuario puede inspeccionar y editar el comando efectivo en un solo archivo.
+- Las rutas y valores no dependen de precedencia ni valores heredados.
+- Los cambios globales deben aplicarse y validar todos los perfiles del catálogo.
+- Se retiran el PID gestionado, el arranque en segundo plano y las
+  sobrescrituras genéricas.
+- La parada interactiva se realiza con `Ctrl+C`.
+- Los nombres de grupo de argumentos son un contrato interno de
+  `Test-Llm.ps1`.
