@@ -5,6 +5,7 @@ param(
     [int]$StartupTimeoutSeconds = 900,
     [string]$VisionImage,
     [switch]$ConfigurationOnly,
+    [switch]$RequireInstalledFiles,
     [switch]$IncludeDeferred
 )
 
@@ -59,10 +60,25 @@ function Get-ArgumentValue {
     return $Arguments[$index + 1]
 }
 
+function Get-NormalizedPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    return [System.IO.Path]::GetFullPath($Path).TrimEnd([System.IO.Path]::DirectorySeparatorChar)
+}
+
 function Get-LauncherPlan {
     param(
         [Parameter(Mandatory = $true)]
-        [System.IO.FileInfo]$Launcher
+        [System.IO.FileInfo]$Launcher,
+
+        [Parameter(Mandatory = $true)]
+        [hashtable]$ModelConfig,
+
+        [Parameter(Mandatory = $true)]
+        [bool]$RequireFiles
     )
 
     $content = Get-Content -LiteralPath $Launcher.FullName -Raw
@@ -73,8 +89,8 @@ function Get-LauncherPlan {
         throw "Launcher still accepts hidden pass-through arguments: $($Launcher.FullName)"
     }
 
-    $serverPath = (Get-AssignmentValue -Content $content -Name 'SERVER').Replace('%LLM_ROOT%', $rootDirectory)
-    if (-not (Test-Path -LiteralPath $serverPath -PathType Leaf)) {
+    $serverPath = Get-NormalizedPath -Path ((Get-AssignmentValue -Content $content -Name 'SERVER').Replace('%LLM_ROOT%', $rootDirectory))
+    if ($RequireFiles -and -not (Test-Path -LiteralPath $serverPath -PathType Leaf)) {
         throw "Runtime executable was not found: $serverPath"
     }
 
@@ -113,23 +129,44 @@ function Get-LauncherPlan {
         throw "Launcher contains duplicate flags: $($duplicateFlags.Name -join ', ')"
     }
 
+    $modelId = $Launcher.Directory.Name
+    if ($ModelConfig.Id -ne $modelId) {
+        throw "Manifest ID '$($ModelConfig.Id)' does not match launcher directory '$modelId'."
+    }
+
+    $alias = Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--alias'
+    if ($alias -ne $modelId) {
+        throw "Launcher alias '$alias' must match model ID '$modelId': $($Launcher.FullName)"
+    }
+
+    $modelDirectory = Get-NormalizedPath -Path (Join-Path $rootDirectory $ModelConfig.RelativeDirectory)
+    $declaredArtifactPaths = @{}
+    foreach ($artifact in $ModelConfig.Artifacts) {
+        $artifactPath = Get-NormalizedPath -Path (Join-Path $modelDirectory $artifact.File)
+        $declaredArtifactPaths[$artifactPath.ToLowerInvariant()] = $artifactPath
+    }
+
+    $artifactPaths = New-Object 'System.Collections.Generic.List[string]'
     foreach ($pathArgument in @('--model', '--mmproj', '--spec-draft-model')) {
         if ($arguments -contains $pathArgument) {
-            $pathValue = Get-ArgumentValue -Arguments $arguments.ToArray() -Name $pathArgument
-            if (-not (Test-Path -LiteralPath $pathValue -PathType Leaf)) {
+            $pathValue = Get-NormalizedPath -Path (Get-ArgumentValue -Arguments $arguments.ToArray() -Name $pathArgument)
+            if ($RequireFiles -and -not (Test-Path -LiteralPath $pathValue -PathType Leaf)) {
                 throw "Launcher file for '$pathArgument' was not found: $pathValue"
             }
+            if (-not $declaredArtifactPaths.ContainsKey($pathValue.ToLowerInvariant())) {
+                throw "Launcher file for '$pathArgument' is not declared in config/models/$modelId.psd1: $pathValue"
+            }
+            $artifactPaths.Add($pathValue)
         }
     }
 
-    $modelId = $Launcher.Directory.Name
     $profileName = $Launcher.BaseName.Substring('start-'.Length)
     $contextSize = [int](Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--ctx-size')
 
     return [pscustomobject]@{
         Model = $modelId
         Profile = $profileName
-        Alias = Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--alias'
+        Alias = $alias
         LauncherPath = $Launcher.FullName
         ServerPath = $serverPath
         HostAddress = Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--host'
@@ -137,17 +174,47 @@ function Get-LauncherPlan {
         ContextSize = $contextSize
         Vision = $arguments -contains '--mmproj'
         Mtp = $arguments -contains '--spec-type'
+        ArtifactPaths = $artifactPaths.ToArray()
         Arguments = $arguments.ToArray()
     }
+}
+
+$catalogModelIds = @($catalog.Models)
+$duplicateCatalogIds = @($catalogModelIds | Group-Object | Where-Object { $_.Count -gt 1 })
+if ($duplicateCatalogIds.Count -gt 0) {
+    throw "Catalog contains duplicate model IDs: $($duplicateCatalogIds.Name -join ', ')"
+}
+
+$modelConfigs = @{}
+foreach ($modelId in $catalogModelIds) {
+    $manifestPath = Join-Path $rootDirectory ("config\models\{0}.psd1" -f $modelId)
+    if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+        throw "Catalog manifest was not found: $manifestPath"
+    }
+    $modelConfig = Import-PowerShellDataFile -Path $manifestPath
+    if ($modelConfig.Id -ne $modelId) {
+        throw "Manifest ID '$($modelConfig.Id)' does not match catalog ID '$modelId': $manifestPath"
+    }
+    if (@($modelConfig.Artifacts).Count -eq 0) {
+        throw "Manifest contains no artifacts: $manifestPath"
+    }
+    $modelConfigs[$modelId] = $modelConfig
 }
 
 $launchers = @(
     Get-ChildItem -LiteralPath $launcherDirectory -Filter 'start-*.cmd' -File -Recurse |
         Sort-Object FullName
 )
-if ($Model -eq 'all' -and -not $Profile -and $launchers.Count -ne 17) {
-    throw "Expected 17 launchers but found $($launchers.Count)."
+$launcherModelIds = @($launchers | ForEach-Object { $_.Directory.Name } | Sort-Object -Unique)
+$unknownLauncherModels = @($launcherModelIds | Where-Object { $catalogModelIds -notcontains $_ })
+if ($unknownLauncherModels.Count -gt 0) {
+    throw "Launcher directories are not registered in the catalog: $($unknownLauncherModels -join ', ')"
 }
+$modelsWithoutLaunchers = @($catalogModelIds | Where-Object { $launcherModelIds -notcontains $_ })
+if ($modelsWithoutLaunchers.Count -gt 0) {
+    throw "Catalog models have no launchers: $($modelsWithoutLaunchers -join ', ')"
+}
+
 if ($Model -ne 'all') {
     $launchers = @($launchers | Where-Object { $_.Directory.Name -eq $Model })
 }
@@ -158,14 +225,42 @@ if ($launchers.Count -eq 0) {
     throw 'No matching launchers were found.'
 }
 
-$testCases = New-Object 'System.Collections.Generic.List[object]'
+$requireFiles = (-not $ConfigurationOnly) -or $RequireInstalledFiles
+$plans = New-Object 'System.Collections.Generic.List[object]'
 foreach ($launcher in $launchers) {
-    $modelConfig = Import-PowerShellDataFile -Path (Join-Path $rootDirectory ("config\models\{0}.psd1" -f $launcher.Directory.Name))
+    $plans.Add((Get-LauncherPlan -Launcher $launcher -ModelConfig $modelConfigs[$launcher.Directory.Name] -RequireFiles $requireFiles))
+}
+
+if (-not $Profile) {
+    foreach ($selectedModelId in @($plans.Model | Sort-Object -Unique)) {
+        $modelConfig = $modelConfigs[$selectedModelId]
+        $modelDirectory = Get-NormalizedPath -Path (Join-Path $rootDirectory $modelConfig.RelativeDirectory)
+        $declaredPaths = @(
+            $modelConfig.Artifacts |
+                ForEach-Object { (Get-NormalizedPath -Path (Join-Path $modelDirectory $_.File)).ToLowerInvariant() }
+        )
+        $referencedPaths = @(
+            $plans |
+                Where-Object { $_.Model -eq $selectedModelId } |
+                ForEach-Object { $_.ArtifactPaths } |
+                ForEach-Object { $_.ToLowerInvariant() } |
+                Sort-Object -Unique
+        )
+        $unusedArtifacts = @($declaredPaths | Where-Object { $referencedPaths -notcontains $_ })
+        if ($unusedArtifacts.Count -gt 0) {
+            throw "Manifest artifacts are not referenced by any launcher for '$selectedModelId': $($unusedArtifacts -join ', ')"
+        }
+    }
+}
+
+$testCases = New-Object 'System.Collections.Generic.List[object]'
+foreach ($plan in $plans) {
+    $modelConfig = $modelConfigs[$plan.Model]
     if (-not $ConfigurationOnly -and -not $IncludeDeferred -and $Model -eq 'all' -and $modelConfig.DeferredInference) {
-        Write-Host "Skipping deferred inference model: $($launcher.Directory.Name)"
+        Write-Host "Skipping deferred inference model: $($plan.Model)"
         continue
     }
-    $testCases.Add((Get-LauncherPlan -Launcher $launcher))
+    $testCases.Add($plan)
 }
 
 if ($testCases.Count -eq 0) {
@@ -183,7 +278,7 @@ foreach ($testCase in $testCases) {
 
     Write-Host "Testing $($testCase.Model)/$($testCase.Profile)..."
 
-    $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+    $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
     $logPrefix = Join-Path $resultDirectory "$($testCase.Model)-$($testCase.Profile)-$timestamp"
     $stdoutPath = "$logPrefix.stdout.log"
     $stderrPath = "$logPrefix.stderr.log"
@@ -315,9 +410,9 @@ foreach ($testCase in $testCases) {
     }
 }
 
-$timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+$resultId = '{0}-{1}' -f (Get-Date -Format 'yyyyMMdd-HHmmss-fff'), ([guid]::NewGuid().ToString('N').Substring(0, 8))
 $resultPrefix = if ($ConfigurationOnly) { 'configuration-tests' } else { 'smoke-tests' }
-$resultPath = Join-Path $resultDirectory "$resultPrefix-$timestamp.json"
+$resultPath = Join-Path $resultDirectory "$resultPrefix-$resultId.json"
 $results | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $resultPath -Encoding UTF8
 $results | Format-Table Model, Profile, Status, DurationSeconds -AutoSize
 Write-Host "Results: $resultPath"
