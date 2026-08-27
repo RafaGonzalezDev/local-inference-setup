@@ -9,7 +9,7 @@ rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\ornith-1.5-9b\Ornith-1.5-9B-AD-IQ4_XS.gguf""
 
 rem Context and performance; use the model's native 262144-token context with flash attention and Jinja.
-set "PERFORMANCE_ARGS=--gpu-layers 999 --ctx-size 262144 --parallel 1 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 20 --ctx-size 262144 --parallel 1 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
 
 rem Network and API identity
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias ornith-1.5-9b"
