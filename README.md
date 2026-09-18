@@ -27,6 +27,7 @@ The following specifications are relevant for language model inference:
 | `ornith-1.5-35b-a3b` | `agentic-131k-2048`, `agentic-262k-1024` |
 | `ling-3.0-tiny` | `agentic-131k-1024` |
 | `ornith-1.5-9b` | `agentic-262k-1024` |
+| `ternary-bonsai-2-27b` | `vision-131k-1024` |
 
 ## Repository Structure
 
@@ -52,6 +53,12 @@ The following specifications are relevant for language model inference:
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-LlamaRuntime.ps1
 ```
 
+   Ternary-Bonsai 2 27B profiles additionally require the PrismML fork runtime:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-BonsaiRuntime.ps1
+```
+
 2. Download a model:
 
 ```powershell
@@ -66,7 +73,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 
 ## Launchers
 
-The 20 launchers are grouped by model:
+The 21 launchers are grouped by model:
 
 ```bat
 scripts\models\gemma-4-12b-v2\start-text.cmd
@@ -77,6 +84,7 @@ scripts\models\ornith-1.5-35b-a3b\start-agentic-262k-1024.cmd
 scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-131k-2048.cmd
 scripts\models\ling-3.0-tiny\start-agentic-131k-1024.cmd
 scripts\models\ornith-1.5-9b\start-agentic-262k-1024.cmd
+scripts\models\ternary-bonsai-2-27b\start-vision-131k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
@@ -94,7 +102,7 @@ Profiles listen on `0.0.0.0:8080` without authentication. They should only be us
 
 ## Validation
 
-Validate all 20 launchers declaratively without loading weights:
+Validate all 21 launchers declaratively without loading weights:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -ConfigurationOnly

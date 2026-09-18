@@ -31,8 +31,26 @@ The previous `b10361-cuda13.3` runtime remains installed for rollback. The
 installer accepts both the legacy numeric version output and the current
 semantic-version output while still requiring the pinned build and commit.
 
-All retained profiles use the official runtime. Runtime DLLs remain isolated and
-the global `PATH` is not modified.
+### PrismML fork runtime
+
+Ternary-Bonsai 2 27B requires the PrismML fork: the official build rejects the
+`PQ2_0` and `PTQ1_0` quantization types, or produces invalid output because it
+lacks the Hadamard activation transform.
+
+- Release: `prism-b10685-7dffb15`
+- Commit: `7dffb158`
+- Reported version: `0.2.0-dev (build 10685, commit 7dffb158d)`
+- Directory: `runtimes\llama.cpp\prism-b10685-7dffb15-cuda13.3`
+- Package: `llama-prism-b10685-7dffb15-bin-win-cuda-13.3-x64.zip`
+- SHA-256: `0b0e44045b0b55bb892c5afa8fd4c988194c47c02967ff1da55cd01c0c8eda69`
+- CUDA runtime SHA-256: `1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e`
+- Installer: `scripts/setup/Install-BonsaiRuntime.ps1`
+
+Both runtimes coexist in separate immutable directories. Launchers pin the
+executable they need and no DLL is copied between runtimes.
+
+All retained profiles use one of these two runtimes. Runtime DLLs remain isolated
+and the global `PATH` is not modified.
 
 ## Process and Logs
 
