@@ -34,10 +34,12 @@ arquitectura del modelo habría de reponerse con un sidecar compatible.
 
 | Lanzador | Contexto | `n-cpu-moe` | MTP |
 | --- | ---: | ---: | :---: |
-| `start-agentic-131k-1024.cmd` | 131.072 | 8 | no |
+| `start-agentic-262k-1024.cmd` | 262.144 | 8 | no |
 
-El lanzador `start-agentic-131k-1024.cmd` materializa un perfil agentic con
-131.072 tokens de contexto y `n-cpu-moe 8`. Conserva los parámetros comunes
+El lanzador actual `start-agentic-262k-1024.cmd`, copiado de Windows,
+configura 262.144 tokens y `n-cpu-moe 8`. Este valor configurado no demuestra
+que se haya probado un prompt completo de ese tamaño ni amplía por sí solo
+el contexto nativo documentado. Conserva los parámetros comunes
 del entorno: Flash Attention, Jinja, un único slot, `--gpu-layers 999`,
 `--cache-ram 0`, `--split-mode none`, `--fit off` y presupuesto de razonamiento
 sin límite artificial (`--reasoning-budget -1`). El muestreo usa `temp 1.0`,
@@ -52,7 +54,7 @@ La caché KV usa `q8_0` tanto para claves como para valores. El perfil materiali
 Las mediciones siguientes corresponden al perfil anterior `text` que se
 ejecutaba con `start-text.cmd` (contexto de 131.072 tokens y `n-cpu-moe 8`).
 Se conservan como referencia histórica y no describen el lanzador actual de
-131.072 tokens con `n-cpu-moe 8`.
+262.144 tokens con `n-cpu-moe 8`.
 
 La memoria se comprueba con métricas nativas WDDM de Windows, no desde WSL, con
 el servidor cargado; el Administrador de tareas muestra el mismo contador.
@@ -71,10 +73,13 @@ decode.
 ## Dependencias
 
 - `config/models/ling-3.0-tiny.psd1`
-- `scripts/models/ling-3.0-tiny/start-agentic-131k-1024.cmd`
+- `scripts/models/ling-3.0-tiny/start-agentic-262k-1024.cmd`
 - `runtimes/llama.cpp/b10502-cuda13.3/`
 
-## Validación
+## Validación histórica
+
+Los resultados siguientes corresponden al perfil retirado de 131k. No se
+atribuyen al perfil actual de 262k, sincronizado desde Windows el 2026-09-22.
 
 - Integridad verificada contra el tamaño y SHA-256 fijados en el manifiesto.
 - Configuración declarativa y paths instalados verificados para

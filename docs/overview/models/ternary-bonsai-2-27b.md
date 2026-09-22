@@ -38,7 +38,7 @@ desplegable, 302 MB menor que el de referencia.
 Estos archivos no cargan en el runtime oficial. `PTQ1_0` y `PQ2_0` son tipos
 propios del fork `PrismML-Eng/llama.cpp`: el runtime oficial los rechaza como
 tipos desconocidos y, sin la transformación Hadamard de activaciones, produce
-salida inválida. El lanzador fija `SERVER` en
+salida inválida. Los dos lanzadores fijan `SERVER` en
 `runtimes\llama.cpp\prism-b10685-7dffb15-cuda13.3\llama-server.exe`, instalado por
 `scripts/setup/Install-BonsaiRuntime.ps1` desde la release `prism-b10685-7dffb15`
 (commit `7dffb158`, `version: 0.2.0-dev (build 10685, commit 7dffb158d)`). Las DLL
@@ -49,12 +49,13 @@ oficial `b10502-cuda13.3`.
 
 | Lanzador | Contexto | Batch/UBatch | Visión | MTP |
 | --- | ---: | ---: | :---: | :---: |
+| `start-text-131k-1024.cmd` | 131.072 | 1.024/1.024 | no | no |
 | `start-vision-131k-1024.cmd` | 131.072 | 1.024/1.024 | sí, imagen fijada a 1.024 tokens | no |
 
-El perfil único sustituye a los dos perfiles iniciales (`text` a 65.536 sin
-visión y `vision` a 32.768). El proyector añade ~0,9 GB, de modo que un solo
-lanzador con visión evita duplicar configuración y aprovecha el margen de VRAM
-medido. Materializa un slot, `--gpu-layers 999`, Flash Attention, caché KV
+Windows conserva dos perfiles a 131k: texto sin `--mmproj` y visión con
+proyector. El perfil de texto se sincronizó el 2026-09-22; las mediciones
+siguientes pertenecen al perfil de visión, no al nuevo perfil de texto.
+Ambos materializan un slot, `--gpu-layers 999`, Flash Attention, caché KV
 `q8_0` en claves y valores, ocho hilos, Jinja, `--cache-ram 0`, `--split-mode
 none`, `--fit off`, `--load-mode none` y `--log-verbosity 3`.
 
@@ -71,7 +72,7 @@ especulativo.
 
 ## Visión
 
-El perfil único carga el proyector `Q8_0` oficial, que la ficha describe como
+El perfil de visión carga el proyector `Q8_0` oficial, que la ficha describe como
 el paquete desplegable del vision tower. El lanzador materializa
 `--image-min-tokens 1024 --image-max-tokens 1024`: el mínimo responde al aviso del
 runtime ("Qwen-VL models require at minimum 1024 image tokens to function
@@ -112,7 +113,10 @@ Sus pruebas funcionales de 16 tokens midieron: perfil `text`, prefill de 57
 tokens a 388 tok/s y decode a 76,3 tok/s; perfil `vision`, prefill de 1.072
 tokens a 1.298 tok/s y decode a 76,4 tok/s.
 
-## Validación
+## Validación histórica
+
+Estos resultados preceden a la sincronización del perfil de texto de 131k;
+no constituyen una prueba funcional de ese perfil.
 
 - Integridad verificada contra el tamaño y SHA-256 fijados en el manifiesto para
   los dos artefactos.
@@ -138,6 +142,7 @@ Avisos observados con el runtime del fork, ninguno bloqueante:
 ## Dependencias
 
 - `config/models/ternary-bonsai-2-27b.psd1`
+- `scripts/models/ternary-bonsai-2-27b/start-text-131k-1024.cmd`
 - `scripts/models/ternary-bonsai-2-27b/start-vision-131k-1024.cmd`
 - `scripts/setup/Install-BonsaiRuntime.ps1`
 - `runtimes/llama.cpp/prism-b10685-7dffb15-cuda13.3/`
