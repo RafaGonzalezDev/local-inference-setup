@@ -1,7 +1,7 @@
 # MiMo V2.6 Distill Qwen 9B Q6_K
 
 MiMo is a Qwen3.5-9B-derived agentic model with hybrid linear/full attention,
-a native 262,144-token context, and optional image input. Its GGUF architecture
+a native 262,144-token context. Its GGUF architecture
 is `qwen35`; it is not a mixture-of-experts model.
 
 ## Provenance and artifacts
@@ -14,28 +14,29 @@ is `qwen35`; it is not a mixture-of-experts model.
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
 | `MiMo-V2.6-Distill-Qwen-9B-Q6_K.gguf` | 7,793,710,624 | `ef96d05a2ddf2cbb450d1af1ac3860ec769d3575bafa70692ee5609bda3fad7d` |
-| `mmproj-MiMo-V2.6-Distill-Qwen-9B-f16.gguf` | 918,166,048 | `ff348f3180a63188aa7285db85f550fe38acb61dd013c599eb8bad08d2cc2576` |
 
-The text-only profiles do not load the projector. No imatrix or calibration
-files are required for inference. This distribution does not provide a
+This distribution does not provide a
 speculative draft model; MTP is disabled.
 
 ## Profiles
 
 Launchers live in `scripts/models/mimo-v2.6-distill-qwen-9b/`.
 
-| Launcher | Context | Batch/UBatch | Vision |
-| --- | ---: | ---: | --- |
-| `start-agentic-131k-1024.cmd` | 131,072 | 1,024/1,024 | no |
-| `start-agentic-262k-1024.cmd` | 262,144 | 1,024/1,024 | no |
-| `start-agentic-vision-131k-1024.cmd` | 131,072 | 1,024/1,024 | yes |
-| `start-agentic-vision-262k-1024.cmd` | 262,144 | 1,024/1,024 | yes |
+| Launcher | Context | Batch/UBatch |
+| --- | ---: | ---: |
+| `start-agentic-131k-1024.cmd` | 131,072 | 1,024/1,024 |
+| `start-agentic-262k-1024.cmd` | 262,144 | 1,024/1,024 |
 
 All profiles use GPU offload, one slot, Flash Attention, eight CPU threads,
 Jinja with the embedded MiMo template, and `q8_0` K/V caches. Automatic fitting
 is disabled so the requested context is not silently reduced. No `n-cpu-moe`
 option is applied. Batch sizes and cache settings are local adaptations, not
 upstream performance recommendations.
+
+The vision projector (`mmproj`) was removed from the client catalog because Pi
+no longer declares MiMo as a multimodal model. The launcher scripts
+`start-agentic-vision-131k-1024.cmd` and `start-agentic-vision-262k-1024.cmd`
+were deleted.
 
 Sampling follows upstream `generation_config.json`: temperature `0.6`, top-p
 `0.95`, top-k `20`. Min-p and presence penalty are explicitly zero and repeat
@@ -50,8 +51,8 @@ network only. Only one profile can run on port 8080. Stop it with `Ctrl+C`.
 
 Pi/OpenCode retain client selection aliases ending in `-131k` and `-262k`,
 but both map to the server ID `mimo-v2.6-distill-qwen-9b`. Selecting an alias
-does not change server context or load the projector. Start the corresponding
-Windows launcher; images require a `vision` profile. The client output cap
+does not change server context. Start the corresponding
+Windows launcher. The client output cap
 of 16,384 tokens is a policy, not a measured model limit.
 
 ## Runtime and installation
@@ -71,6 +72,9 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Ll
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Llm.ps1 -Model mimo-v2.6-distill-qwen-9b
 ```
 
+The vision projector `mmproj-MiMo-V2.6-Distill-Qwen-9B-f16.gguf` is no longer
+required by the client and has been removed from the config manifest.
+
 ## Validation status
 
 Verified on 2026-09-22 against the pinned revision and artifacts:
@@ -82,9 +86,6 @@ Verified on 2026-09-22 against the pinned revision and artifacts:
   declared artifact paths found, no duplicate flags).
 - `Test-Llm.ps1 -Model mimo-v2.6-distill-qwen-9b -Profile agentic-262k-1024`:
   `Passed`; the server logged `n_ctx_slot = 262144` and returned `pong`.
-- `Test-Llm.ps1 -Model mimo-v2.6-distill-qwen-9b -Profile
-  agentic-vision-262k-1024`: `Passed`; the multimodal projector loaded and the
-  server described the test image (a three-column panel layout).
 
 These smoke tests ran before the network binding correction and do not prove
 WSL access. The 131k profiles received declarative validation only; inference
@@ -105,3 +106,4 @@ remain unverified.
 - [Upstream model](https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B).
 - [Runtime release and package digests](https://github.com/ggml-org/llama.cpp/releases/tag/b10964).
 - [Self-contained launchers](../../adr/ADR-0001-self-contained-model-launchers.md).
+- [Pi models.json](../../../../dotfiles-pi/agent/models.json).

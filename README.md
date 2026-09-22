@@ -32,7 +32,7 @@ The following specifications are relevant for language model inference:
 | `ornith-1.5-35b-a3b` | `agentic-131k-2048`, `agentic-262k-1024` |
 | `ling-3.0-tiny` | `agentic-262k-1024` |
 | `ornith-1.5-9b` | `agentic-262k-1024` |
-| `mimo-v2.6-distill-qwen-9b` | `agentic-131k-1024`, `agentic-262k-1024`, `agentic-vision-131k-1024`, `agentic-vision-262k-1024` |
+| `mimo-v2.6-distill-qwen-9b` | `agentic-131k-1024`, `agentic-262k-1024` |
 | `ternary-bonsai-2-27b` | `text-131k-1024`, `vision-131k-1024` |
 
 ## Repository Structure
@@ -97,7 +97,6 @@ scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-131k-2048.cmd
 scripts\models\ling-3.0-tiny\start-agentic-262k-1024.cmd
 scripts\models\ornith-1.5-9b\start-agentic-262k-1024.cmd
 scripts\models\mimo-v2.6-distill-qwen-9b\start-agentic-262k-1024.cmd
-scripts\models\mimo-v2.6-distill-qwen-9b\start-agentic-vision-262k-1024.cmd
 scripts\models\ternary-bonsai-2-27b\start-text-131k-1024.cmd
 scripts\models\ternary-bonsai-2-27b\start-vision-131k-1024.cmd
 ```
