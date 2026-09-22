@@ -27,9 +27,21 @@ The default runtime is the official `llama.cpp`:
 - Validated GPU: NVIDIA RTX 5080
 - Validated driver: 610.47
 
-The previous `b10361-cuda13.3` runtime remains installed for rollback. The
-installer accepts both the legacy numeric version output and the current
+The installer accepts both the legacy numeric version output and the current
 semantic-version output while still requiring the pinned build and commit.
+
+### MiMo runtime
+
+MiMo pins official `b10964-cuda13.3`, installed alongside the unchanged default:
+
+- Commit: `b29c606e28a01b1bc8c1351026a0fa6e616bf6c4`
+- Package: `llama-b10964-bin-win-cuda-13.3-x64.zip`
+- SHA-256: `cd63ae76ad78a1540aa0f30f6c6284bab14c146d99a58f70c3f0a38cb9c62351`
+- CUDA runtime SHA-256: `1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e`
+- Installer: `scripts/setup/Install-LlamaRuntime.ps1 -Version b10964`
+
+These pins match the Windows installer; no package is redownloaded as part of
+repository synchronization.
 
 ### PrismML fork runtime
 
@@ -46,10 +58,10 @@ lacks the Hadamard activation transform.
 - CUDA runtime SHA-256: `1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e`
 - Installer: `scripts/setup/Install-BonsaiRuntime.ps1`
 
-Both runtimes coexist in separate immutable directories. Launchers pin the
+All three runtimes coexist in separate immutable directories. Launchers pin the
 executable they need and no DLL is copied between runtimes.
 
-All retained profiles use one of these two runtimes. Runtime DLLs remain isolated
+All retained profiles use one of these three runtimes. Runtime DLLs remain isolated
 and the global `PATH` is not modified.
 
 ## Process and Logs
