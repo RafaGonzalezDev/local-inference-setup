@@ -2,7 +2,7 @@
 param(
     [string]$RootDirectory,
 
-    [ValidateSet('b10502', 'b10964')]
+    [ValidateSet('b10502')]
     [string]$Version = 'b10502'
 )
 
@@ -14,15 +14,11 @@ if ([string]::IsNullOrWhiteSpace($RootDirectory)) {
     $RootDirectory = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 }
 
-# Keep the default; install newer builds side by side without sharing DLLs.
+# Pinned official release, installed in its own immutable directory.
 $releases = @{
     b10502 = @{
         Commit = '0adcc3bb5'
         Sha256 = '657ad104b7c2f3aaf9abac91b48ffb72a2556cb8a6a38d395eaaf64bc1f1f719'
-    }
-    b10964 = @{
-        Commit = 'b29c606e2'
-        Sha256 = 'cd63ae76ad78a1540aa0f30f6c6284bab14c146d99a58f70c3f0a38cb9c62351'
     }
 }
 $versionNumber = $Version.Substring(1)
