@@ -24,7 +24,7 @@ Exit codes 0 to 7 from `robocopy` are acceptable; 8 or higher represents failure
 
 ## Validating Profiles
 
-Static validation of all 21 launchers, without requiring installed weights:
+Static validation of all 17 launchers, without requiring installed weights:
 
 ```powershell
 & scripts\common\Test-Llm.ps1 -ConfigurationOnly
@@ -51,12 +51,10 @@ When testing the entire catalog, models with `DeferredInference` are skipped. Us
 ## Updating a Runtime
 
 Install each version in a new immutable directory and verify its packages and
-commit. Each runtime has its own installer: `Install-LlamaRuntime.ps1` for the
-official `llama.cpp` and `Install-BonsaiRuntime.ps1` for the PrismML fork used by
-Ternary-Bonsai 2 27B.
+commit; `Install-LlamaRuntime.ps1` installs the official `llama.cpp`.
 
-After updating the `SERVER` value of the affected launchers, run configuration
-validation and test representative profiles before retiring the previous
+Update the `SERVER` value of all affected launchers, run configuration
+validation, and test representative profiles before retiring the previous
 version. Do not copy DLLs between runtime directories.
 
 ## Retiring a Model

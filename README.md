@@ -27,13 +27,10 @@ The following specifications are relevant for language model inference:
 | `gemma-4-12b-v2` | `text`, `vision` |
 | `gemma-4-26b-a4b` | `text`, `text-mtp`, `vision`, `agentic`, `agentic-vision`, `vision-mtp` |
 | `qwen3.6-35b-a3b` | `agentic-131k-2048`, `agentic-262k-1024`, `agentic-mtp-131k-2048`, `agentic-vision-131k-2048` |
-| `qwen3.8-27b` | `text`, `vision`, `text-mtp` |
 | `nemotron-3.5-lightning-30b-a3b` | `agentic-131k-2048` |
 | `ornith-1.5-35b-a3b` | `agentic-131k-2048`, `agentic-262k-1024` |
 | `ling-3.0-tiny` | `agentic-262k-1024` |
 | `ornith-1.5-9b` | `agentic-262k-1024` |
-| `mimo-v2.6-distill-qwen-9b` | `agentic-131k-1024`, `agentic-262k-1024` |
-| `ternary-bonsai-2-27b` | `text-131k-1024`, `vision-131k-1024` |
 
 ## Repository Structure
 
@@ -59,18 +56,6 @@ The following specifications are relevant for language model inference:
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-LlamaRuntime.ps1
 ```
 
-   Ternary-Bonsai 2 27B profiles additionally require the PrismML fork runtime:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-BonsaiRuntime.ps1
-```
-
-   MiMo requires official `b10964`, installed alongside the unchanged default `b10502`:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-LlamaRuntime.ps1 -Version b10964
-```
-
 2. Download a model:
 
 ```powershell
@@ -91,14 +76,10 @@ The launchers are grouped by model (representative commands below):
 scripts\models\gemma-4-12b-v2\start-text.cmd
 scripts\models\gemma-4-26b-a4b\start-vision-mtp.cmd
 scripts\models\qwen3.6-35b-a3b\start-agentic-mtp-131k-2048.cmd
-scripts\models\qwen3.8-27b\start-text.cmd
 scripts\models\ornith-1.5-35b-a3b\start-agentic-262k-1024.cmd
 scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-131k-2048.cmd
 scripts\models\ling-3.0-tiny\start-agentic-262k-1024.cmd
 scripts\models\ornith-1.5-9b\start-agentic-262k-1024.cmd
-scripts\models\mimo-v2.6-distill-qwen-9b\start-agentic-262k-1024.cmd
-scripts\models\ternary-bonsai-2-27b\start-text-131k-1024.cmd
-scripts\models\ternary-bonsai-2-27b\start-vision-131k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
@@ -112,7 +93,7 @@ The terminal remains linked to `llama-server` and displays loading, prompt proce
 - Health: `http://localhost:8080/health`
 - Models: `http://localhost:8080/v1/models`
 
-Profiles, including MiMo and Ornith 1.5 9B, listen on `0.0.0.0:8080`
+Profiles, including Ornith 1.5 9B, listen on `0.0.0.0:8080`
 without authentication. Use a private trusted network only. The Pi/OpenCode
 WSL clients use `http://192.168.1.100:8080/v1`; Windows-only loopback did not
 work from this WSL setup. Restart an existing server after changing a
