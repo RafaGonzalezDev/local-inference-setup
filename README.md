@@ -38,6 +38,7 @@ only `b11269-cuda13.4` remains installed.
 | `ling-3.0-tiny` | `agentic-auto-262k-1024` | `ling-3.0-tiny-262k` |
 | `ornith-1.5-9b` | `agentic-auto-262k-1024` | `ornith-1.5-9b-262k` |
 | `tiel-coder-35b-a3b-mtp` | `agentic-auto-mtp-131k-2048`, `agentic-auto-mtp-262k-1024`, `agentic-auto-mtp-vision-131k-2048` | `tiel-coder-35b-a3b-mtp-131k`, `tiel-coder-35b-a3b-mtp-262k`, `tiel-coder-35b-a3b-mtp-vision-131k` |
+| `tiel-coder-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `tiel-coder-35b-a3b-131k`, `tiel-coder-35b-a3b-262k`, `tiel-coder-35b-a3b-vision-131k` |
 
 ## Repository Structure
 
@@ -88,6 +89,8 @@ scripts\models\qwen3.6-35b-a3b\start-agentic-auto-131k-2048.cmd
 scripts\models\ornith-1.5-35b-a3b\start-agentic-auto-262k-1024.cmd
 scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-131k-2048.cmd
 scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-vision-131k-2048.cmd
+scripts\models\tiel-coder-35b-a3b\start-agentic-auto-131k-2048.cmd
+scripts\models\tiel-coder-35b-a3b\start-agentic-auto-vision-131k-2048.cmd
 scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-auto-131k-2048.cmd
 scripts\models\ling-3.0-tiny\start-agentic-auto-262k-1024.cmd
 scripts\models\ornith-1.5-9b\start-agentic-auto-262k-1024.cmd

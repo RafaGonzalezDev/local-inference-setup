@@ -9,5 +9,6 @@
         'ling-3.0-tiny'
         'ornith-1.5-9b'
         'tiel-coder-35b-a3b-mtp'
+        'tiel-coder-35b-a3b'
     )
 }
