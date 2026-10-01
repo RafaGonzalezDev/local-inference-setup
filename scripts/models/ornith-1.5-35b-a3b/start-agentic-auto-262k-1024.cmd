@@ -2,17 +2,17 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem This launcher is self-contained. Edit the literal values below to customize it.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b10502-cuda13.3\llama-server.exe"
+rem Automatic device placement profile for full-context workloads; --fit resolves the layer split.
+set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11269-cuda13.4\llama-server.exe"
 
 rem Model
-set "MODEL_ARGS=--model "%LLM_ROOT%\models\qwen3.6-35b-a3b\mtp\Qwen3.6-35B-A3B-UD-Q4_K_M.gguf""
+set "MODEL_ARGS=--model "%LLM_ROOT%\models\ornith-1.5-35b-a3b\Ornith-1.5-35B-A3B-AD-Q4_K-IQ4_XS.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 25 --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 262144 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
 
-rem Network and API identity
-set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias qwen3.6-35b-a3b"
+rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
+set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias ornith-1.5-35b-a3b,ornith-1.5-35b-a3b-262k"
 
 rem Reasoning
 set "REASONING_ARGS=--reasoning on"
@@ -27,7 +27,7 @@ rem Vision
 set "VISION_ARGS="
 
 rem MTP speculative decoding
-set "MTP_ARGS=--spec-type draft-mtp --spec-draft-n-max 3"
+set "MTP_ARGS="
 
 "%SERVER%" ^
   %MODEL_ARGS% ^

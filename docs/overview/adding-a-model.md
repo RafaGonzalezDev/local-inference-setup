@@ -49,7 +49,7 @@ for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\<runtime>\llama-server.exe"
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\example-model\model.gguf""
-set "PERFORMANCE_ARGS=--gpu-layers 999 --ctx-size 131072"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --fit on --fit-target 1024"
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias example-model"
 set "REASONING_ARGS=--reasoning on"
 set "SAMPLING_ARGS=--temp 1 --top-p 0.95"
@@ -73,10 +73,17 @@ lanzador y no añada `%*`. Para visión use `VISION_ARGS`; para MTP use
 `MTP_ARGS`. Si un modelo requiere otro fork, fije su ejecutable en `SERVER`
 sin mezclar DLL entre runtimes.
 
+Todos los perfiles son automáticos: use `--gpu-layers auto --fit on
+--fit-target 1024` (o `2048` en visión, porque `--fit` no contabiliza el
+proyector), omita `--n-cpu-moe` y declare siempre `--ctx-size`, ya que `--fit`
+solo ajusta los argumentos no declarados y, si se omite, reduce el contexto a
+`--fit-ctx`. Nómbrelos `start-<perfil>-auto.cmd`, insertando `auto` tras el
+primer segmento del nombre.
+
 ## 4. Registrar y validar
 
 1. Añada el identificador a `config\catalog.psd1`.
-2. Cree un `start-<profile>.cmd` por perfil.
+2. Cree un `start-<perfil>-auto.cmd` por perfil.
 3. Ejecute `Test-ModelIntegrity.ps1 -Model <model-id>`.
 4. Ejecute `Test-Llm.ps1 -ConfigurationOnly`.
 5. Pruebe cada perfil con una petición breve.

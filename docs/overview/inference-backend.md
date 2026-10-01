@@ -13,22 +13,37 @@
 Each `start-*.cmd` resolves `LLM_ROOT` locally, pins the runtime, and materializes all its arguments. This controlled duplication makes the effective configuration visible and avoids inheritance between runtime, model, and profile. The decision and its consequences are documented in
 [ADR-0001](../adr/ADR-0001-self-contained-model-launchers.md).
 
+Every profile materializes `--gpu-layers auto`, `--fit on` and `--fit-target
+1024` — `2048` in the vision profiles, because `--fit` does not account for the
+projector — which declares a delegated placement policy instead of a fixed layer
+count. The runtime resolves it by emitting a per-layer `-ot` override, so the
+launchers omit `--n-cpu-moe` entirely, and the context stays declared because
+`--fit` only adjusts unset arguments. Every other argument in those launchers
+stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
+`--n-cpu-moe` were retired on 2026-09-30; their reference copy was deleted on
+2026-10-01.
+
 ## Installed Runtime
 
 The runtime is the official `llama.cpp`:
 
-- Version: `b10502`
-- Commit: `0adcc3bb5`
-- Reported version: `0.1.2-dev (build 10502, commit 0adcc3bb5)`
-- Directory: `runtimes\llama.cpp\b10502-cuda13.3`
-- Package: `llama-b10502-bin-win-cuda-13.3-x64.zip`
-- SHA-256: `657ad104b7c2f3aaf9abac91b48ffb72a2556cb8a6a38d395eaaf64bc1f1f719`
-- CUDA runtime SHA-256: `1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e`
+- Version: `b11269`
+- Commit: `cee37ffea`
+- Reported version: `0.5.0-dev (build 11269, commit cee37ffea)`
+- Directory: `runtimes\llama.cpp\b11269-cuda13.4`
+- Package: `llama-b11269-bin-win-cuda-13.4-x64.zip`
+- SHA-256: `79e8431306e0d5dad9f7d429272226387d449a167d3e9285cdf0ec0edce8b27e`
+- CUDA runtime SHA-256: `738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`
 - Validated GPU: NVIDIA RTX 5080
-- Validated driver: 610.47
+- Validated driver: 616.56
 
 The installer accepts both the legacy numeric version output and the current
-semantic-version output while still requiring the pinned build and commit.
+semantic-version output while still requiring the pinned build and commit. The
+`b11269` release moves the Windows x64 CUDA asset from the 13.3 toolkit to 13.4,
+which is why the runtime directory is suffixed `cuda13.4`. The install was
+verified through `llama-server --version`; functional validation of the profiles
+against this runtime is still pending. The `b10502-cuda13.3` runtime was deleted
+on 2026-10-01, so this is the only installed runtime.
 
 The runtime is installed in its own immutable directory. Launchers pin the
 executable they need and no DLL is copied between runtime directories.

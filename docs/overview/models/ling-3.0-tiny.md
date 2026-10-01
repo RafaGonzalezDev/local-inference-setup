@@ -3,14 +3,14 @@
 - Modelo: `Ling-3.0-tiny-UD-Q6_K_XL.gguf`
 - Repositorio: `bloomer010/Ling-3.0-tiny-GGUF`
 - Alias API: `ling-3.0-tiny`
-- Arquitectura GGUF: `qwen35` (KDA + MLA hybrid)
+- Arquitectura GGUF: `bailingmoe3` (KDA + MLA hybrid)
 
 ## Arquitectura
 
 - 7,9B parámetros totales y 1,3B activos por token.
 - 24 capas: 18 KDA y 6 MLA.
 - 128 expertos enrutados, 8 activos por token y 1 experto compartido.
-- Contexto nativo de 131.072 tokens.
+- Contexto nativo de 131.072 tokens según el GGUF; el lanzador declara 262.144.
 - Thinking activado por defecto y sin bloque MTP incluido.
 
 ## Artefacto
@@ -30,31 +30,45 @@ un checkpoint de draft DFlash público; la arquitectura KDA/MLA no combina con e
 formato de especitación speculative actual. Si se requiere MTP en el futuro, la
 arquitectura del modelo habría de reponerse con un sidecar compatible.
 
-## Perfiles
+## Perfil
 
-| Lanzador | Contexto | `n-cpu-moe` | MTP |
-| --- | ---: | ---: | :---: |
-| `start-agentic-262k-1024.cmd` | 262.144 | 8 | no |
+### Colocación automática
 
-El lanzador actual `start-agentic-262k-1024.cmd`, copiado de Windows,
-configura 262.144 tokens y `n-cpu-moe 8`. Este valor configurado no demuestra
-que se haya probado un prompt completo de ese tamaño ni amplía por sí solo
-el contexto nativo documentado. Conserva los parámetros comunes
-del entorno: Flash Attention, Jinja, un único slot, `--gpu-layers 999`,
-`--cache-ram 0`, `--split-mode none`, `--fit off` y presupuesto de razonamiento
-sin límite artificial (`--reasoning-budget -1`). El muestreo usa `temp 1.0`,
-`top-p 0.95`, `top-k 20`, `min-p 0`, penalización de presencia 0 y
-penalización de repetición 1 con `--reasoning on`.
+| Lanzador | Contexto | Batch/UBatch | Visión | MTP |
+| --- | ---: | ---: | :---: | :---: |
+| `start-agentic-auto-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | no |
 
-La caché KV usa `q8_0` tanto para claves como para valores. El perfil materializa
-`--gpu-layers 999` y deja el resto de parámetros en su valor declarado.
+El lanzador declara contexto, batch/ubatch, muestreo, alias y puerto, y
+materializa `--gpu-layers auto --fit on --fit-target 1024`. Con 262.144 tokens,
+`--fit` resuelve `-ngl -1`: los 7,27 GB del modelo caben enteros en la GPU y no
+descarga ninguna capa MoE.
+
+Conserva los parámetros comunes del entorno: Flash Attention, Jinja, un único
+slot, `--cache-ram 0`, `--split-mode none` y presupuesto de razonamiento sin
+límite artificial (`--reasoning-budget -1`). El muestreo usa `temp 1.0`,
+`top-p 0.95`, `top-k 20`, `min-p 0`, penalización de presencia 0 y penalización
+de repetición 1 con `--reasoning on`.
+
+La caché KV usa `q8_0` tanto para claves como para valores.
+
+El contexto declarado de 262.144 tokens no demuestra que se haya probado un
+prompt completo de ese tamaño ni amplía por sí solo el contexto nativo
+documentado, que el GGUF fija en 131.072.
+
+## Lanzador retirado
+
+El perfil manual `start-agentic-262k-1024.cmd` (`--gpu-layers 999 --n-cpu-moe 8
+--fit off`) se retiró el 2026-09-30. Su copia de referencia bajo
+`logs\reference\retired-launchers-20260930\` se eliminó el 2026-10-01. Enviaba
+8 capas MoE a la CPU, a diferencia del reparto automático, que no descarga
+ninguna.
 
 ## Calibración histórica
 
 Las mediciones siguientes corresponden al perfil anterior `text` que se
 ejecutaba con `start-text.cmd` (contexto de 131.072 tokens y `n-cpu-moe 8`).
 Se conservan como referencia histórica y no describen el lanzador actual de
-262.144 tokens con `n-cpu-moe 8`.
+262.144 tokens.
 
 La memoria se comprueba con métricas nativas WDDM de Windows, no desde WSL, con
 el servidor cargado; el Administrador de tareas muestra el mismo contador.
@@ -63,7 +77,7 @@ aproximadamente 1,0-1,5 GB de los 16.302 MiB totales, por lo que el margen
 efectivo varía con la sesión.
 
 | Perfil | `n-cpu-moe` | WDDM usado | WDDM libre | prompt | decode |
-| --- | ---: | ---: | ---: | ---: | ---: |
+| --- | ---: | --- | --- | ---: | ---: |
 | `text` | 8 | ~12.000 MiB (11,7 GB) | ~0,8 GB | ~95 tok/s | ~78 tok/s |
 
 Mediciones con una petición de 128 tokens de generación (razonamiento activo).
@@ -73,8 +87,8 @@ decode.
 ## Dependencias
 
 - `config/models/ling-3.0-tiny.psd1`
-- `scripts/models/ling-3.0-tiny/start-agentic-262k-1024.cmd`
-- `runtimes/llama.cpp/b10502-cuda13.3/`
+- `scripts/models/ling-3.0-tiny/start-agentic-auto-262k-1024.cmd`
+- `runtimes/llama.cpp/b11269-cuda13.4/`
 
 ## Validación histórica
 

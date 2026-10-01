@@ -2,17 +2,17 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem This launcher is self-contained. Edit the literal values below to customize it.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b10502-cuda13.3\llama-server.exe"
+rem Automatic device placement profile; --fit resolves the layer split.
+set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11269-cuda13.4\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\gemma-4-12b-v2\gemma-4-12B-it-qat-UD-Q4_K_XL.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers 999 --ctx-size 262144 --split-mode none --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 262144 --fit on --fit-target 1024 --split-mode none --jinja"
 
-rem Network and API identity
-set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias gemma-4-12b-v2"
+rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
+set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias gemma-4-12b-v2,gemma-4-12b-v2-text"
 
 rem Reasoning
 set "REASONING_ARGS=--reasoning on"
@@ -24,7 +24,7 @@ rem Runtime, cache, logging, and reasoning budget
 set "RUNTIME_ARGS=--reasoning-budget 8192"
 
 rem Vision
-set "VISION_ARGS=--mmproj "%LLM_ROOT%\models\gemma-4-12b-v2\mmproj-F16.gguf""
+set "VISION_ARGS="
 
 rem MTP speculative decoding
 set "MTP_ARGS="

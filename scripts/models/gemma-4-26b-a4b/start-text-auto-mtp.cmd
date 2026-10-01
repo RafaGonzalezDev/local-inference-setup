@@ -2,17 +2,17 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem This launcher is self-contained. Edit the literal values below to customize it.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b10502-cuda13.3\llama-server.exe"
+rem Automatic device placement MTP profile; --fit resolves the layer split and the draft placement.
+set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11269-cuda13.4\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\gemma-4-26b-a4b\gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers 999 --n-cpu-moe 7 --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit off --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 256 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 256 --jinja"
 
-rem Network and API identity
-set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias gemma-4-26b-a4b"
+rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
+set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias gemma-4-26b-a4b,gemma-4-26b-a4b-text-mtp"
 
 rem Reasoning
 set "REASONING_ARGS=--reasoning on"
@@ -27,7 +27,7 @@ rem Vision
 set "VISION_ARGS="
 
 rem MTP speculative decoding
-set "MTP_ARGS=--spec-draft-model "%LLM_ROOT%\models\gemma-4-26b-a4b\mtp-gemma-4-26B-A4B-it.gguf" --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-ngl 999"
+set "MTP_ARGS=--spec-draft-model "%LLM_ROOT%\models\gemma-4-26b-a4b\mtp-gemma-4-26B-A4B-it.gguf" --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-ngl auto"
 
 "%SERVER%" ^
   %MODEL_ARGS% ^

@@ -134,9 +134,13 @@ function Get-LauncherPlan {
         throw "Manifest ID '$($ModelConfig.Id)' does not match launcher directory '$modelId'."
     }
 
-    $alias = Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--alias'
-    if ($alias -ne $modelId) {
-        throw "Launcher alias '$alias' must match model ID '$modelId': $($Launcher.FullName)"
+    $aliases = @(
+        (Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--alias') -split ',' |
+            ForEach-Object { $_.Trim() } |
+            Where-Object { $_ -ne '' }
+    )
+    if ($aliases.Count -eq 0 -or $aliases[0] -ne $modelId) {
+        throw "Launcher primary alias '$($aliases -join ',')' must start with model ID '$modelId': $($Launcher.FullName)"
     }
 
     $modelDirectory = Get-NormalizedPath -Path (Join-Path $rootDirectory $ModelConfig.RelativeDirectory)
@@ -166,7 +170,8 @@ function Get-LauncherPlan {
     return [pscustomobject]@{
         Model = $modelId
         Profile = $profileName
-        Alias = $alias
+        Alias = $aliases[0]
+        Aliases = $aliases
         LauncherPath = $Launcher.FullName
         ServerPath = $serverPath
         HostAddress = Get-ArgumentValue -Arguments $arguments.ToArray() -Name '--host'
@@ -229,6 +234,20 @@ $requireFiles = (-not $ConfigurationOnly) -or $RequireInstalledFiles
 $plans = New-Object 'System.Collections.Generic.List[object]'
 foreach ($launcher in $launchers) {
     $plans.Add((Get-LauncherPlan -Launcher $launcher -ModelConfig $modelConfigs[$launcher.Directory.Name] -RequireFiles $requireFiles))
+}
+
+# Profile aliases name one launcher each, so they must be unique and must not shadow a model ID.
+$profileAliasOwners = @{}
+foreach ($plan in $plans) {
+    foreach ($profileAlias in @($plan.Aliases | Select-Object -Skip 1)) {
+        if ($catalogModelIds -contains $profileAlias) {
+            throw "Profile alias '$profileAlias' collides with a catalog model ID: $($plan.LauncherPath)"
+        }
+        if ($profileAliasOwners.ContainsKey($profileAlias)) {
+            throw "Profile alias '$profileAlias' is declared by more than one launcher: $($profileAliasOwners[$profileAlias]) and $($plan.LauncherPath)"
+        }
+        $profileAliasOwners[$profileAlias] = $plan.LauncherPath
+    }
 }
 
 if (-not $Profile) {

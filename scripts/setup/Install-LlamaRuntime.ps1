@@ -2,8 +2,8 @@
 param(
     [string]$RootDirectory,
 
-    [ValidateSet('b10502')]
-    [string]$Version = 'b10502'
+    [ValidateSet('b11269')]
+    [string]$Version = 'b11269'
 )
 
 Set-StrictMode -Version Latest
@@ -16,26 +16,26 @@ if ([string]::IsNullOrWhiteSpace($RootDirectory)) {
 
 # Pinned official release, installed in its own immutable directory.
 $releases = @{
-    b10502 = @{
-        Commit = '0adcc3bb5'
-        Sha256 = '657ad104b7c2f3aaf9abac91b48ffb72a2556cb8a6a38d395eaaf64bc1f1f719'
+    b11269 = @{
+        Commit = 'cee37ffea'
+        Sha256 = '79e8431306e0d5dad9f7d429272226387d449a167d3e9285cdf0ec0edce8b27e'
     }
 }
 $versionNumber = $Version.Substring(1)
 $commitPrefix = $releases[$Version].Commit
-$runtimeDirectory = Join-Path $RootDirectory "runtimes\llama.cpp\$Version-cuda13.3"
+$runtimeDirectory = Join-Path $RootDirectory "runtimes\llama.cpp\$Version-cuda13.4"
 $packageDirectory = Join-Path $RootDirectory "packages\llama.cpp\$Version"
 
 $assets = @(
     @{
-        Name = "llama-$Version-bin-win-cuda-13.3-x64.zip"
-        Url = "https://github.com/ggml-org/llama.cpp/releases/download/$Version/llama-$Version-bin-win-cuda-13.3-x64.zip"
+        Name = "llama-$Version-bin-win-cuda-13.4-x64.zip"
+        Url = "https://github.com/ggml-org/llama.cpp/releases/download/$Version/llama-$Version-bin-win-cuda-13.4-x64.zip"
         Sha256 = $releases[$Version].Sha256
     },
     @{
-        Name = 'cudart-llama-bin-win-cuda-13.3-x64.zip'
-        Url = "https://github.com/ggml-org/llama.cpp/releases/download/$Version/cudart-llama-bin-win-cuda-13.3-x64.zip"
-        Sha256 = '1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e'
+        Name = 'cudart-llama-bin-win-cuda-13.4-x64.zip'
+        Url = "https://github.com/ggml-org/llama.cpp/releases/download/$Version/cudart-llama-bin-win-cuda-13.4-x64.zip"
+        Sha256 = '738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668'
     }
 )
 

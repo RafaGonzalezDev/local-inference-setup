@@ -6,6 +6,7 @@
 - Repositorio MTP: `unsloth/Qwen3.6-35B-A3B-MTP-GGUF`
 - Revisión MTP: `5bc3e238d916f48a861bac2f8a1990a0e9b7e98d`
 - Alias API: `qwen3.6-35b-a3b`
+- Arquitectura GGUF: `qwen35moe` (MoE, 256 expertos y 8 activos por token, 40 capas)
 
 ## Artefactos
 
@@ -22,31 +23,64 @@ El proyecto de visión usa `mmproj-F16.gguf` para la proyección multimodal.
 
 ## Perfiles
 
-| Lanzador | Contexto | Batch/UBatch | `n-cpu-moe` | Visión | MTP |
-| --- | ---: | ---: | ---: | :---: | :---: |
-| `start-agentic-131k-2048.cmd` | 131.072 | 2.048/2.048 | 22 | no | no |
-| `start-agentic-262k-1024.cmd` | 262.144 | 1.024/1.024 | 24 | no | no |
-| `start-agentic-mtp-131k-2048.cmd` | 131.072 | 1.024/1.024 | 25 | no | sí, n-max 3 |
-| `start-agentic-vision-131k-2048.cmd` | 131.072 | 2.048/2.048 | 24 | sí | no |
+### Colocación automática
 
-Los cuatro lanzadores comparten la configuración base: ocho hilos, caché KV `q8_0`,
-Flash Attention, un slot, `--gpu-layers 999`, `--parallel 1`, `--cache-ram 0`,
-`--split-mode none`, `--fit off`, Jinja y presupuesto de razonamiento 8.192.
-El muestreo usa `temp 0.6`, `top-p 0.95`, `top-k 20`, `min-p 0`,
-`presence-penalty 0`, `repeat-penalty 1` con `--reasoning on`.
+| Lanzador | Contexto | Batch/UBatch | Visión | MTP |
+| --- | ---: | ---: | :---: | :---: |
+| `start-agentic-auto-131k-2048.cmd` | 131.072 | 2.048/2.048 | no | no |
+| `start-agentic-auto-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | no |
+| `start-agentic-auto-mtp-131k-2048.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 |
+| `start-agentic-auto-vision-131k-2048.cmd` | 131.072 | 2.048/2.048 | sí | no |
 
-- **Base agentic 131k** (`start-agentic-131k-2048.cmd`): utiliza el GGUF base con
-  `n-cpu-moe 22` y `batch/ubatch 2048/2048`. No incluye visión ni MTP.
-- **Base agentic 262k** (`start-agentic-262k-1024.cmd`): utiliza el GGUF base con
-  `n-cpu-moe 24` y `batch/ubatch 1024/1024`. No incluye visión ni MTP.
-- **MTP agentic** (`start-agentic-mtp-131k-2048.cmd`): utiliza el GGUF MTP con
-  `n-cpu-moe 25`, `batch/ubatch 1024/1024` y `--spec-type draft-mtp
-  --spec-draft-n-max 3` para descodificación especulativa. El nombre conserva
-  el sufijo histórico `2048`, pero los valores efectivos son 1024/1024.
-  No incluye visión.
-- **Vision agentic** (`start-agentic-vision-131k-2048.cmd`): utiliza el GGUF
-  base con `n-cpu-moe 24`, `batch/ubatch 2048/2048` y `--mmproj
-  mmproj-F16.gguf --image-min-tokens 2048` para visión. No incluye MTP.
+Los cuatro comparten la configuración base: ocho hilos, caché KV `q8_0`,
+Flash Attention, un slot, `--parallel 1`, `--cache-ram 0`, `--split-mode none`,
+Jinja y presupuesto de razonamiento 8.192. El muestreo usa `temp 0.6`,
+`top-p 0.95`, `top-k 20`, `min-p 0`, `presence-penalty 0`, `repeat-penalty 1`
+con `--reasoning on`.
+
+Los cuatro materializan `--gpu-layers auto --fit on --fit-target 1024` y omiten
+`--n-cpu-moe`: `--fit` coloca los pesos con `-ot` por capa en lugar de usar esa
+palanca. El perfil de visión usa `--fit-target 2048` porque `--fit` no
+contabiliza el proyector multimodal, que se descarga a la GPU por defecto
+(`--mmproj-offload` está habilitado). El perfil MTP usa el GGUF de `mtp\`, que
+declara 41 bloques porque añade el módulo de borrador.
+
+- **Auto agentic 131k** (`start-agentic-auto-131k-2048.cmd`): GGUF base con
+  `batch/ubatch 2048/2048`. No incluye visión ni MTP.
+- **Auto agentic 262k** (`start-agentic-auto-262k-1024.cmd`): GGUF base con
+  `batch/ubatch 1024/1024`. No incluye visión ni MTP.
+- **Auto MTP agentic** (`start-agentic-auto-mtp-131k-2048.cmd`): GGUF MTP con
+  `batch/ubatch 1024/1024` y `--spec-type draft-mtp --spec-draft-n-max 3` para
+  descodificación especulativa. El nombre conserva el sufijo histórico `2048`,
+  pero los valores efectivos son 1024/1024. No incluye visión.
+- **Auto vision agentic** (`start-agentic-auto-vision-131k-2048.cmd`): GGUF base
+  con `batch/ubatch 2048/2048` y `--mmproj mmproj-F16.gguf
+  --image-min-tokens 2048` para visión. No incluye MTP.
+
+Con el contexto declarado, `--fit` resuelve en este hardware `-c <ctx> -ngl 41`,
+esto es, las 40 capas en GPU, y manda a la CPU las FFN expertas de un tramo
+final del modelo:
+
+| Perfil | Tramo con expertos en CPU | Capas |
+| --- | --- | ---: |
+| `start-agentic-auto-131k-2048.cmd` | blk.18–39 | 22 |
+| `start-agentic-auto-262k-1024.cmd` | blk.17–39 | 23 |
+| `start-agentic-auto-mtp-131k-2048.cmd` | blk.21–40 | 20 |
+| `start-agentic-auto-vision-131k-2048.cmd` | blk.15–39 | 25 |
+
+`--fit` extiende el patrón `-ot` hasta `blk.40`; en el modelo base, que declara
+40 capas, ese último patrón no coincide con ningún tensor. A diferencia de
+`--n-cpu-moe N`, que descargaba las primeras N capas, `--fit` descarga un tramo
+al final. El contexto debe seguir declarado: si se omite, `--fit` lo reduce al
+mínimo de `--fit-ctx`, 4.096 tokens.
+
+## Lanzadores retirados
+
+Los cuatro perfiles manuales —`start-agentic-131k-2048.cmd`,
+`start-agentic-262k-1024.cmd`, `start-agentic-mtp-131k-2048.cmd` y
+`start-agentic-vision-131k-2048.cmd`, que fijaban `--gpu-layers 999
+--n-cpu-moe <N> --fit off`— se retiraron el 2026-09-30. Su copia de referencia bajo
+`logs\reference\retired-launchers-20260930\` se eliminó el 2026-10-01.
 
 ## Calibración histórica
 
@@ -72,11 +106,11 @@ y penalización de presencia 1,5. Todos los perfiles agentic usaban temperatura
 ## Dependencias
 
 - `config/models/qwen3.6-35b-a3b.psd1`
-- `scripts/models/qwen3.6-35b-a3b/start-agentic-131k-2048.cmd`
-- `scripts/models/qwen3.6-35b-a3b/start-agentic-262k-1024.cmd`
-- `scripts/models/qwen3.6-35b-a3b/start-agentic-mtp-131k-2048.cmd`
-- `scripts/models/qwen3.6-35b-a3b/start-agentic-vision-131k-2048.cmd`
-- `runtimes/llama.cpp/b10502-cuda13.3/`
+- `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-131k-2048.cmd`
+- `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-262k-1024.cmd`
+- `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-mtp-131k-2048.cmd`
+- `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-vision-131k-2048.cmd`
+- `runtimes/llama.cpp/b11269-cuda13.4/`
 
 ## Related ADRs
 
