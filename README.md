@@ -32,12 +32,12 @@ only `b11269-cuda13.4` remains installed.
 | --- | --- | --- |
 | `gemma-4-12b-v2` | `text-auto`, `vision-auto` | `gemma-4-12b-v2-text`, `gemma-4-12b-v2-vision` |
 | `gemma-4-26b-a4b` | `text-auto`, `text-auto-mtp`, `vision-auto`, `agentic-auto`, `agentic-auto-vision`, `vision-auto-mtp` | `gemma-4-26b-a4b-text`, `gemma-4-26b-a4b-text-mtp`, `gemma-4-26b-a4b-vision`, `gemma-4-26b-a4b-agentic`, `gemma-4-26b-a4b-agentic-vision`, `gemma-4-26b-a4b-vision-mtp` |
-| `qwen3.6-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-2048`, `agentic-auto-vision-131k-2048` | `qwen3.6-35b-a3b-131k`, `qwen3.6-35b-a3b-262k`, `qwen3.6-35b-a3b-mtp-131k`, `qwen3.6-35b-a3b-vision-131k` |
+| `qwen3.6-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `qwen3.6-35b-a3b-131k`, `qwen3.6-35b-a3b-262k`, `qwen3.6-35b-a3b-mtp-131k`, `qwen3.6-35b-a3b-vision-131k` |
 | `nemotron-3.5-lightning-30b-a3b` | `agentic-auto-131k-2048` | `nemotron-3.5-lightning-30b-a3b-131k` |
 | `ornith-1.5-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024` | `ornith-1.5-35b-a3b-131k`, `ornith-1.5-35b-a3b-262k` |
 | `ling-3.0-tiny` | `agentic-auto-262k-1024` | `ling-3.0-tiny-262k` |
 | `ornith-1.5-9b` | `agentic-auto-262k-1024` | `ornith-1.5-9b-262k` |
-| `tiel-coder-35b-a3b-mtp` | `agentic-auto-mtp-131k-2048`, `agentic-auto-mtp-262k-1024`, `agentic-auto-mtp-vision-131k-2048` | `tiel-coder-35b-a3b-mtp-131k`, `tiel-coder-35b-a3b-mtp-262k`, `tiel-coder-35b-a3b-mtp-vision-131k` |
+| `tiel-coder-35b-a3b-mtp` | `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-mtp-vision-131k-1024` | `tiel-coder-35b-a3b-mtp-131k`, `tiel-coder-35b-a3b-mtp-262k`, `tiel-coder-35b-a3b-mtp-vision-131k` |
 | `tiel-coder-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `tiel-coder-35b-a3b-131k`, `tiel-coder-35b-a3b-262k`, `tiel-coder-35b-a3b-vision-131k` |
 
 ## Repository Structure
@@ -84,11 +84,11 @@ The launchers are grouped by model (representative commands below):
 scripts\models\gemma-4-12b-v2\start-text-auto.cmd
 scripts\models\gemma-4-12b-v2\start-vision-auto.cmd
 scripts\models\gemma-4-26b-a4b\start-vision-auto-mtp.cmd
-scripts\models\qwen3.6-35b-a3b\start-agentic-auto-mtp-131k-2048.cmd
+scripts\models\qwen3.6-35b-a3b\start-agentic-auto-mtp-131k-1024.cmd
 scripts\models\qwen3.6-35b-a3b\start-agentic-auto-131k-2048.cmd
 scripts\models\ornith-1.5-35b-a3b\start-agentic-auto-262k-1024.cmd
-scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-131k-2048.cmd
-scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-vision-131k-2048.cmd
+scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-131k-1024.cmd
+scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-vision-131k-1024.cmd
 scripts\models\tiel-coder-35b-a3b\start-agentic-auto-131k-2048.cmd
 scripts\models\tiel-coder-35b-a3b\start-agentic-auto-vision-131k-2048.cmd
 scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-auto-131k-2048.cmd

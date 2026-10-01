@@ -36,9 +36,9 @@ compartido por todos los niveles de cuantización del repositorio.
 
 | Lanzador | Contexto | Batch/UBatch | Visión | MTP |
 | --- | ---: | ---: | :---: | :---: |
-| `start-agentic-auto-mtp-131k-2048.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 |
+| `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 |
 | `start-agentic-auto-mtp-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | sí, n-max 3 |
-| `start-agentic-auto-mtp-vision-131k-2048.cmd` | 131.072 | 1.024/1.024 | sí | sí, n-max 3 |
+| `start-agentic-auto-mtp-vision-131k-1024.cmd` | 131.072 | 1.024/1.024 | sí | sí, n-max 3 |
 
 Los tres comparten la configuración base del entorno: ocho hilos,
 `--parallel 1`, `--cache-ram 0`, Flash Attention, `--split-mode none`, caché KV
@@ -77,10 +77,8 @@ perfil MTP de `qwen3.6-35b-a3b` y a diferencia de los 2.048/2.048 de los
 perfiles sin MTP. Los búferes de cómputo crecen con `--ubatch-size` y compiten
 con los pesos por el mismo margen de `--fit-target`, así que un ubatch menor
 deja más VRAM para pesos y reduce el tramo de expertos que `--fit` manda a la
-CPU. Los dos perfiles de 131k conservan el sufijo histórico `2048` en el nombre,
-heredado del perfil sin MTP del que se copiaron; los valores efectivos son
-1.024/1.024, igual que en el perfil MTP de Qwen, cuyo nombre arrastra el mismo
-sufijo por la misma razón.
+CPU. Los nombres de los tres perfiles declaran ese 1.024, igual que el perfil
+MTP de Qwen.
 
 La variante sin cabezal, [`tiel-coder-35b-a3b`](tiel-coder-35b-a3b.md), es el
 par de control: ambos artefactos solo se diferencian en el cabezal `nextn`, así
@@ -120,9 +118,9 @@ este modelo.
 ## Dependencias
 
 - `config/models/tiel-coder-35b-a3b-mtp.psd1`
-- `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-131k-2048.cmd`
+- `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-131k-1024.cmd`
 - `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-262k-1024.cmd`
-- `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-vision-131k-2048.cmd`
+- `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-vision-131k-1024.cmd`
 - `runtimes/llama.cpp/b11269-cuda13.4/`
 
 ## Related ADRs

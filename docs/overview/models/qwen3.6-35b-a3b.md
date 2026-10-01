@@ -29,7 +29,7 @@ El proyecto de visión usa `mmproj-F16.gguf` para la proyección multimodal.
 | --- | ---: | ---: | :---: | :---: |
 | `start-agentic-auto-131k-2048.cmd` | 131.072 | 2.048/2.048 | no | no |
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | no |
-| `start-agentic-auto-mtp-131k-2048.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 |
+| `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 |
 | `start-agentic-auto-vision-131k-2048.cmd` | 131.072 | 2.048/2.048 | sí | no |
 
 Los cuatro comparten la configuración base: ocho hilos, caché KV `q8_0`,
@@ -49,10 +49,9 @@ declara 41 bloques porque añade el módulo de borrador.
   `batch/ubatch 2048/2048`. No incluye visión ni MTP.
 - **Auto agentic 262k** (`start-agentic-auto-262k-1024.cmd`): GGUF base con
   `batch/ubatch 1024/1024`. No incluye visión ni MTP.
-- **Auto MTP agentic** (`start-agentic-auto-mtp-131k-2048.cmd`): GGUF MTP con
+- **Auto MTP agentic** (`start-agentic-auto-mtp-131k-1024.cmd`): GGUF MTP con
   `batch/ubatch 1024/1024` y `--spec-type draft-mtp --spec-draft-n-max 3` para
-  descodificación especulativa. El nombre conserva el sufijo histórico `2048`,
-  pero los valores efectivos son 1024/1024. No incluye visión.
+  descodificación especulativa. No incluye visión.
 - **Auto vision agentic** (`start-agentic-auto-vision-131k-2048.cmd`): GGUF base
   con `batch/ubatch 2048/2048` y `--mmproj mmproj-F16.gguf
   --image-min-tokens 2048` para visión. No incluye MTP.
@@ -65,7 +64,7 @@ final del modelo:
 | --- | --- | ---: |
 | `start-agentic-auto-131k-2048.cmd` | blk.18–39 | 22 |
 | `start-agentic-auto-262k-1024.cmd` | blk.17–39 | 23 |
-| `start-agentic-auto-mtp-131k-2048.cmd` | blk.21–40 | 20 |
+| `start-agentic-auto-mtp-131k-1024.cmd` | blk.21–40 | 20 |
 | `start-agentic-auto-vision-131k-2048.cmd` | blk.15–39 | 25 |
 
 `--fit` extiende el patrón `-ot` hasta `blk.40`; en el modelo base, que declara
@@ -108,7 +107,7 @@ y penalización de presencia 1,5. Todos los perfiles agentic usaban temperatura
 - `config/models/qwen3.6-35b-a3b.psd1`
 - `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-131k-2048.cmd`
 - `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-262k-1024.cmd`
-- `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-mtp-131k-2048.cmd`
+- `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-mtp-131k-1024.cmd`
 - `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-vision-131k-2048.cmd`
 - `runtimes/llama.cpp/b11269-cuda13.4/`
 
