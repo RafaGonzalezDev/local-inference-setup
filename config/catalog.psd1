@@ -8,5 +8,6 @@
         'nemotron-3.5-lightning-30b-a3b'
         'ling-3.0-tiny'
         'ornith-1.5-9b'
+        'tiel-coder-35b-a3b-mtp'
     )
 }
