@@ -11,8 +11,8 @@ estilo Unsloth Dynamic) de `ornith-ai/Ornith-1.5-35B-A3B`, con la plantilla de
 chat Sharp incorporada en el propio GGUF y el cabezal MTP conservado. Licencia
 MIT, heredada del modelo base. El repositorio hermano
 `peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF` publica la misma escalera sin el
-cabezal MTP; este perfil usa el repositorio `-MTP` porque el artefacto elegido
-lo incluye.
+cabezal MTP, incorporada aquí como [`tiel-coder-35b-a3b`](tiel-coder-35b-a3b.md);
+este perfil usa el repositorio `-MTP` porque el artefacto elegido lo incluye.
 
 ## Artefactos
 
@@ -36,9 +36,9 @@ compartido por todos los niveles de cuantización del repositorio.
 
 | Lanzador | Contexto | Batch/UBatch | Visión | MTP |
 | --- | ---: | ---: | :---: | :---: |
-| `start-agentic-auto-mtp-131k-2048.cmd` | 131.072 | 2.048/2.048 | no | sí, n-max 3 |
+| `start-agentic-auto-mtp-131k-2048.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 |
 | `start-agentic-auto-mtp-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | sí, n-max 3 |
-| `start-agentic-auto-mtp-vision-131k-2048.cmd` | 131.072 | 2.048/2.048 | sí | sí, n-max 3 |
+| `start-agentic-auto-mtp-vision-131k-2048.cmd` | 131.072 | 1.024/1.024 | sí | sí, n-max 3 |
 
 Los tres comparten la configuración base del entorno: ocho hilos,
 `--parallel 1`, `--cache-ram 0`, Flash Attention, `--split-mode none`, caché KV
@@ -71,6 +71,21 @@ depende del equipo, del nivel de cuantización y del contexto. Se materializa
 `n-max 3` siguiendo el perfil MTP de `qwen3.6-35b-a3b` y se deja `p-min` en su
 defecto (0). Conviene barrer ambos valores midiendo tokens por segundo, no tasa
 de aceptación, antes de fijar un valor propio.
+
+El batch y el ubatch son 1.024/1.024 en los tres perfiles, igual que en el
+perfil MTP de `qwen3.6-35b-a3b` y a diferencia de los 2.048/2.048 de los
+perfiles sin MTP. Los búferes de cómputo crecen con `--ubatch-size` y compiten
+con los pesos por el mismo margen de `--fit-target`, así que un ubatch menor
+deja más VRAM para pesos y reduce el tramo de expertos que `--fit` manda a la
+CPU. Los dos perfiles de 131k conservan el sufijo histórico `2048` en el nombre,
+heredado del perfil sin MTP del que se copiaron; los valores efectivos son
+1.024/1.024, igual que en el perfil MTP de Qwen, cuyo nombre arrastra el mismo
+sufijo por la misma razón.
+
+La variante sin cabezal, [`tiel-coder-35b-a3b`](tiel-coder-35b-a3b.md), es el
+par de control: ambos artefactos solo se diferencian en el cabezal `nextn`, así
+que comparar sus perfiles de 131k aísla el efecto completo de la especulación,
+tanto su coste como su ganancia.
 
 ## Visión
 
