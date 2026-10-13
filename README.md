@@ -40,6 +40,7 @@ only `b11269-cuda13.4` remains installed.
 | `tiel-coder-35b-a3b-mtp` | `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-mtp-vision-131k-1024` | `tiel-coder-35b-a3b-mtp-131k`, `tiel-coder-35b-a3b-mtp-262k`, `tiel-coder-35b-a3b-mtp-vision-131k` |
 | `tiel-coder-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `tiel-coder-35b-a3b-131k`, `tiel-coder-35b-a3b-262k`, `tiel-coder-35b-a3b-vision-131k` |
 | `swift-1.5-qwen3.8-27b-gsq-rco-mtp` | `agentic-auto-mtp-32k-1024`, `agentic-auto-mtp-65k-1024`, `agentic-auto-mtp-96k-1024`, `agentic-auto-mtp-131k-1024` | `swift-1.5-qwen3.8-27b-gsq-rco-mtp-32k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-65k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-96k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-131k` |
+| `minicpm-v-4.7-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `minicpm-v-4.7-35b-a3b-131k`, `minicpm-v-4.7-35b-a3b-262k`, `minicpm-v-4.7-35b-a3b-vision-131k` |
 
 ## Repository Structure
 
@@ -96,6 +97,8 @@ scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-auto-131k-2048.cmd
 scripts\models\ling-3.0-tiny\start-agentic-auto-262k-1024.cmd
 scripts\models\ornith-1.5-9b\start-agentic-auto-262k-1024.cmd
 scripts\models\swift-1.5-qwen3.8-27b-gsq-rco-mtp\start-agentic-auto-mtp-65k-1024.cmd
+scripts\models\minicpm-v-4.7-35b-a3b\start-agentic-auto-131k-2048.cmd
+scripts\models\minicpm-v-4.7-35b-a3b\start-agentic-auto-vision-131k-2048.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
