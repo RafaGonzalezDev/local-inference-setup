@@ -25,8 +25,9 @@ The following specifications are relevant for language model inference:
 All profiles are automatic: every launcher declares `--gpu-layers auto --fit on`
 and lets the runtime resolve the device placement. The hand-tuned profiles that
 pinned `--gpu-layers 999` with `--n-cpu-moe` were retired on 2026-09-30. Their
-reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01, so
-only `b11269-cuda13.4` remains installed.
+reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01. Every
+launcher pins `b11551-cuda13.4`; `b11269-cuda13.4` stays installed as the previous
+build for rollback.
 
 | Identifier | Profiles | Profile aliases |
 | --- | --- | --- |
@@ -60,11 +61,13 @@ only `b11269-cuda13.4` remains installed.
 
 ## Installation
 
-1. Install the required runtime:
+1. Install the runtime:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-LlamaRuntime.ps1
 ```
+
+`-Version b11269` reinstalls the previous pinned build if a rollback is needed.
 
 2. Download a model:
 

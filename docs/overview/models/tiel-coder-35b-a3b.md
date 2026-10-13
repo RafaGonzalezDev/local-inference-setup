@@ -102,7 +102,7 @@ este modelo.
 - `scripts/models/tiel-coder-35b-a3b/start-agentic-auto-131k-2048.cmd`
 - `scripts/models/tiel-coder-35b-a3b/start-agentic-auto-262k-1024.cmd`
 - `scripts/models/tiel-coder-35b-a3b/start-agentic-auto-vision-131k-2048.cmd`
-- `runtimes/llama.cpp/b11269-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs
 

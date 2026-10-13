@@ -23,9 +23,29 @@ stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
 `--n-cpu-moe` were retired on 2026-09-30; their reference copy was deleted on
 2026-10-01.
 
-## Installed Runtime
+## Installed Runtimes
 
-The runtime is the official `llama.cpp`:
+Two official `llama.cpp` runtimes are installed. Every launcher pins `b11551`;
+`b11269` stays installed as the previous pinned build for rollback, and
+`Install-LlamaRuntime.ps1` reinstalls either one with `-Version`.
+
+`b11551` is the runtime every profile uses. It is a nightly, and it was chosen
+because it is the first build that contains MiniCPM-V 4.7 support (PR #29416):
+that model needs the canvas M-RoPE metadata key `rope.section_order` and the
+`v.tok_embd_sep` projector tensor, neither of which exists in `b11269`.
+
+- Version: `b11551` (nightly)
+- Commit: `69f201a20` (merge commit of PR #29416)
+- Reported version: `0.6.0-dev (build 11551, commit 69f201a20)`
+- Directory: `runtimes\llama.cpp\b11551-cuda13.4`
+- Package: `llama-b11551-bin-win-cuda-13.4-x64.zip`
+- SHA-256: `80c5f94fe5ecd8090fe682c89861a949efb4a3487782cfcd99252a18f571afc7`
+- CUDA runtime SHA-256: `738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`
+- Validated GPU: NVIDIA RTX 5080
+- Validated driver: 616.56
+
+`b11269` is retained and installed; no launcher uses it, so returning to it is
+editing one `SERVER` line per launcher:
 
 - Version: `b11269`
 - Commit: `cee37ffea`
@@ -38,18 +58,21 @@ The runtime is the official `llama.cpp`:
 - Validated driver: 616.56
 
 The installer accepts both the legacy numeric version output and the current
-semantic-version output while still requiring the pinned build and commit. The
-`b11269` release moves the Windows x64 CUDA asset from the 13.3 toolkit to 13.4,
-which is why the runtime directory is suffixed `cuda13.4`. The install was
-verified through `llama-server --version`; functional validation of the profiles
-against this runtime is still pending. The `b10502-cuda13.3` runtime was deleted
-on 2026-10-01, so this is the only installed runtime.
+semantic-version output while still requiring the pinned build and commit. Both
+pin the same `cudart` archive and the 13.4 toolkit, which is why the runtime
+directory is suffixed `cuda13.4`. Each install is verified through
+`llama-server --version`. The `b10502-cuda13.3` runtime was deleted on
+2026-10-01.
 
-The runtime is installed in its own immutable directory. Launchers pin the
-executable they need and no DLL is copied between runtime directories.
+The swap of 2026-10-13 changed only the executable each launcher pins. On the
+same profile and arguments `b11551` keeps the same `--fit` placement and the same
+KV allocation as `b11269`, uses 26–32 MiB more compute buffer, improves prefill
+by 28 % and leaves decode within noise; the calibration tables in the model cards
+were measured with `b11269` and stay recorded as such in the
+[runtime changelog](../changelog/2026-10-13-llama-runtime-b11551-catalog.md).
 
-All retained profiles use this runtime. Runtime DLLs remain isolated
-and the global `PATH` is not modified.
+Launchers pin the executable they need, no DLL is copied between runtime
+directories, and the global `PATH` is not modified.
 
 ## Process and Logs
 

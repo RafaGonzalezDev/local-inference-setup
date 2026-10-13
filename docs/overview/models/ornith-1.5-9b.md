@@ -63,7 +63,7 @@ El modelo declara la arquitectura `qwen35` sin tensores de expertos
 
 - `config/models/ornith-1.5-9b.psd1`
 - `scripts/models/ornith-1.5-9b/start-agentic-auto-262k-1024.cmd`
-- `runtimes/llama.cpp/b11269-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Source
 

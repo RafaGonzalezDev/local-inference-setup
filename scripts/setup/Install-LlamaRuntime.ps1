@@ -2,8 +2,8 @@
 param(
     [string]$RootDirectory,
 
-    [ValidateSet('b11269')]
-    [string]$Version = 'b11269'
+    [ValidateSet('b11269', 'b11551')]
+    [string]$Version = 'b11551'
 )
 
 Set-StrictMode -Version Latest
@@ -19,6 +19,11 @@ $releases = @{
     b11269 = @{
         Commit = 'cee37ffea'
         Sha256 = '79e8431306e0d5dad9f7d429272226387d449a167d3e9285cdf0ec0edce8b27e'
+    }
+    # Nightly build that first contains MiniCPM-V 4.7 support (merge 69f201a, PR #29416).
+    b11551 = @{
+        Commit = '69f201a'
+        Sha256 = '80c5f94fe5ecd8090fe682c89861a949efb4a3487782cfcd99252a18f571afc7'
     }
 }
 $versionNumber = $Version.Substring(1)

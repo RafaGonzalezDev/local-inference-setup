@@ -79,7 +79,7 @@ La referencia `agentic` usaba 12 capas MoE en CPU (2026-08-06): sin el mmproj,
 - `scripts/models/gemma-4-26b-a4b/start-vision-auto-mtp.cmd`
 - `scripts/models/gemma-4-26b-a4b/start-agentic-auto.cmd`
 - `scripts/models/gemma-4-26b-a4b/start-agentic-auto-vision.cmd`
-- `runtimes/llama.cpp/b11269-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs
 

@@ -3,7 +3,7 @@ setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem Automatic device placement agentic profile; use the model's native 262144-token context.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11269-cuda13.4\llama-server.exe"
+set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\ornith-1.5-9b\Ornith-1.5-9B-AD-IQ4_XS.gguf""

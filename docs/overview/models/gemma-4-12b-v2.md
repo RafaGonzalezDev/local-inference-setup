@@ -42,7 +42,7 @@ tool calling respecto a la carga anterior.
 - `config/models/gemma-4-12b-v2.psd1`
 - `scripts/models/gemma-4-12b-v2/start-text-auto.cmd`
 - `scripts/models/gemma-4-12b-v2/start-vision-auto.cmd`
-- `runtimes/llama.cpp/b11269-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs
 

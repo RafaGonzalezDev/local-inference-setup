@@ -88,7 +88,7 @@ decode.
 
 - `config/models/ling-3.0-tiny.psd1`
 - `scripts/models/ling-3.0-tiny/start-agentic-auto-262k-1024.cmd`
-- `runtimes/llama.cpp/b11269-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Validación histórica
 

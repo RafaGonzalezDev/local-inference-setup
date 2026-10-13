@@ -121,7 +121,7 @@ este modelo.
 - `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-131k-1024.cmd`
 - `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-262k-1024.cmd`
 - `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-vision-131k-1024.cmd`
-- `runtimes/llama.cpp/b11269-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs
 
