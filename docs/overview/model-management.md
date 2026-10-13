@@ -24,7 +24,7 @@ Exit codes 0 to 7 from `robocopy` are acceptable; 8 or higher represents failure
 
 ## Validating Profiles
 
-Static validation of all 23 launchers, without requiring installed weights:
+Static validation of all catalog launchers, without requiring installed weights:
 
 ```powershell
 & scripts\common\Test-Llm.ps1 -ConfigurationOnly
@@ -47,6 +47,27 @@ Individual functional test:
 The test waits for `/health`, makes a request of up to 16 tokens, and stops the process tree it initiated. Vision profiles reuse `tests\assets\panels-1080p.png`. These are not benchmarks.
 
 When testing the entire catalog, models with `DeferredInference` are skipped. Use `-IncludeDeferred` or an explicit model to include them.
+
+## Minimum Memory Calibration
+
+Before declaring a profile viable, test it sequentially on the target hardware:
+
+1. Confirm the effective context in startup logs or `/props`. Check that port
+   8080 is free before starting; never stop another user's server.
+2. Observe free system RAM and GPU memory before startup, during model loading,
+   prompt processing (prefill), and generation. Use `nvidia-smi` repeatedly or
+   its monitoring mode plus Windows memory monitoring; a single idle snapshot
+   does not capture load peaks.
+3. Send a request representative of the intended prompt length and output;
+   include images or MTP when the profile enables them. Record token counts,
+   enabled capabilities, observed memory peaks, and remaining headroom.
+4. If loading or inference fails, or headroom is insufficient for that workload,
+   reduce context or batch/ubatch, update the launcher, and repeat static and
+   functional validation. Do not bypass automatic placement or integrity checks.
+
+The 16-token smoke test is not memory calibration. Passing a representative
+request validates only the workload tested, not the full advertised context or
+all possible images. Report the tested range and any untested limits.
 
 ## Updating a Runtime
 
