@@ -21,16 +21,22 @@ Hecho y verificado en esta sesión:
   perfiles publicados: `agentic-auto-131k-2048`, `agentic-auto-262k-1024` y
   `agentic-auto-vision-131k-2048`. Detalles en
   [docs/overview/models/minicpm-v-4.7-35b-a3b.md](docs/overview/models/minicpm-v-4.7-35b-a3b.md).
+- **Modelo nuevo** `lfm2.5-24b-a2b` (Q4_K_M, solo texto) con un único perfil
+  `agentic-auto-131k-2048`: 131.072 tokens nativos, sin proyector y sin borrador publicados, así que
+  no hay equivalentes de 262K ni de visión. Detalles y mediciones en
+  [docs/overview/models/lfm2.5-24b-a2b.md](docs/overview/models/lfm2.5-24b-a2b.md).
 - **Runtime del catálogo a `b11551`**: los 30 lanzadores apuntan a
   `runtimes\llama.cpp\b11551-cuda13.4`; `b11269-cuda13.4` sigue instalado para revertir y el
   instalador (`-Version b11269|b11551`, por defecto `b11551`) puede reinstalar cualquiera. Detalles y
   evidencia A/B en
   [docs/changelog/2026-10-13-llama-runtime-b11551-catalog.md](docs/changelog/2026-10-13-llama-runtime-b11551-catalog.md).
 - **Validación estática global**: `Test-Llm.ps1 -ConfigurationOnly -RequireInstalledFiles` sin
-  filtros → 30 lanzadores, 0 fallos, todos resolviendo el ejecutable de `b11551`.
-- **Lista de modelos locales de DSH**: `~/.dsh/profiles/desktop/cordis.patch.yml` incluye ya los
-  tres alias de perfil de MiniCPM-V 4.7 en la ruta `llama-cpp`; validado con un parse YAML y un diff
-  contra el backup (34 líneas añadidas, 0 eliminadas).
+  filtros → 31 lanzadores, 0 fallos, todos resolviendo el ejecutable de `b11551`.
+- **Lista de modelos locales de DSH**: `~/.dsh/profiles/desktop/cordis.patch.yml` incluye los tres
+  alias de perfil de MiniCPM-V 4.7 y el de LFM2.5 en la ruta `llama-cpp` (15 modelos); validado con un
+  parse YAML y comprobado que la edición es aditiva. Ese archivo lo reescribe el propio harness
+  cuando cambia un ajuste en la GUI: se ha observado una reescritura concurrente de la fila
+  `agent-default-model` que no ha afectado a las filas añadidas.
 
 Pendiente o no verificado (declarado, no asumido):
 
@@ -57,6 +63,11 @@ Pendiente o no verificado (declarado, no asumido):
   2.720,00 MiB de caché KV a contexto completo (10 capas de atención completa, 10,88 KB por token).
 - DSpark se probó y se retiró por regresión medida (aceptación 0,059; 3,29 t/s frente a 75,32 t/s).
   No reintroducir sin medir y sin resolver la colocación del borrador.
+- LFM2.5 24B A2B medido a 131K: prefill 2.693,69 t/s con 742 tokens y 8.251,88 t/s con 15.862;
+  decode 122,83 y 131,36 t/s. Tool calling verificado (`tool_calls` con `{"location":"Madrid"}`); el
+  runtime usa su plantilla especializada «LFM2.5». El modelo siempre piensa y el runtime conserva el
+  razonamiento en el historial por defecto (`--no-reasoning-preserve` lo desactiva). Licencia
+  `lfm1.0`, no permisiva: revisar antes de uso comercial.
 - `~/.dsh/profiles/desktop/cordis.patch.yml` está gestionado por `dotfiles-dsh`: una instalación de
   ese componente reemplaza el archivo entero y descarta filas no declaradas en el propio archivo. El
   backup de esta edición es
@@ -72,15 +83,20 @@ Pendiente o no verificado (declarado, no asumido):
   instalados, paquetes, SHA-256 y qué perfiles usan cuál.
 - [docs/overview/models/minicpm-v-4.7-35b-a3b.md](docs/overview/models/minicpm-v-4.7-35b-a3b.md):
   artefactos, perfiles, calibración, DSpark retirado y límites.
+- [docs/overview/models/lfm2.5-24b-a2b.md](docs/overview/models/lfm2.5-24b-a2b.md): artefactos,
+  perfil único y por qué, muestreo del autor, calibración, presupuesto de memoria y límites.
 - [docs/changelog/2026-10-13-minicpm-v-4.7-35b-a3b.md](docs/changelog/2026-10-13-minicpm-v-4.7-35b-a3b.md),
-  [docs/changelog/2026-10-13-minicpm-v-4.7-35b-a3b-262k.md](docs/changelog/2026-10-13-minicpm-v-4.7-35b-a3b-262k.md)
+  [docs/changelog/2026-10-13-minicpm-v-4.7-35b-a3b-262k.md](docs/changelog/2026-10-13-minicpm-v-4.7-35b-a3b-262k.md),
+  [docs/changelog/2026-10-13-lfm2.5-24b-a2b.md](docs/changelog/2026-10-13-lfm2.5-24b-a2b.md)
   y [docs/changelog/2026-10-13-llama-runtime-b11551-catalog.md](docs/changelog/2026-10-13-llama-runtime-b11551-catalog.md).
-- [config/models/minicpm-v-4.7-35b-a3b.psd1](config/models/minicpm-v-4.7-35b-a3b.psd1) y
+- [config/models/minicpm-v-4.7-35b-a3b.psd1](config/models/minicpm-v-4.7-35b-a3b.psd1),
+  [config/models/lfm2.5-24b-a2b.psd1](config/models/lfm2.5-24b-a2b.psd1) y
   [config/catalog.psd1](config/catalog.psd1).
 - [scripts/setup/Install-LlamaRuntime.ps1](scripts/setup/Install-LlamaRuntime.ps1): versiones fijadas.
 - Evidencia en `logs\validation\`: `ab-qwen-b11269-20261013-211946.*`, `ab-qwen-b11551-20261013-212010.*`,
-  `calib-agentic-auto-*-20261013-*`, `tools-agentic-auto-131k-2048-20261013-210351.*` y los smokes
-  `smoke-tests-20261013-*`.
+  `ab-lfm2-diagnostic-20261013-222313.*`, `calib-agentic-auto-*-20261013-*`,
+  `tools-agentic-auto-131k-2048-20261013-210351.*`,
+  `tools-lfm2.5-24b-a2b-agentic-auto-131k-2048-20261013-222232.*` y los smokes `smoke-tests-20261013-*`.
 
 ## Suggested skills
 
@@ -92,7 +108,7 @@ Pendiente o no verificado (declarado, no asumido):
 
 ## Open questions
 
-- ¿Se completa el barrido funcional de los 27 perfiles restantes con `b11551`, o basta la validación
+- ¿Se completa el barrido funcional de los perfiles restantes con `b11551`, o basta la validación
   estática más los cuatro smokes que pasaron?
 - ¿Se promueve una release estable como runtime único cuando incluya MiniCPM-V 4.7, en lugar de
   mantener un nightly?
@@ -100,6 +116,8 @@ Pendiente o no verificado (declarado, no asumido):
   a 262K?
 - ¿Se reintenta DSpark con contexto menor para darle sitio en VRAM al borrador, o se descarta hasta
   que exista soporte en el fork del autor?
+- Para LFM2.5: ¿hace falta un perfil de contexto menor, o el VL de Liquid como modelo aparte con su
+  propio proyector? El repositorio añadido es solo texto y de 131K nativos.
 
 ## Verification steps
 
@@ -111,14 +129,16 @@ Select-String -Path .\scripts\models\*\*.cmd -Pattern 'b11269|b11551' | Group-Ob
 # Validación estática global (no carga pesos)
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts\common\Test-Llm.ps1 -ConfigurationOnly -RequireInstalledFiles
 
-# Integridad del modelo nuevo
+# Integridad de los modelos añadidos
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts\common\Test-ModelIntegrity.ps1 -Model minicpm-v-4.7-35b-a3b
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts\common\Test-ModelIntegrity.ps1 -Model lfm2.5-24b-a2b
 
 # Prueba funcional de un perfil (secuencial, un solo perfil a la vez en el puerto 8080)
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts\common\Test-Llm.ps1 -Model minicpm-v-4.7-35b-a3b -Profile agentic-auto-vision-131k-2048
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts\common\Test-Llm.ps1 -Model lfm2.5-24b-a2b -Profile agentic-auto-131k-2048
 ```
 
 ```powershell
-# Lista de modelos locales de DSH (debe listar 14 modelos en la ruta llama-cpp)
+# Lista de modelos locales de DSH (debe listar 15 modelos en la ruta llama-cpp)
 & 'C:\Program Files\nodejs\node.exe' -e "const YAML=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');const fs=require('fs');const d=YAML.parse(fs.readFileSync('C:/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml','utf8').replace(/!!js/g,''));const m=d.find(e=>e.id==='llm-pi-ai').config.providers['llama-cpp'].models;console.log(m.length, m.map(x=>x.id).join('\n'))"
 ```

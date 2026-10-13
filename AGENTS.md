@@ -8,11 +8,11 @@ Responde en español. Escribe código, identificadores y comentarios de código 
 
 ## Estado de referencia y fuentes de verdad
 
-Inspeccionado el 2026-10-13: 11 modelos registrados, 30 lanzadores y dos runtimes instalados. Reconsulta el inventario en cada sesión; no fijes estos recuentos en código.
+Inspeccionado el 2026-10-13: 12 modelos registrados, 31 lanzadores y dos runtimes instalados. Reconsulta el inventario en cada sesión; no fijes estos recuentos en código.
 
 - Raíz de este despliegue: `D:\LLM`. Los lanzadores calculan la raíz relativa, no dependen del directorio de trabajo.
 - Hardware documentado en [README.md](<README.md>): Ryzen 7 9800X3D, RTX 5080 con 16 GB de VRAM y 64 GB de RAM DDR5-6000. Comprueba memoria libre, disco y driver antes de descargar o calibrar; memoria total no equivale a disponible.
-- Runtime en uso: `b11551-cuda13.4` (build `11551`, commit `69f201a20`), al que apuntan los 30 lanzadores desde el 2026-10-13; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) queda instalado como versión anterior para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551`; el valor por defecto es `b11551`.
+- Runtime en uso: `b11551-cuda13.4` (build `11551`, commit `69f201a20`), al que apuntan los 31 lanzadores desde el 2026-10-13; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) queda instalado como versión anterior para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551`; el valor por defecto es `b11551`.
 - [Catálogo](<config/catalog.psd1>): modelos activos. Los manifiestos `config/models/<model-id>.psd1` contienen únicamente metadatos de descarga e integridad.
 - Los GGUF instalados bajo `models/<model-id>/` y los argumentos literales de `scripts/models/<model-id>/start-*.cmd` son la fuente de verdad operativa. La documentación histórica y los catálogos de clientes no seleccionan perfiles.
 - [ADR-0001](<docs/adr/ADR-0001-self-contained-model-launchers.md>): cada lanzador invoca directamente su servidor, sin motor de arranque común, herencia de parámetros, PID global ni argumentos ocultos.
