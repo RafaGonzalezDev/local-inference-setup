@@ -27,7 +27,7 @@ tras la descarga. El repositorio publica además `Q5_K_M`, `Q6_K`, `Q8_0`, `F16`
 
 | Lanzador | Contexto | Batch/UBatch | Visión | Alias de perfil |
 | --- | ---: | ---: | :---: | --- |
-| `start-agentic-auto-131k-2048.cmd` | 131.072 | 2.048/2.048 | no | `lfm2.5-24b-a2b-131k` |
+| `start-agentic-auto-131k-2048.cmd` | 131.072 | 512/512 | no | `lfm2.5-24b-a2b-131k` |
 
 Hay un solo perfil, y es deliberado:
 

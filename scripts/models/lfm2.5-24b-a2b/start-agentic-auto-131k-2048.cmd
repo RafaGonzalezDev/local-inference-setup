@@ -9,7 +9,7 @@ rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\lfm2.5-24b-a2b\LFM2.5-24B-A2B-Q4_K_M.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 8 --threads-batch 8 --batch-size 2048 --ubatch-size 2048 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 8 --threads-batch 8 --batch-size 512 --ubatch-size 512 --jinja"
 
 rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias lfm2.5-24b-a2b,lfm2.5-24b-a2b-131k"
