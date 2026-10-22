@@ -26,8 +26,9 @@ All profiles are automatic: every launcher declares `--gpu-layers auto --fit on`
 and lets the runtime resolve the device placement. The hand-tuned profiles that
 pinned `--gpu-layers 999` with `--n-cpu-moe` were retired on 2026-09-30. Their
 reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01. Every
-launcher pins `b11551-cuda13.4`; `b11269-cuda13.4` stays installed as the previous
-build for rollback.
+launcher pins `b11551-cuda13.4` except `flint`, which pins `b11827-cuda13.4`
+because no earlier build supports its architecture; `b11269-cuda13.4` was removed on
+2026-10-22 and can be reinstalled for rollback.
 
 | Identifier | Profiles | Profile aliases |
 | --- | --- | --- |
@@ -43,6 +44,7 @@ build for rollback.
 | `swift-1.5-qwen3.8-27b-gsq-rco-mtp` | `agentic-auto-mtp-32k-1024`, `agentic-auto-mtp-65k-1024`, `agentic-auto-mtp-96k-1024`, `agentic-auto-mtp-131k-1024` | `swift-1.5-qwen3.8-27b-gsq-rco-mtp-32k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-65k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-96k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-131k` |
 | `minicpm-v-4.7-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `minicpm-v-4.7-35b-a3b-131k`, `minicpm-v-4.7-35b-a3b-262k`, `minicpm-v-4.7-35b-a3b-vision-131k` |
 | `lfm2.5-24b-a2b` | `agentic-auto-131k-2048` | `lfm2.5-24b-a2b-131k` |
+| `flint` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
 
 ## Repository Structure
 
@@ -68,7 +70,8 @@ build for rollback.
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-LlamaRuntime.ps1
 ```
 
-`-Version b11269` reinstalls the previous pinned build if a rollback is needed.
+`-Version b11269` reinstalls the previous pinned build if a rollback is needed;
+`-Version b11827` installs the runtime that `flint` requires.
 
 2. Download a model:
 

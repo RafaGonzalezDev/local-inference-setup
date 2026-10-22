@@ -13,5 +13,6 @@
         'swift-1.5-qwen3.8-27b-gsq-rco-mtp'
         'minicpm-v-4.7-35b-a3b'
         'lfm2.5-24b-a2b'
+        'flint'
     )
 }

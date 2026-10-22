@@ -2,7 +2,7 @@
 param(
     [string]$RootDirectory,
 
-    [ValidateSet('b11269', 'b11551')]
+    [ValidateSet('b11269', 'b11551', 'b11827')]
     [string]$Version = 'b11551'
 )
 
@@ -24,6 +24,11 @@ $releases = @{
     b11551 = @{
         Commit = '69f201a'
         Sha256 = '80c5f94fe5ecd8090fe682c89861a949efb4a3487782cfcd99252a18f571afc7'
+    }
+    # Nightly build after Flint support (PR #30928) and Jinja hex escapes (PR #30929).
+    b11827 = @{
+        Commit = '970b51c'
+        Sha256 = '5d54c5fa2f26d9c80fa7439692e5929e8f7f1e7b2d00e3d6ab5a919154c768fa'
     }
 }
 $versionNumber = $Version.Substring(1)

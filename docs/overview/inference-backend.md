@@ -25,9 +25,10 @@ stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
 
 ## Installed Runtimes
 
-Two official `llama.cpp` runtimes are installed. Every launcher pins `b11551`;
-`b11269` stays installed as the previous pinned build for rollback, and
-`Install-LlamaRuntime.ps1` reinstalls either one with `-Version`.
+Two official `llama.cpp` runtimes are installed. Every launcher pins `b11551`
+except the `flint` profiles, which pin `b11827`. The previous pinned build
+`b11269` was uninstalled on 2026-10-22; `Install-LlamaRuntime.ps1` installs any of
+the three with `-Version`.
 
 `b11551` is the runtime every profile uses. It is a nightly, and it was chosen
 because it is the first build that contains MiniCPM-V 4.7 support (PR #29416):
@@ -44,8 +45,24 @@ that model needs the canvas M-RoPE metadata key `rope.section_order` and the
 - Validated GPU: NVIDIA RTX 5080
 - Validated driver: 616.56
 
-`b11269` is retained and installed; no launcher uses it, so returning to it is
-editing one `SERVER` line per launcher:
+`b11827` is a nightly used only by `flint`: it is the latest build on 2026-10-22
+and contains Flint support (PR #30928, first shipped in `b11803`) and the Jinja
+hexadecimal string escapes its chat template needs (PR #30929). The other
+launchers stay on `b11551` until they are tested on it. The Flint PR notes that
+its expert-activation scaling costs 10–30 % speed.
+
+- Version: `b11827` (nightly)
+- Commit: `970b51ce7`
+- Reported version: `0.7.0-dev (build 11827, commit 970b51ce7)`
+- Directory: `runtimes\llama.cpp\b11827-cuda13.4`
+- Package: `llama-b11827-bin-win-cuda-13.4-x64.zip`
+- SHA-256: `5d54c5fa2f26d9c80fa7439692e5929e8f7f1e7b2d00e3d6ab5a919154c768fa`
+- CUDA runtime SHA-256: `738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`
+- Validated GPU: NVIDIA RTX 5080
+- Validated driver: 616.56
+
+`b11269` is no longer installed; returning to it is running the installer with
+`-Version b11269` and editing one `SERVER` line per launcher:
 
 - Version: `b11269`
 - Commit: `cee37ffea`
@@ -62,7 +79,7 @@ semantic-version output while still requiring the pinned build and commit. Both
 pin the same `cudart` archive and the 13.4 toolkit, which is why the runtime
 directory is suffixed `cuda13.4`. Each install is verified through
 `llama-server --version`. The `b10502-cuda13.3` runtime was deleted on
-2026-10-01.
+2026-10-01 and the `b11269-cuda13.4` runtime on 2026-10-22.
 
 The swap of 2026-10-13 changed only the executable each launcher pins. On the
 same profile and arguments `b11551` keeps the same `--fit` placement and the same
