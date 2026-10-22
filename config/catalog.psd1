@@ -14,5 +14,6 @@
         'minicpm-v-4.7-35b-a3b'
         'lfm2.5-24b-a2b'
         'flint'
+        'sage-a1.5-35b-a3b'
     )
 }

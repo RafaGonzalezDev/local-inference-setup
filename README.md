@@ -45,6 +45,7 @@ because no earlier build supports its architecture; `b11269-cuda13.4` was remove
 | `minicpm-v-4.7-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `minicpm-v-4.7-35b-a3b-131k`, `minicpm-v-4.7-35b-a3b-262k`, `minicpm-v-4.7-35b-a3b-vision-131k` |
 | `lfm2.5-24b-a2b` | `agentic-auto-131k-2048` | `lfm2.5-24b-a2b-131k` |
 | `flint` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
+| `sage-a1.5-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `sage-a1.5-35b-a3b-131k`, `sage-a1.5-35b-a3b-262k`, `sage-a1.5-35b-a3b-mtp-131k`, `sage-a1.5-35b-a3b-vision-131k` |
 
 ## Repository Structure
 
