@@ -15,7 +15,7 @@ rem Network and API identity; the second alias is the profile ID this launcher s
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias swift-1.5-qwen3.8-27b-gsq-rco-mtp,swift-1.5-qwen3.8-27b-gsq-rco-mtp-131k"
 
 rem Reasoning; xhigh is the effort used by the author's evaluation and the template default
-set "REASONING_ARGS=--reasoning on --reasoning-effort xhigh"
+set "REASONING_ARGS=--reasoning auto --reasoning-effort xhigh"
 
 rem Sampling, as recommended by the model card for thinking mode
 set "SAMPLING_ARGS=--temp 1 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 0 --repeat-penalty 1"

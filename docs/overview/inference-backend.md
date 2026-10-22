@@ -84,6 +84,16 @@ All profiles use port 8080, so only one can listen at a time. `Test-Llm.ps1` sta
 
 Profiles use `0.0.0.0:8080`, accessible from Windows, WSL, and the local network if the system configuration allows it. No Firewall rules are created and the API does not use authentication. It should not be exposed to a public or untrusted network.
 
+## Reasoning
+
+Launchers use `--reasoning auto`: thinking stays on by default when the template supports it, and each request can turn it off. With `--reasoning on`, the server injects `enable_thinking=true` as a template kwarg that overrides `reasoning_effort: "none"` (measured on build `11551`). Per-request controls that reach the model:
+
+- `reasoning_effort: "none"` (Chat Completions) or `reasoning.effort: "none"` (Responses) turns thinking off.
+- `chat_template_kwargs: {"enable_thinking": false}` turns thinking off.
+- `thinking_budget_tokens` / `reasoning_budget_tokens` overrides the launcher's `--reasoning-budget`.
+- Other `reasoning_effort` levels are passed to the template; only templates that read them (Tiel, Swift) change behavior. Swift rejects levels other than `low`, `medium`, `xhigh`.
+- Anthropic `thinking: {"type": "disabled"}` is not mapped by the server and does not turn thinking off.
+
 ## Customizing Parameters
 
 Edit the literal values in the corresponding `.cmd`. To preserve a variant, copy the launcher with another name `start-<profile>.cmd` and validate the new total. There are no generic overrides for port, context, or reasoning from the command line.

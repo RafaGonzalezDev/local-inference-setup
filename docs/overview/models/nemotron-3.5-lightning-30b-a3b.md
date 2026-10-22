@@ -47,7 +47,7 @@ sumando modelo, contexto y búfer de cómputo.
 Conserva los parámetros comunes del entorno: ocho hilos, caché KV `q8_0`, Flash
 Attention, un slot, `--cache-ram 0`, `--split-mode none`, Jinja y presupuesto de
 razonamiento 8.192. El muestreo usa `temp 0.6`, `top-p 0.95`, `top-k 20` con
-`--reasoning on`.
+`--reasoning auto`.
 
 ## Lanzador retirado
 

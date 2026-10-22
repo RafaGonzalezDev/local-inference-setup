@@ -24,7 +24,7 @@ Ambos materializan un perfil agentic de alta prefill y declaran
 `--gpu-layers auto --fit on --fit-target 1024`, sin `--n-cpu-moe`. Conservan los
 parámetros comunes del entorno: ocho hilos, KV `q8_0`, Flash Attention, un slot,
 `--cache-ram 0`, `--split-mode none`, Jinja y presupuesto de razonamiento 8.192.
-El muestreo usa `temp 0.6`, `top-p 0.95`, `top-k 20` con `--reasoning on`.
+El muestreo usa `temp 0.6`, `top-p 0.95`, `top-k 20` con `--reasoning auto`.
 
 La caché KV usa `q8_0` tanto para claves como para valores para reducir su
 consumo en las ventanas de 131.072 y 262.144 tokens.

@@ -52,7 +52,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts\setup\Install-
 
 Los tres comparten la configuración heredada de `qwen3.6-35b-a3b`, que usa la misma arquitectura: ocho
 hilos, caché KV `q8_0`, Flash Attention, un slot (`--parallel 1`), `--cache-ram 0`,
-`--split-mode none`, Jinja, `--reasoning on` con presupuesto 8.192 y
+`--split-mode none`, Jinja, `--reasoning auto` con presupuesto 8.192 y
 `--gpu-layers auto --fit on`. El perfil de visión declara `--fit-target 2048` porque `--fit` no
 contabiliza el proyector, y `--mmproj` apunta al proyector 16x de la misma publicación.
 
@@ -68,7 +68,7 @@ Muestreo y razonamiento:
   proceden de la guía oficial de llama.cpp para v4.7 (Cookbook de MiniCPM-V), no de Qwen. El GGUF
   incrusta además `general.sampling.temp 1`, `top_p 0.95` y `top_k 20`; el lanzador materializa los
   valores de la guía y los sobrescribe.
-- `--reasoning on` con `--reasoning-budget 8192` es la convención local para perfiles agentic. La
+- `--reasoning auto` con `--reasoning-budget 8192` es la convención local para perfiles agentic. La
   guía del modelo recomienda `--reasoning off` para respuestas directas; cambiarlo es editar esa
   línea del lanzador. La plantilla del modelo activa el pensamiento por defecto.
 
@@ -90,7 +90,7 @@ además de `capabilities: ["completion"]` en texto y `["completion","multimodal"
 - Carga completa del modelo: 6,8 s (texto) y 7,7 s (visión) según las marcas de tiempo del log.
 - La respuesta de visión describe correctamente el fixture: tres paneles verticales rojo, verde y
   azul. Las respuestas traen `content` y `reasoning_content` separados, coherente con
-  `--reasoning on` y `--jinja`.
+  `--reasoning on` y `--jinja` (medido antes del cambio a `--reasoning auto`).
 - Tool calling verificado con el perfil de texto: una petición con una función `get_weather` responde
   `finish_reason = tool_calls` y `arguments {"location":"Madrid"}`, con el razonamiento en
   `reasoning_content`.

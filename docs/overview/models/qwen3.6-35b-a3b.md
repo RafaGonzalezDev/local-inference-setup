@@ -36,7 +36,7 @@ Los cuatro comparten la configuración base: ocho hilos, caché KV `q8_0`,
 Flash Attention, un slot, `--parallel 1`, `--cache-ram 0`, `--split-mode none`,
 Jinja y presupuesto de razonamiento 8.192. El muestreo usa `temp 0.6`,
 `top-p 0.95`, `top-k 20`, `min-p 0`, `presence-penalty 0`, `repeat-penalty 1`
-con `--reasoning on`.
+con `--reasoning auto`.
 
 Los cuatro materializan `--gpu-layers auto --fit on --fit-target 1024` y omiten
 `--n-cpu-moe`: `--fit` coloca los pesos con `-ot` por capa en lugar de usar esa

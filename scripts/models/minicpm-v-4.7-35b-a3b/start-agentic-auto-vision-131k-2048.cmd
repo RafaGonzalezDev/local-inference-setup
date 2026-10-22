@@ -15,7 +15,7 @@ rem Network and API identity; the second alias is the profile ID this launcher s
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias minicpm-v-4.7-35b-a3b,minicpm-v-4.7-35b-a3b-vision-131k"
 
 rem Reasoning
-set "REASONING_ARGS=--reasoning on"
+set "REASONING_ARGS=--reasoning auto"
 
 rem Sampling from the official v4.7 llama.cpp guide
 set "SAMPLING_ARGS=--temp 0.7 --top-p 0.8 --top-k 100 --min-p 0 --presence-penalty 0 --repeat-penalty 1.05"

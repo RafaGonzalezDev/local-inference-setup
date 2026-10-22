@@ -47,7 +47,7 @@ Muestreo y razonamiento:
   `general.sampling.penalty_repeat`. La publicación no fija `top_p` ni `min_p`: el lanzador los deja
   en su valor neutro (`--top-p 1 --min-p 0 --presence-penalty 0`) para no truncar más de lo que pide
   el autor.
-- `--reasoning on` con `--reasoning-budget 8192` es la convención local para perfiles agentic. El
+- `--reasoning auto` con `--reasoning-budget 8192` es la convención local para perfiles agentic. El
   modelo siempre piensa, así que el presupuesto es un tope, no una activación.
 - El runtime avisa de que la plantilla conserva el razonamiento en el historial por defecto
   (`preserve_reasoning kwarg: true`, «may use more tokens»). Desactivarlo es añadir

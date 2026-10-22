@@ -15,7 +15,7 @@ rem Network and API identity; the second alias is the profile ID this launcher s
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias gemma-4-12b-v2,gemma-4-12b-v2-text"
 
 rem Reasoning
-set "REASONING_ARGS=--reasoning on"
+set "REASONING_ARGS=--reasoning auto"
 
 rem Sampling
 set "SAMPLING_ARGS=--temp 1 --top-p 0.95 --top-k 64"

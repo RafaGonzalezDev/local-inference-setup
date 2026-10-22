@@ -15,7 +15,7 @@ rem Network and API identity; the second alias is the profile ID this launcher s
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias lfm2.5-24b-a2b,lfm2.5-24b-a2b-131k"
 
 rem Reasoning: the model always thinks; the budget is the local agentic cap
-set "REASONING_ARGS=--reasoning on"
+set "REASONING_ARGS=--reasoning auto"
 
 rem Sampling from the publication's generation_config and general.sampling metadata
 set "SAMPLING_ARGS=--temp 0.1 --top-p 1 --top-k 50 --min-p 0 --presence-penalty 0 --repeat-penalty 1.05"

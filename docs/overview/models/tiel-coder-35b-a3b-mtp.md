@@ -43,7 +43,7 @@ compartido por todos los niveles de cuantización del repositorio.
 Los tres comparten la configuración base del entorno: ocho hilos,
 `--parallel 1`, `--cache-ram 0`, Flash Attention, `--split-mode none`, caché KV
 `q8_0` para claves y valores, Jinja y presupuesto de razonamiento 8.192 con
-`--reasoning on`. El muestreo usa `temp 0.6`, `top-p 0.95`, `top-k 20`,
+`--reasoning auto`. El muestreo usa `temp 0.6`, `top-p 0.95`, `top-k 20`,
 `min-p 0`, `presence-penalty 0` y `repeat-penalty 1`.
 
 Sobre el muestreo: la tarjeta del modelo recomienda `temperature 1.0`,

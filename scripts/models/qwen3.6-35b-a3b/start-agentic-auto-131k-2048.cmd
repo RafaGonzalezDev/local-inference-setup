@@ -15,7 +15,7 @@ rem Network and API identity; the second alias is the profile ID this launcher s
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias qwen3.6-35b-a3b,qwen3.6-35b-a3b-131k"
 
 rem Reasoning
-set "REASONING_ARGS=--reasoning on"
+set "REASONING_ARGS=--reasoning auto"
 
 rem Sampling
 set "SAMPLING_ARGS=--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 0 --repeat-penalty 1"

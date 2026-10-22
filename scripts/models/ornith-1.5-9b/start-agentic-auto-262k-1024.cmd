@@ -15,7 +15,7 @@ rem Network and API identity; the second alias is the profile ID this launcher s
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias ornith-1.5-9b,ornith-1.5-9b-262k"
 
 rem Reasoning
-set "REASONING_ARGS=--reasoning on"
+set "REASONING_ARGS=--reasoning auto"
 
 rem Sampling; these values are required by the model card because no generation_config.json is shipped.
 set "SAMPLING_ARGS=--temp 0.6 --top-p 0.95 --top-k 20"

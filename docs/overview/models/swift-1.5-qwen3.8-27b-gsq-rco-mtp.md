@@ -117,7 +117,7 @@ tokens por segundo ni de tasa de aceptación para estos ficheros.
 
 El muestreo queda en `temp 1`, `top-p 0.95`, `top-k 20`, `min-p 0`,
 `presence-penalty 0` y `repeat-penalty 1`. El razonamiento se declara con
-`--reasoning on --reasoning-effort xhigh --reasoning-budget -1`: el presupuesto
+`--reasoning auto --reasoning-effort xhigh --reasoning-budget -1`: el presupuesto
 negativo mantiene el límite desactivado, de modo que el presupuesto no trunca la
 cadena de razonamiento y es el modelo quien la cierra, en coherencia con el
 esfuerzo `xhigh`. Son valores declarados de configuración, no mediciones propias.

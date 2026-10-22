@@ -47,7 +47,7 @@ Conserva los parámetros comunes del entorno: Flash Attention, Jinja, un único
 slot, `--cache-ram 0`, `--split-mode none` y presupuesto de razonamiento sin
 límite artificial (`--reasoning-budget -1`). El muestreo usa `temp 1.0`,
 `top-p 0.95`, `top-k 20`, `min-p 0`, penalización de presencia 0 y penalización
-de repetición 1 con `--reasoning on`.
+de repetición 1 con `--reasoning auto`.
 
 La caché KV usa `q8_0` tanto para claves como para valores.
 
