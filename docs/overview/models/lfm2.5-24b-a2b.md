@@ -27,7 +27,7 @@ tras la descarga. El repositorio publica además `Q5_K_M`, `Q6_K`, `Q8_0`, `F16`
 
 | Lanzador | Contexto | Batch/UBatch | Visión | Alias de perfil |
 | --- | ---: | ---: | :---: | --- |
-| `start-agentic-auto-131k-2048.cmd` | 131.072 | 512/512 | no | `lfm2.5-24b-a2b-131k` |
+| `start-agentic-auto-131k-512.cmd` | 131.072 | 512/512 | no | `lfm2.5-24b-a2b-131k` |
 
 Hay un solo perfil, y es deliberado:
 
@@ -92,7 +92,7 @@ Contexto declarado 131.072; `/props` lo confirma y `/v1/models` publica
 ## Dependencias
 
 - `config/models/lfm2.5-24b-a2b.psd1`
-- `scripts/models/lfm2.5-24b-a2b/start-agentic-auto-131k-2048.cmd`
+- `scripts/models/lfm2.5-24b-a2b/start-agentic-auto-131k-512.cmd`
 - `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs

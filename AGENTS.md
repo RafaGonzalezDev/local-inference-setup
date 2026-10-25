@@ -8,11 +8,11 @@ Responde en español. Escribe código, identificadores y comentarios de código 
 
 ## Estado de referencia y fuentes de verdad
 
-Inspeccionado el 2026-10-13: 12 modelos registrados, 31 lanzadores y dos runtimes instalados. Reconsulta el inventario en cada sesión; no fijes estos recuentos en código.
+Reconsulta el inventario en cada sesión (`config/catalog.psd1`, `scripts/models/*/start-*.cmd`, `runtimes/llama.cpp/`); este documento no fija recuentos.
 
 - Raíz de este despliegue: `D:\LLM`. Los lanzadores calculan la raíz relativa, no dependen del directorio de trabajo.
 - Hardware documentado en [README.md](<README.md>): Ryzen 7 9800X3D, RTX 5080 con 16 GB de VRAM y 64 GB de RAM DDR5-6000. Comprueba memoria libre, disco y driver antes de descargar o calibrar; memoria total no equivale a disponible.
-- Runtime en uso: `b11551-cuda13.4` (build `11551`, commit `69f201a20`), al que apuntan los 31 lanzadores existentes desde el 2026-10-13; `b11827-cuda13.4` (build `11827`, commit `970b51ce7`) lo usan solo los perfiles de `flint` desde el 2026-10-22, porque ningún build anterior soporta su arquitectura; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) se desinstaló el 2026-10-22 y puede reinstalarse para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551|b11827`; el valor por defecto es `b11551`.
+- Runtime en uso: `b11551-cuda13.4` (build `11551`, commit `69f201a20`), al que apuntan todos los lanzadores salvo los de `flint`; `b11827-cuda13.4` (build `11827`, commit `970b51ce7`) lo usan solo los perfiles de `flint` desde el 2026-10-22, porque ningún build anterior soporta su arquitectura; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) se desinstaló el 2026-10-22 y puede reinstalarse para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551|b11827`; el valor por defecto es `b11551`.
 - [Catálogo](<config/catalog.psd1>): modelos activos. Los manifiestos `config/models/<model-id>.psd1` contienen únicamente metadatos de descarga e integridad.
 - Los GGUF instalados bajo `models/<model-id>/` y los argumentos literales de `scripts/models/<model-id>/start-*.cmd` son la fuente de verdad operativa. La documentación histórica y los catálogos de clientes no seleccionan perfiles.
 - [ADR-0001](<docs/adr/ADR-0001-self-contained-model-launchers.md>): cada lanzador invoca directamente su servidor, sin motor de arranque común, herencia de parámetros, PID global ni argumentos ocultos.
@@ -88,7 +88,7 @@ Contrato de cada `.cmd`:
 - Llamada directa `"%SERVER%"` con los ocho grupos, terminal vinculada y código de salida preservado. No delegues a otro lanzador, no añadas `%*` ni arranque oculto.
 - Exactamente un `--model`, `--ctx-size`, `--host`, `--port` y `--alias`; sin flags largos duplicados. Toda ruta de `--model`, `--mmproj` o `--spec-draft-model` debe existir en el manifiesto.
 - Usa `--alias <model-id>,<profile-alias>`: canónico primero, alias de perfil único en todo el catálogo y distinto de cualquier ID canónico. El alias identifica el perfil YA iniciado, no lo inicia ni cambia contexto.
-- Nombres reales: `start-text-auto.cmd`, `start-vision-auto.cmd` o `start-agentic-auto[-mtp][-vision]-<context-label>-<batch>.cmd`. `-Profile` recibe el nombre completo sin `start-` ni `.cmd`, no el alias API. El último número es batch, NO margen de VRAM; un perfil visión terminado en `1024` puede usar `--fit-target 2048`.
+- Nombres reales: los perfiles nuevos usan `start-agentic-auto[-mtp][-vision]-<context-label>-<batch>.cmd`, y los perfiles Gemma conservan nombres sin contexto ni batch (`start-{text,vision,agentic}-auto[-mtp|-vision].cmd`). `-Profile` recibe el nombre completo sin `start-` ni `.cmd`, no el alias API. El último número es batch, NO margen de VRAM; un perfil visión terminado en `1024` puede usar `--fit-target 2048`.
 
 Política y calibración:
 
@@ -97,15 +97,15 @@ Antes de declarar un perfil viable, confirma el contexto efectivo y aplica la [c
 - Todos los perfiles usan `--gpu-layers auto --fit on`, contexto explícito y `--fit-target 1024` MiB para texto / `2048` para visión. No vuelvas a perfiles manuales con `--gpu-layers 999`, `--n-cpu-moe` o `--n-cpu-ffn`. El planificador ajusta la colocación y solo reduce contexto si no se fijó; un contexto explícito demasiado grande puede fallar.
 - Base agentic habitual, si la arquitectura la admite: `--parallel 1 --cache-ram 0 --flash-attn on --split-mode none --threads 8 --threads-batch 8 --jinja`; `--cache-type-k q8_0 --cache-type-v q8_0 --load-mode none --log-verbosity 3`. No son requisitos universales: los perfiles Gemma de texto simples son más mínimos.
 - Contextos habituales: 32768, 65536, 98304, 131072, 262144. Respeta el límite nativo y la memoria real; no crees 262K solo porque otro modelo lo permite. Empieza con un perfil razonable y crea variantes solo si son útiles. Etiquetas locales `32k/65k/96k/131k/262k` corresponden a esos enteros, no a miles decimales.
-- Batch/ubatch frecuentes: 2048/2048 a 131K para MoE sin MTP; 1024/1024 en contextos largos, densos y MTP integrado. Gemma 26B texto/MTP usa 1024/256. Son puntos de partida existentes, no óptimos medidos del nuevo modelo.
+- Batch/ubatch frecuentes: 2048/2048 a 131K para MoE sin MTP; 1024/1024 en contextos largos, densos y MTP integrado. Gemma 26B texto/MTP usa 1024/256. LFM2.5 usa 512/512 a 131K como excepción calibrada (ver su ficha). Son puntos de partida existentes, no óptimos medidos del nuevo modelo.
 - Usa `--reasoning auto`: `--reasoning on` impide que `reasoning_effort: "none"` desactive el razonamiento por petición (ver [backend](<docs/overview/inference-backend.md#reasoning>)). Comprueba con `/apply-template` que la plantilla abre el bloque de razonamiento por defecto.
 - Muestreo, razonamiento y plantilla se obtienen de la publicación concreta. No fuerces `--reasoning on`, `--reasoning-effort xhigh` ni presupuesto 8192 en cualquier modelo. Aquí existen presupuestos 8192 y `-1` (sin límite). Verifica el formato real de salida y compatibilidad del cliente; no presupongas `reasoning_content` separado.
 - Visión: `VISION_ARGS=--mmproj "..."` y opciones de imagen justificadas por ese modelo. El margen mayor contempla el proyector, que la política local de `--fit` no presupone contabilizado; confirma uso real de memoria.
-- MTP integrado: `--spec-type draft-mtp --spec-draft-n-max 3` es la referencia de Qwen/Tiel/Swift, con GGUF que conserva `nextn`; no requiere archivo borrador externo. Gemma usa `--spec-draft-model "..." --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-ngl auto`. No intercambies ambas recetas. Comprueba inicialización del borrador en logs; las estimaciones de ajuste pueden no reflejar todo el coste del MTP. La aceptación de borradores no prueba aceleración: mide tokens/s si afirmas rendimiento.
+- MTP integrado: `--spec-type draft-mtp --spec-draft-n-max 3` es la referencia de Qwen/Tiel/Swift/Sage, con GGUF que conserva `nextn`; no requiere archivo borrador externo. Gemma usa `--spec-draft-model "..." --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-ngl auto`. No intercambies ambas recetas. Comprueba inicialización del borrador en logs; las estimaciones de ajuste pueden no reflejar todo el coste del MTP. La aceptación de borradores no prueba aceleración: mide tokens/s si afirmas rendimiento.
 
 ### 5. Descargar, validar y documentar
 
-Usa los comandos de [instalación](<README.md#L60-L78>) y [descarga y validación](<docs/overview/model-management.md#L3-L49>) desde la raíz. Orden: configuración estática global; instalar runtime solo si falta; descargar; comprobar integridad; configuración global con `-RequireInstalledFiles`; puerto libre; prueba funcional de cada perfil.
+Usa los comandos de [instalación](<README.md#L67-L88>) y [descarga y validación](<docs/overview/model-management.md#L3-L49>) desde la raíz. Orden: configuración estática global; instalar runtime solo si falta; descargar; comprobar integridad; configuración global con `-RequireInstalledFiles`; puerto libre; prueba funcional de cada perfil.
 
 - [Download-Model.ps1](<scripts/setup/Download-Model.ps1>) usa `curl.exe`, reanuda `.partial` y comprueba tamaño/SHA-256 antes de instalar. Un artefacto existente distinto provoca error; no lo sobrescribas ni borres silenciosamente. Comprueba espacio libre y alcance antes de descargas y movimientos.
 - [Test-ModelIntegrity.ps1](<scripts/common/Test-ModelIntegrity.ps1>) comprueba todos los artefactos del modelo. [Test-Llm.ps1](<scripts/common/Test-Llm.ps1>) valida catálogo, grupos, rutas y alias; ejecuta el modo estático SIN filtros para cubrir colisiones globales y artefactos sin uso. No valida automáticamente pinning, `auto/fit`, semántica de flags, plantilla ni calidad: revísalos explícitamente.
@@ -118,7 +118,7 @@ Usa los comandos de [instalación](<README.md#L60-L78>) y [descarga y validació
 
 ## Criterio de finalización
 
-Entrega el modelo registrado y los lanzadores visibles, pesos íntegros si se pidió instalar, validación estática global y funcional por perfil cuando sea posible. En el cierre indica archivos principales y qué comprobaste; declara descargas, inferencias, benchmarks o compatibilidades que no hayas verificado. No presentes «configurado», «descargado», «arranca» y «validado funcionalmente» como estados equivalentes. No crees commits ni modifiques catálogos externos sin petición.
+Entrega el modelo registrado y los lanzadores visibles, pesos íntegros si se pidió instalar, validación estática global y funcional por perfil cuando sea posible. En el cierre indica archivos principales y qué comprobaste; declara descargas, inferencias, benchmarks o compatibilidades que no hayas verificado. No presentes «configurado», «descargado», «arranca» y «validado funcionalmente» como estados equivalentes. No crees commits ni modifiques catálogos externos salvo lo establecido en «Propagación a clientes» o por petición expresa.
 
 ## Propagación a clientes
 

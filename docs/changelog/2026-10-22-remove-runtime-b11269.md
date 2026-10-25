@@ -23,3 +23,8 @@ solo como opción de rollback.
   `D:\LLM\runtimes\llama.cpp\`, que no era un punto de reanálisis y que ningún
   proceso en ejecución usaba esa carpeta.
 - `Test-Llm.ps1 -ConfigurationOnly -RequireInstalledFiles` tras la eliminación.
+
+## Nota posterior
+
+Tras el alta de `flint` el mismo día (commit `b556c82`), quedaron instalados `b11551-cuda13.4` y
+`b11827-cuda13.4`. Ver `docs/changelog/2026-10-22-flint.md`.

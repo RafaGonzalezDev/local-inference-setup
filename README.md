@@ -43,7 +43,7 @@ because no earlier build supports its architecture; `b11269-cuda13.4` was remove
 | `tiel-coder-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `tiel-coder-35b-a3b-131k`, `tiel-coder-35b-a3b-262k`, `tiel-coder-35b-a3b-vision-131k` |
 | `swift-1.5-qwen3.8-27b-gsq-rco-mtp` | `agentic-auto-mtp-32k-1024`, `agentic-auto-mtp-65k-1024`, `agentic-auto-mtp-96k-1024`, `agentic-auto-mtp-131k-1024` | `swift-1.5-qwen3.8-27b-gsq-rco-mtp-32k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-65k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-96k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-131k` |
 | `minicpm-v-4.7-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `minicpm-v-4.7-35b-a3b-131k`, `minicpm-v-4.7-35b-a3b-262k`, `minicpm-v-4.7-35b-a3b-vision-131k` |
-| `lfm2.5-24b-a2b` | `agentic-auto-131k-2048` | `lfm2.5-24b-a2b-131k` |
+| `lfm2.5-24b-a2b` | `agentic-auto-131k-512` | `lfm2.5-24b-a2b-131k` |
 | `flint` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
 | `sage-a1.5-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `sage-a1.5-35b-a3b-131k`, `sage-a1.5-35b-a3b-262k`, `sage-a1.5-35b-a3b-mtp-131k`, `sage-a1.5-35b-a3b-vision-131k` |
 | `nemotron-3.5-bolt-e4b` | `agentic-auto-65k-1024` | `nemotron-3.5-bolt-e4b-65k` |
@@ -108,7 +108,7 @@ scripts\models\ornith-1.5-9b\start-agentic-auto-262k-1024.cmd
 scripts\models\swift-1.5-qwen3.8-27b-gsq-rco-mtp\start-agentic-auto-mtp-65k-1024.cmd
 scripts\models\minicpm-v-4.7-35b-a3b\start-agentic-auto-131k-2048.cmd
 scripts\models\minicpm-v-4.7-35b-a3b\start-agentic-auto-vision-131k-2048.cmd
-scripts\models\lfm2.5-24b-a2b\start-agentic-auto-131k-2048.cmd
+scripts\models\lfm2.5-24b-a2b\start-agentic-auto-131k-512.cmd
 scripts\models\nemotron-3.5-bolt-e4b\start-agentic-auto-65k-1024.cmd
 ```
 
