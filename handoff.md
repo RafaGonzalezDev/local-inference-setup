@@ -19,15 +19,23 @@ pasos, en este orden, sin pedirlos de nuevo:
    `nemotron-3.5-bolt-e4b-65k`) en los tres dotfiles. `input`/`modalities` con imagen solo en perfiles de
    visión. Límite de salida: 16.384 a 65K, 24.576 a 131K, 32.768 (pi, dsh) / 32.000 (opencode) a 262K,
    salvo que la tarjeta pida más.
-4. **Commit convencional por repositorio** (skill `conventional-commit`), push a `origin main` y mostrar
+4. **Actualizar también la configuración global de DSH**
+   (`C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml`), no solo `dotfiles-dsh`: copia de seguridad
+   `cordis.patch.yml.bak-<yyyyMMdd-HHmmss>-<model>` en el mismo directorio y edición **aditiva** de la
+   misma entrada de `providers.llama-cpp.models`. No reinstalar el componente desde el repositorio: el
+   archivo global conserva ajustes de la GUI (p. ej. `agent-default-model`) que el repositorio no
+   tiene. Validar con el parse YAML de abajo y comprobar que el `diff` contra el repositorio solo muestra
+   esos ajustes. DSH necesita reiniciarse para listar el modelo.
+5. **Commit convencional por repositorio** (skill `conventional-commit`), push a `origin main` y mostrar
    al usuario la URL de cada remoto.
-5. **Espejar D:\LLM en `local-inference-setup`** (incluido este `handoff.md`), commit y push.
+6. **Espejar D:\LLM en `local-inference-setup`** (incluido este `handoff.md`), commit y push.
 
 ## Dónde se registra cada modelo
 
 | Repositorio | Archivos | Patrón a copiar |
 | --- | --- | --- |
 | `C:\Users\rafat\Desktop\Code\dotfiles-dsh` | `config/profiles/desktop/cordis.patch.yml` (ruta `llm-pi-ai` → `providers.llama-cpp.models`) | Entrada YAML con `id`, `name` (`<Familia> Local · <ctx>`), `contextWindow`, `maxTokens`, `input`, `reasoningEfforts`; reglas en `skills/dsh-model-catalog/SKILL.md` |
+| DSH global (sin git) | `C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml` | Misma entrada que `dotfiles-dsh`; conservar las filas que difieran por ajustes de la GUI |
 | `C:\Users\rafat\Desktop\Code\dotfiles-opencode` | `frameworks/{conductor,learning,orchestrated,streamlined,vanilla}/opencode.json` (`provider.llamacpp.models`), `docs/frameworks.md`, `docs/changelog/frameworks.md` | Clave = alias de perfil, `name` `<Familia> <Quant> Local (<ctx>)`, `limit`, `reasoning`, `variants` off/low/medium/high |
 | `C:\Users\rafat\Desktop\Code\dotfiles-pi` | `agent/models.json` (`providers.llama-cpp.models`), `docs/overview/local-models.md` | Objeto con `compat` `chat-template` + `enable_thinking` desde `thinking.enabled` |
 | `C:\Users\rafat\Desktop\Code\local-inference-setup` | Copia de `AGENTS.md`, `README.md`, `handoff.md`, `config/`, `docs/`, `scripts/` de `D:\LLM` | `.gitignore` excluye `models/`, `runtimes/`, `packages/`, `logs/`, `tests/` |
@@ -45,8 +53,12 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   - local-inference-setup: espejo con este alta — https://github.com/RafaGonzalezDev/local-inference-setup
 - Verificado en el servidor: `enable_thinking: false` sin razonamiento; `thinking_budget_tokens: 64` cortó
   el razonamiento a unas 36 palabras.
-- **No** se ha instalado la configuración en los clientes activos (`~/.dsh`, OpenCode, Pi) ni reiniciado
-  ningún harness: los dotfiles solo cambian en el repositorio.
+- DSH global actualizado (2026-10-25): `nemotron-3.5-bolt-e4b-65k` añadido a
+  `C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml` (22 modelos locales); copia previa
+  `cordis.patch.yml.bak-20261025-025047-nemotron-bolt`. Solo difiere del repositorio en
+  `agent-default-model` (`llama-cpp` / `lfm2.5-24b-a2b-131k`, elegido en la GUI). DSH no se ha reiniciado.
+- **No** se ha instalado la configuración en los clientes activos de OpenCode ni Pi: solo cambian en sus
+  repositorios.
 
 ## Key context
 
@@ -78,7 +90,8 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Open questions
 
-- ¿Instalar los dotfiles en los clientes activos tras cada alta, o solo actualizar los repositorios?
+- ¿Instalar también los dotfiles de OpenCode y Pi en sus clientes activos tras cada alta? (DSH global ya
+  forma parte del procedimiento.)
 - ¿Añadir el borrador DFlash de Bolt como perfil propio (requiere descarga, prueba y medición)?
 
 ## Verification steps
@@ -99,4 +112,8 @@ cd /c/Users/rafat/Desktop/Code
 node -e "for(const f of ['conductor','learning','orchestrated','streamlined','vanilla']){const m=require('./dotfiles-opencode/frameworks/'+f+'/opencode.json').provider.llamacpp.models;console.log(f,Object.keys(m).length)}"
 node -e "const m=require('./dotfiles-pi/agent/models.json').providers['llama-cpp'].models;console.log(m.length,new Set(m.map(x=>x.id)).size)"
 node -e "const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');const d=Y.parse(require('fs').readFileSync('dotfiles-dsh/config/profiles/desktop/cordis.patch.yml','utf8').replace(/!!js/g,''));const m=d.find(e=>e.id==='llm-pi-ai').config.providers['llama-cpp'].models;console.log(m.length,new Set(m.map(x=>x.id)).size)"
+
+# DSH global: mismos IDs que el repositorio; el diff solo debe mostrar ajustes de la GUI
+node -e "const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');const d=Y.parse(require('fs').readFileSync('C:/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml','utf8').replace(/!!js/g,''));const m=d.find(e=>e.id==='llm-pi-ai').config.providers['llama-cpp'].models;console.log(m.length,new Set(m.map(x=>x.id)).size)"
+diff /c/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml dotfiles-dsh/config/profiles/desktop/cordis.patch.yml
 ```

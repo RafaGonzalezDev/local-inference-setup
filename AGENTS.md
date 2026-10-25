@@ -120,6 +120,10 @@ Usa los comandos de [instalación](<README.md#L60-L78>) y [descarga y validació
 
 Entrega el modelo registrado y los lanzadores visibles, pesos íntegros si se pidió instalar, validación estática global y funcional por perfil cuando sea posible. En el cierre indica archivos principales y qué comprobaste; declara descargas, inferencias, benchmarks o compatibilidades que no hayas verificado. No presentes «configurado», «descargado», «arranca» y «validado funcionalmente» como estados equivalentes. No crees commits ni modifiques catálogos externos sin petición.
 
+## Propagación a clientes
+
+El usuario ha pedido de forma permanente que cada modelo nuevo se registre también en los clientes: `dotfiles-dsh`, la configuración global de DSH (`C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml`, con copia de seguridad previa y edición aditiva), `dotfiles-opencode` y `dotfiles-pi`. Después se hace un commit convencional y push por repositorio, y se copia este directorio a `local-inference-setup`. Los pasos, archivos y comprobaciones están en [handoff.md](<handoff.md>).
+
 ## Referencias externas
 
 - [llama.cpp oficial](https://github.com/ggml-org/llama.cpp), [servidor](https://github.com/ggml-org/llama.cpp/tree/master/tools/server) y [multimodal](https://github.com/ggml-org/llama.cpp/blob/master/docs/multimodal.md).
