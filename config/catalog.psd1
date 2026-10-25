@@ -15,5 +15,6 @@
         'lfm2.5-24b-a2b'
         'flint'
         'sage-a1.5-35b-a3b'
+        'nemotron-3.5-bolt-e4b'
     )
 }
