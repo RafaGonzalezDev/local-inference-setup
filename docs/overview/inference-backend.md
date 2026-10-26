@@ -25,15 +25,15 @@ stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
 
 ## Installed Runtimes
 
-Two official `llama.cpp` runtimes are installed. Every launcher pins `b11551`
-except the `flint` profiles, which pin `b11827`. The previous pinned build
-`b11269` was uninstalled on 2026-10-22; `Install-LlamaRuntime.ps1` installs any of
-the three with `-Version`.
+One official `llama.cpp` runtime is installed, and every launcher pins it:
+`b11551`. The previous pinned build `b11269` was uninstalled on 2026-10-22, and
+`b11827`, which only the retired `flint` used, on 2026-10-26;
+`Install-LlamaRuntime.ps1` installs any of the three with `-Version`.
 
-`b11551` is the runtime every profile uses. It is a nightly, and it was chosen
-because it is the first build that contains MiniCPM-V 4.7 support (PR #29416):
-that model needs the canvas M-RoPE metadata key `rope.section_order` and the
-`v.tok_embd_sep` projector tensor, neither of which exists in `b11269`.
+`b11551` is a nightly. It was chosen because it was the first build that
+contained MiniCPM-V 4.7 support (PR #29416, the canvas M-RoPE key
+`rope.section_order` and the `v.tok_embd_sep` projector tensor); MiniCPM-V was
+retired on 2026-10-26 and the remaining models were validated on this build.
 
 - Version: `b11551` (nightly)
 - Commit: `69f201a20` (merge commit of PR #29416)
@@ -45,21 +45,10 @@ that model needs the canvas M-RoPE metadata key `rope.section_order` and the
 - Validated GPU: NVIDIA RTX 5080
 - Validated driver: 616.56
 
-`b11827` is a nightly used only by `flint`: it is the latest build on 2026-10-22
-and contains Flint support (PR #30928, first shipped in `b11803`) and the Jinja
-hexadecimal string escapes its chat template needs (PR #30929). The other
-launchers stay on `b11551` until they are tested on it. The Flint PR notes that
-its expert-activation scaling costs 10–30 % speed.
-
-- Version: `b11827` (nightly)
-- Commit: `970b51ce7`
-- Reported version: `0.7.0-dev (build 11827, commit 970b51ce7)`
-- Directory: `runtimes\llama.cpp\b11827-cuda13.4`
-- Package: `llama-b11827-bin-win-cuda-13.4-x64.zip`
-- SHA-256: `5d54c5fa2f26d9c80fa7439692e5929e8f7f1e7b2d00e3d6ab5a919154c768fa`
-- CUDA runtime SHA-256: `738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`
-- Validated GPU: NVIDIA RTX 5080
-- Validated driver: 616.56
+`b11827` (nightly, commit `970b51ce7`, package SHA-256
+`5d54c5fa2f26d9c80fa7439692e5929e8f7f1e7b2d00e3d6ab5a919154c768fa`) was installed
+for Flint support (PR #30928) and its template's Jinja escapes (PR #30929). It was
+removed with `flint` on 2026-10-26 and can be reinstalled with `-Version b11827`.
 
 `b11269` is no longer installed; returning to it is running the installer with
 `-Version b11269` and editing one `SERVER` line per launcher:
@@ -108,7 +97,7 @@ Launchers use `--reasoning auto`: thinking stays on by default when the template
 - `reasoning_effort: "none"` (Chat Completions) or `reasoning.effort: "none"` (Responses) turns thinking off.
 - `chat_template_kwargs: {"enable_thinking": false}` turns thinking off.
 - `thinking_budget_tokens` / `reasoning_budget_tokens` overrides the launcher's `--reasoning-budget`.
-- Other `reasoning_effort` levels are passed to the template; only templates that read them (Tiel, Swift) change behavior. Swift rejects levels other than `low`, `medium`, `xhigh`.
+- Other `reasoning_effort` levels are passed to the template; only templates that read them (Tiel) change behavior.
 - Anthropic `thinking: {"type": "disabled"}` is not mapped by the server and does not turn thinking off.
 
 ## Customizing Parameters

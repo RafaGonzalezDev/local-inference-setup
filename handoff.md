@@ -1,7 +1,7 @@
 # Handoff
 
-Sesión del 2026-10-26: alta de `nail-qwen3.6-35b-a3b` en `D:\LLM`, su propagación a los clientes y al
-espejo público, y sincronización completa de los catálogos de cliente con todos los lanzadores. Este documento fija el **procedimiento que debe repetirse cada vez que se añade un modelo**;
+Sesión del 2026-10-26: altas de Nail y Occult Nail, Tiel Coder a IQ4_XS, retirada de diez modelos y
+sincronización de los catálogos de cliente con todos los lanzadores. Este documento fija el **procedimiento que debe repetirse cada vez que se añade un modelo**;
 el detalle técnico del modelo está en su ficha y changelog (ver rutas abajo).
 
 ## Next session focus
@@ -13,8 +13,8 @@ pasos, en este orden, sin pedirlos de nuevo:
    calibración y smoke, README, ficha y changelog (todo según AGENTS.md).
 2. **Verificar el contrato de razonamiento del cliente** con el perfil arrancado: que
    `chat_template_kwargs.enable_thinking: false` deja `reasoning_content` vacío y que
-   `thinking_budget_tokens` corta el razonamiento. Si la plantilla usa `reasoning_effort` (Tiel, Swift) o
-   siempre razona (LFM2.5, Flint), usar la receta alternativa de cada cliente.
+   `thinking_budget_tokens` corta el razonamiento. Si la plantilla usa `reasoning_effort` (Tiel) o
+   siempre razona (LFM2.5), usar la receta alternativa de cada cliente.
 3. **Registrar un ID por alias de perfil** (el segundo `--alias` del lanzador, p. ej.
    `nemotron-3.5-bolt-e4b-65k`) en los tres dotfiles. `input`/`modalities` con imagen solo en perfiles de
    visión. Límite de salida: 12.288 a 32K, 16.384 a 65K, 24.576 a 96K y 131K, 32.768 (pi, dsh) /
@@ -22,7 +22,7 @@ pasos, en este orden, sin pedirlos de nuevo:
    exactamente los alias de todos los lanzadores (script de verificación abajo).
 4. **Actualizar también la configuración global de DSH**
    (`C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml`), no solo `dotfiles-dsh`: copia de seguridad
-   `cordis.patch.yml.bak-<yyyyMMdd-HHmmss>-<model>` en el mismo directorio y edición **aditiva** de la
+   `cordis.patch.yml.bak-<yyyyMMdd-HHmmss>-<model>` en el mismo directorio y edición acotada (alta o baja) de la
    misma entrada de `providers.llama-cpp.models`. No reinstalar el componente desde el repositorio: el
    archivo global conserva ajustes de la GUI (p. ej. `agent-default-model`) que el repositorio no
    tiene. Validar con el parse YAML de abajo y comprobar que el `diff` contra el repositorio solo muestra
@@ -30,6 +30,8 @@ pasos, en este orden, sin pedirlos de nuevo:
 5. **Commit convencional por repositorio** (skill `conventional-commit`), push a `origin main` y mostrar
    al usuario la URL de cada remoto.
 6. **Espejar D:\LLM en `local-inference-setup`** (incluido este `handoff.md`), commit y push.
+7. **Clientes activos en WSL**: copiar el proveedor local del repositorio a `~/.pi/agent/models.json` y
+   a `~/.config/opencode/opencode.json` (solo `provider.llamacpp.models`), con copia `.bak-<timestamp>` previa.
 
 ## Dónde se registra cada modelo
 
@@ -45,28 +47,23 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- `nail-qwen3.6-35b-a3b` instalado y validado en D:\LLM: ver
-  [docs/overview/models/nail-qwen3.6-35b-a3b.md](docs/overview/models/nail-qwen3.6-35b-a3b.md).
-- Registrado y subido (2026-10-26):
-  - dotfiles-dsh `7543050` — https://github.com/RafaGonzalezDev/dotfiles-dsh
-  - dotfiles-opencode `2cebce3` — https://github.com/RafaGonzalezDev/dotfiles-opencode
-  - dotfiles-pi `741d700` — https://github.com/RafaGonzalezDev/dotfiles-pi
-  - local-inference-setup: espejo con este alta — https://github.com/RafaGonzalezDev/local-inference-setup
-- Verificado en el servidor: `enable_thinking: false` y `reasoning_effort: "none"` sin razonamiento;
-  `thinking_budget_tokens: 64` cortó el razonamiento a unas 35 palabras.
-- DSH global actualizado (2026-10-26): los cuatro alias `nail-qwen3.6-35b-a3b-*` añadidos a
-  `C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml` (26 modelos locales); copia previa
-  `cordis.patch.yml.bak-20261026-164831-nail`. Solo difiere del repositorio en
-  `agent-default-model` (`llama-cpp` / `flint-262k`, elegido en la GUI). DSH no se ha reiniciado.
-- Catálogos sincronizados con los 42 alias de perfil de los lanzadores (2026-10-26): dotfiles-dsh
-  `1b60c3a`, dotfiles-opencode `a55087b`, dotfiles-pi `a54a67b`. Los IDs sin sufijo de Pi y OpenCode
-  (`gemma-4-12b-v2`, `gemma-4-26b-a4b`, `ling-3.0-tiny`, `nemotron-3.5-lightning-30b-a3b`,
-  `ornith-1.5-9b`) se sustituyeron por sus alias de perfil; DSH global también tiene los 42 (copia previa
-  `cordis.patch.yml.bak-20261026-170046-catalog-sync`).
-- Flint: el lanzador 131K es `start-agentic-auto-131k-1024.cmd` (batch 1024) y la documentación ya lo
-  refleja; el motivo del cambio de batch del 2026-10-25 no está registrado.
-- **No** se ha instalado la configuración en los clientes activos de OpenCode ni Pi: solo cambian en sus
-  repositorios. Las selecciones guardadas con un ID sin sufijo deben pasar a un alias de perfil.
+- Catálogo activo (2026-10-26): 7 modelos y 18 perfiles en `b11551`: `qwen3.6-35b-a3b`,
+  `ornith-1.5-35b-a3b`, `tiel-coder-35b-a3b-mtp` (ahora `UD-IQ4_XS`), `lfm2.5-24b-a2b`,
+  `nemotron-3.5-bolt-e4b`, `nail-qwen3.6-35b-a3b` y `occult-nail-1.0-35b-a3b`. Nail, Occult Nail y Tiel
+  los publica `peculiar-ragdoll`; el README tiene columna de publicador.
+- Retirados el 2026-10-26 a elección del usuario, con sus pesos: `tiel-coder-35b-a3b`, `gemma-4-12b-v2`,
+  `gemma-4-26b-a4b`, `ornith-1.5-9b`, `nemotron-3.5-lightning-30b-a3b`, `ling-3.0-tiny`,
+  `swift-1.5-qwen3.8-27b-gsq-rco-mtp`, `minicpm-v-4.7-35b-a3b`, `flint`, `sage-a1.5-35b-a3b`, y el runtime
+  `b11827`. Ver [el changelog de retirada](docs/changelog/2026-10-26-model-set-retirement.md).
+- Occult Nail y Tiel IQ4_XS calibrados bajo carga en todos sus perfiles; contrato de razonamiento
+  verificado (`enable_thinking: false`, `reasoning_effort: "none"` y `thinking_budget_tokens`).
+- Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
+  `~/.config/opencode/opencode.json`) listan exactamente los 18 alias. Cada archivo vivo tiene copia
+  `*.bak-<timestamp>-{profile-aliases,retirement}`; DSH global, `cordis.patch.yml.bak-*-retirement`.
+- DSH global: `agent-default-model` pasó de `flint-262k` a `nail-qwen3.6-35b-a3b-262k` (elección del
+  usuario); es la única diferencia con el repositorio. DSH no se ha reiniciado.
+- Estado de OpenCode en WSL (`~/.local/state/opencode/model.json`): recientes, favoritos y variantes
+  migrados a alias de perfil y sin modelos retirados (copias `.bak-*`).
 
 ## Key context
 

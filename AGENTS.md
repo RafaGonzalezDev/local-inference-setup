@@ -12,7 +12,7 @@ Reconsulta el inventario en cada sesión (`config/catalog.psd1`, `scripts/models
 
 - Raíz de este despliegue: `D:\LLM`. Los lanzadores calculan la raíz relativa, no dependen del directorio de trabajo.
 - Hardware documentado en [README.md](<README.md>): Ryzen 7 9800X3D, RTX 5080 con 16 GB de VRAM y 64 GB de RAM DDR5-6000. Comprueba memoria libre, disco y driver antes de descargar o calibrar; memoria total no equivale a disponible.
-- Runtime en uso: `b11551-cuda13.4` (build `11551`, commit `69f201a20`), al que apuntan todos los lanzadores salvo los de `flint`; `b11827-cuda13.4` (build `11827`, commit `970b51ce7`) lo usan solo los perfiles de `flint` desde el 2026-10-22, porque ningún build anterior soporta su arquitectura; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) se desinstaló el 2026-10-22 y puede reinstalarse para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551|b11827`; el valor por defecto es `b11551`.
+- Runtime en uso: `b11551-cuda13.4` (build `11551`, commit `69f201a20`), al que apuntan todos los lanzadores; `b11827-cuda13.4` (build `11827`, commit `970b51ce7`), que solo usaba el retirado `flint`, se desinstaló el 2026-10-26; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) se desinstaló el 2026-10-22 y puede reinstalarse para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551|b11827`; el valor por defecto es `b11551`.
 - [Catálogo](<config/catalog.psd1>): modelos activos. Los manifiestos `config/models/<model-id>.psd1` contienen únicamente metadatos de descarga e integridad.
 - Los GGUF instalados bajo `models/<model-id>/` y los argumentos literales de `scripts/models/<model-id>/start-*.cmd` son la fuente de verdad operativa. La documentación histórica y los catálogos de clientes no seleccionan perfiles.
 - [ADR-0001](<docs/adr/ADR-0001-self-contained-model-launchers.md>): cada lanzador invoca directamente su servidor, sin motor de arranque común, herencia de parámetros, PID global ni argumentos ocultos.
@@ -77,8 +77,9 @@ Copia un lanzador cercano por arquitectura/capacidad y conserva su estructura, n
 | MoE, texto agentic | [Qwen texto 131K](<scripts/models/qwen3.6-35b-a3b/start-agentic-auto-131k-2048.cmd>) |
 | Visión | [Qwen visión 131K](<scripts/models/qwen3.6-35b-a3b/start-agentic-auto-vision-131k-2048.cmd>) |
 | MTP integrado | [Tiel MTP 131K](<scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-131k-1024.cmd>) |
-| MTP con borrador externo | [Gemma MTP](<scripts/models/gemma-4-26b-a4b/start-text-auto-mtp.cmd>) |
-| Denso, contexto escalonado | [Swift MTP 96K](<scripts/models/swift-1.5-qwen3.8-27b-gsq-rco-mtp/start-agentic-auto-mtp-96k-1024.cmd>) |
+| Visión con MTP integrado | [Tiel MTP visión 131K](<scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-vision-131k-1024.cmd>) |
+
+No queda ningún perfil activo con borrador externo ni denso de contexto escalonado: sus referencias (Gemma 4 26B y Swift 1.5) se retiraron el 2026-10-26 y sus lanzadores siguen en el historial git de `local-inference-setup`.
 
 Contrato de cada `.cmd`:
 
@@ -88,20 +89,20 @@ Contrato de cada `.cmd`:
 - Llamada directa `"%SERVER%"` con los ocho grupos, terminal vinculada y código de salida preservado. No delegues a otro lanzador, no añadas `%*` ni arranque oculto.
 - Exactamente un `--model`, `--ctx-size`, `--host`, `--port` y `--alias`; sin flags largos duplicados. Toda ruta de `--model`, `--mmproj` o `--spec-draft-model` debe existir en el manifiesto.
 - Usa `--alias <model-id>,<profile-alias>`: canónico primero, alias de perfil único en todo el catálogo y distinto de cualquier ID canónico. El alias identifica el perfil YA iniciado, no lo inicia ni cambia contexto.
-- Nombres reales: los perfiles nuevos usan `start-agentic-auto[-mtp][-vision]-<context-label>-<batch>.cmd`, y los perfiles Gemma conservan nombres sin contexto ni batch (`start-{text,vision,agentic}-auto[-mtp|-vision].cmd`). `-Profile` recibe el nombre completo sin `start-` ni `.cmd`, no el alias API. El último número es batch, NO margen de VRAM; un perfil visión terminado en `1024` puede usar `--fit-target 2048`.
+- Nombres reales: los perfiles usan `start-agentic-auto[-mtp][-vision]-<context-label>-<batch>.cmd`. `-Profile` recibe el nombre completo sin `start-` ni `.cmd`, no el alias API. El último número es batch, NO margen de VRAM; un perfil visión terminado en `1024` puede usar `--fit-target 2048`.
 
 Política y calibración:
 
 Antes de declarar un perfil viable, confirma el contexto efectivo y aplica la [calibración mínima bajo carga](<docs/overview/model-management.md#minimum-memory-calibration>): memoria durante carga, prefill y generación de una petición representativa. Si falta margen, reduce contexto o batch/ubatch y repite; registra la carga probada. El smoke de 16 tokens no sustituye esta comprobación.
 
 - Todos los perfiles usan `--gpu-layers auto --fit on`, contexto explícito y `--fit-target 1024` MiB para texto / `2048` para visión. No vuelvas a perfiles manuales con `--gpu-layers 999`, `--n-cpu-moe` o `--n-cpu-ffn`. El planificador ajusta la colocación y solo reduce contexto si no se fijó; un contexto explícito demasiado grande puede fallar.
-- Base agentic habitual, si la arquitectura la admite: `--parallel 1 --cache-ram 0 --flash-attn on --split-mode none --threads 8 --threads-batch 8 --jinja`; `--cache-type-k q8_0 --cache-type-v q8_0 --load-mode none --log-verbosity 3`. No son requisitos universales: los perfiles Gemma de texto simples son más mínimos.
+- Base agentic habitual, si la arquitectura la admite: `--parallel 1 --cache-ram 0 --flash-attn on --split-mode none --threads 8 --threads-batch 8 --jinja`; `--cache-type-k q8_0 --cache-type-v q8_0 --load-mode none --log-verbosity 3`. No son requisitos universales: verifica cada flag con la arquitectura y la tarjeta.
 - Contextos habituales: 32768, 65536, 98304, 131072, 262144. Respeta el límite nativo y la memoria real; no crees 262K solo porque otro modelo lo permite. Empieza con un perfil razonable y crea variantes solo si son útiles. Etiquetas locales `32k/65k/96k/131k/262k` corresponden a esos enteros, no a miles decimales.
-- Batch/ubatch frecuentes: 2048/2048 a 131K para MoE sin MTP; 1024/1024 en contextos largos, densos y MTP integrado. Gemma 26B texto/MTP usa 1024/256. LFM2.5 usa 512/512 a 131K como excepción calibrada (ver su ficha). Son puntos de partida existentes, no óptimos medidos del nuevo modelo.
+- Batch/ubatch frecuentes: 2048/2048 a 131K para MoE sin MTP; 1024/1024 en contextos largos, densos y MTP integrado. LFM2.5 usa 512/512 a 131K como excepción calibrada (ver su ficha). Son puntos de partida existentes, no óptimos medidos del nuevo modelo.
 - Usa `--reasoning auto`: `--reasoning on` impide que `reasoning_effort: "none"` desactive el razonamiento por petición (ver [backend](<docs/overview/inference-backend.md#reasoning>)). Comprueba con `/apply-template` que la plantilla abre el bloque de razonamiento por defecto.
 - Muestreo, razonamiento y plantilla se obtienen de la publicación concreta. No fuerces `--reasoning on`, `--reasoning-effort xhigh` ni presupuesto 8192 en cualquier modelo. Aquí existen presupuestos 8192 y `-1` (sin límite). Verifica el formato real de salida y compatibilidad del cliente; no presupongas `reasoning_content` separado.
 - Visión: `VISION_ARGS=--mmproj "..."` y opciones de imagen justificadas por ese modelo. El margen mayor contempla el proyector, que la política local de `--fit` no presupone contabilizado; confirma uso real de memoria.
-- MTP integrado: `--spec-type draft-mtp --spec-draft-n-max 3` es la referencia de Qwen/Tiel/Swift/Sage, con GGUF que conserva `nextn`; no requiere archivo borrador externo. Gemma usa `--spec-draft-model "..." --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-ngl auto`. No intercambies ambas recetas. Comprueba inicialización del borrador en logs; las estimaciones de ajuste pueden no reflejar todo el coste del MTP. La aceptación de borradores no prueba aceleración: mide tokens/s si afirmas rendimiento.
+- MTP integrado: `--spec-type draft-mtp --spec-draft-n-max 3` es la referencia de Qwen/Tiel/Nail, con GGUF que conserva `nextn`; no requiere archivo borrador externo. Un borrador externo usa otra receta (la retirada Gemma usaba `--spec-draft-model "..." --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-ngl auto`). No intercambies ambas recetas. Comprueba inicialización del borrador en logs; las estimaciones de ajuste pueden no reflejar todo el coste del MTP. La aceptación de borradores no prueba aceleración: mide tokens/s si afirmas rendimiento.
 
 ### 5. Descargar, validar y documentar
 
@@ -134,6 +135,7 @@ El usuario ha pedido de forma permanente que cada alta, baja o cambio de perfil 
 - Cada catálogo de cliente debe tener exactamente una entrada por alias de perfil servido (el segundo `--alias` de cada lanzador): ni alias ausentes ni IDs canónicos sin sufijo. Compruébalo contra todos los lanzadores, no solo contra el modelo nuevo.
 - En el espejo, incluye solo los cambios de la tarea; si `D:\LLM` tiene cambios ajenos sin espejar, infórmalo en vez de arrastrarlos.
 - Un commit con `/conventional-commit` y push a `origin main` por repositorio; muestra el hash de cada uno.
+- Copia también el catálogo local a los clientes activos de WSL (Pi y OpenCode) con copia de seguridad previa, como indica `handoff.md`.
 
 Los pasos, convenciones de nombres, límites de salida y comprobaciones están en [handoff.md](<handoff.md>).
 

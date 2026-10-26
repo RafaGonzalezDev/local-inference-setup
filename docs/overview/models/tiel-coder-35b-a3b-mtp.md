@@ -1,126 +1,87 @@
 # Tiel Coder 35B A3B MTP
 
-- Modelo: `Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf`
+- Publicador: `peculiar-ragdoll` (Hugging Face), que también publica Nail y Occult Nail
+- Modelo: `Tiel-Coder-35B-A3B-MTP-UD-IQ4_XS.gguf`
 - Repositorio: `peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP`
-- Revisión: `bbe9e566f39e4fc9652ac66b71968289a03c520a`
+- Revisión: `bb5f3f441849fc24c2d9037c310bc995404bfa0c`
+- Licencia: `mit`, heredada del modelo base.
 - Alias API: `tiel-coder-35b-a3b-mtp`
 - Arquitectura GGUF: `qwen35moe` (MoE de la familia Ornith 1.5 35B A3B, con el bloque `nextn` de MTP)
 
-Tiel Coder es una recuantización dinámica (imatrix propia del autor, receta
-estilo Unsloth Dynamic) de `ornith-ai/Ornith-1.5-35B-A3B`, con la plantilla de
-chat Sharp incorporada en el propio GGUF y el cabezal MTP conservado. Licencia
-MIT, heredada del modelo base. El repositorio hermano
-`peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF` publica la misma escalera sin el
-cabezal MTP, incorporada aquí como [`tiel-coder-35b-a3b`](tiel-coder-35b-a3b.md);
-este perfil usa el repositorio `-MTP` porque el artefacto elegido lo incluye.
+Tiel Coder es una recuantización dinámica de `ornith-ai/Ornith-1.5-35B-A3B` hecha por
+`peculiar-ragdoll` (imatrix propia, receta estilo Unsloth Dynamic), con la plantilla de chat Sharp
+incorporada en el GGUF y el cabezal MTP conservado.
+
+Desde el 2026-10-26 este ID usa `UD-IQ4_XS` en lugar de `UD-Q4_K_XL`, a petición del usuario. Se
+conservan el ID y los alias para que los clientes y las selecciones guardadas sigan funcionando. La
+variante sin cabezal MTP (`tiel-coder-35b-a3b`) se retiró el mismo día.
 
 ## Artefactos
 
 | Cuantización | Archivo | Tamaño | SHA-256 |
 | --- | --- | ---: | --- |
-| `UD-Q4_K_XL` (principal) | `Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf` | 22.749.880.160 bytes | `54f46c4ce544c225122b0f066c2336f10404be7bc53b0cc94d1dbbc5e826bdc1` |
+| `UD-IQ4_XS` (con MTP) | `Tiel-Coder-35B-A3B-MTP-UD-IQ4_XS.gguf` | 18.119.933.792 bytes | `96b4c5430b5a693447a0aafce58840466829e1788e46fc037b23dfbafab009bf` |
 | `BF16` (mmproj) | `mmproj-BF16.gguf` | 902.822.016 bytes | `d9ce31026d1cb1f3f8d5152e2e2a014d9d2b302b6c93a7dc07bb0a0487f52837` |
 
-Ambos artefactos se fijan a la revisión
-`bbe9e566f39e4fc9652ac66b71968289a03c520a` de
-`peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP`. El autor sitúa el
-`UD-Q4_K_XL` en 22,7 GB y lo recomienda como punto de partida para equipos con
-24–32 GB de RAM+VRAM combinadas, que es el caso de este hardware (16 GB de VRAM
-más 64 GB de RAM). El artefacto principal pesa 2.623.956.640 bytes más que el
-`AD-Q4_K-IQ4_XS` de `ornith-1.5-35b-a3b`.
-
-El proyector `mmproj-BF16.gguf` es el de Ornith, pasado sin modificar y
-compartido por todos los niveles de cuantización del repositorio.
+SHA-256 LFS de la API de Hugging Face en la revisión fijada; ambos verificados en disco. La tarjeta
+describe `UD-IQ4_XS` como el nivel de 4 bits con más margen de contexto. El proyector es el de Ornith,
+sin cambios y compartido por todas las cuantizaciones; es idéntico al de la revisión anterior
+`bbe9e566…`, así que se conservó la copia local.
 
 ## Perfiles
 
-| Lanzador | Contexto | Batch/UBatch | Visión | MTP |
-| --- | ---: | ---: | :---: | :---: |
-| `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 |
-| `start-agentic-auto-mtp-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | sí, n-max 3 |
-| `start-agentic-auto-mtp-vision-131k-1024.cmd` | 131.072 | 1.024/1.024 | sí | sí, n-max 3 |
+| Lanzador | Contexto | Batch/UBatch | Visión | MTP | Alias de perfil |
+| --- | ---: | ---: | :---: | :---: | --- |
+| `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 | `tiel-coder-35b-a3b-mtp-131k` |
+| `start-agentic-auto-mtp-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | sí, n-max 3 | `tiel-coder-35b-a3b-mtp-262k` |
+| `start-agentic-auto-mtp-vision-131k-1024.cmd` | 131.072 | 1.024/1.024 | sí | sí, n-max 3 | `tiel-coder-35b-a3b-mtp-vision-131k` |
 
-Los tres comparten la configuración base del entorno: ocho hilos,
-`--parallel 1`, `--cache-ram 0`, Flash Attention, `--split-mode none`, caché KV
-`q8_0` para claves y valores, Jinja y presupuesto de razonamiento 8.192 con
-`--reasoning auto`. El muestreo usa `temp 0.6`, `top-p 0.95`, `top-k 20`,
-`min-p 0`, `presence-penalty 0` y `repeat-penalty 1`.
+Al cambiar la cuantización, los lanzadores solo cambiaron la ruta del GGUF. Mantienen la base del
+entorno: `b11551`, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto` y
+presupuesto 8.192.
 
-Sobre el muestreo: la tarjeta del modelo recomienda `temperature 1.0`,
-`top_p 0.95`, `top_k 20` para uso general y `temperature 0.6` para coding
-agentic. La tarjeta del modelo base Ornith recomienda `0.6/0.95/20` para tareas
-generales y `1.0` solo para reproducir sus benchmarks. Los tres perfiles fijan
-`0.6` por coherencia con los perfiles agentic ya activos de `ornith-1.5-35b-a3b`
-y `qwen3.6-35b-a3b`; es un valor adaptado de esos perfiles, no una medición
-propia.
+- Muestreo `temp 0.6 --top-p 0.95 --top-k 20 --min-p 0`, sin penalizaciones: la tarjeta recomienda
+  `1.0/0.95/20` para uso general y `0.6` para coding agentic.
+- MTP `--spec-type draft-mtp --spec-draft-n-max 3` y `p-min` por defecto. La tarjeta publica barridos
+  propios de `n-max`/`p-min` en su hardware; aquí no se han barrido.
+- Visión: `--mmproj mmproj-BF16.gguf --image-min-tokens 1024`, el mínimo que la tarjeta de Ornith
+  exige.
+- La plantilla lee `reasoning_effort` y además acepta `enable_thinking: false`.
 
-## MTP
+## Validación medida (2026-10-26, `UD-IQ4_XS`)
 
-Los tres perfiles materializan `--spec-type draft-mtp --spec-draft-n-max 3`. El
-repositorio elegido existe precisamente para conservar ese cabezal: sin
-`--spec-type draft-mtp`, llama.cpp ignora los tensores `nextn` y el archivo
-carga unos 0,4 GB de peso muerto.
+Una ejecución por perfil, sin cambiar parámetros. `/props` confirma el contexto, `/v1/models` publica
+el alias canónico y el de perfil con `ftype IQ4_XS - 4.25 bpw`, y el log muestra «creating MTP draft
+context» en los tres perfiles.
 
-La tarjeta del autor documenta dos palancas, `--spec-draft-n-max` (cuántos
-tokens se borradoran por paso) y `--spec-draft-p-min` (descarta un borrador por
-debajo de esa probabilidad), y publica un barrido sobre `UD-Q4_K_XL` frente a
-la misma configuración sin especulación: 1,22x con `n-max 1` y `p-min 0`, 1,16x
-con `n-max 3` y `p-min 0`, y 1,11x con `n-max 3` y `p-min 0,8`. Son medidas del
-autor en su hardware, no nuestras, y la propia tarjeta advierte que el óptimo
-depende del equipo, del nivel de cuantización y del contexto. Se materializa
-`n-max 3` siguiendo el perfil MTP de `qwen3.6-35b-a3b` y se deja `p-min` en su
-defecto (0). Conviene barrer ambos valores midiendo tokens por segundo, no tasa
-de aceptación, antes de fijar un valor propio.
+| Perfil | Prompt largo | Prefill | Decode largo | Decode corto (1.024) | Borradores aceptados (corto) | VRAM pico | RAM libre mínima |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| MTP 131K | 99.544 | 2.238,33 t/s (44,5 s) | 56,75 t/s | 73,00 t/s | 603/1.259 | 15.713 MiB | 39.534 MiB |
+| MTP 262K | 229.933 | 1.469,88 t/s (156,4 s) | 44,10 t/s | 61,75 t/s | 628/1.180 | 15.863 MiB | 34.914 MiB |
+| MTP visión 131K | 99.544 | 1.959,48 t/s (50,8 s) | 61,74 t/s | 65,75 t/s | 635/1.159 | 15.038 MiB | 37.028 MiB |
 
-El batch y el ubatch son 1.024/1.024 en los tres perfiles, igual que en el
-perfil MTP de `qwen3.6-35b-a3b` y a diferencia de los 2.048/2.048 de los
-perfiles sin MTP. Los búferes de cómputo crecen con `--ubatch-size` y compiten
-con los pesos por el mismo margen de `--fit-target`, así que un ubatch menor
-deja más VRAM para pesos y reduce el tramo de expertos que `--fit` manda a la
-CPU. Los nombres de los tres perfiles declaran ese 1.024, igual que el perfil
-MTP de Qwen.
+- `nvidia-smi` y RAM libre muestreados cada ~0,8 s; el escritorio ocupaba ~1,5 GB antes de cada
+  arranque. Decode largo: respuesta breve tras el prompt largo (`temperature 0`). Decode corto:
+  `enable_thinking: false`, `temperature 0`.
+- Tool calling en los tres perfiles: `get_weather` con `arguments {"location":"Madrid"}` y
+  razonamiento separado.
+- Contrato de razonamiento (131K): `enable_thinking: false` y `reasoning_effort: "none"` dejan
+  `reasoning_content` vacío; `thinking_budget_tokens: 64` lo corta.
+- Visión: `tests/assets/panels-1080p.png` (2.242 tokens) se describe como tres paneles rojo, verde y azul.
+- No se comparó con `--spec-type none`: no hay medición de la ganancia de MTP.
 
-La variante sin cabezal, [`tiel-coder-35b-a3b`](tiel-coder-35b-a3b.md), es el
-par de control: ambos artefactos solo se diferencian en el cabezal `nextn`, así
-que comparar sus perfiles de 131k aísla el efecto completo de la especulación,
-tanto su coste como su ganancia.
+## Límites y no verificado
 
-## Visión
-
-El perfil de visión añade `--mmproj mmproj-BF16.gguf --image-min-tokens 1024` y
-usa `--fit-target 2048` porque `--fit` no contabiliza el proyector multimodal.
-La tarjeta de Ornith 1.5 35B en este repositorio documenta 1.024 como mínimo
-exigido por la tarjeta del modelo base, mientras que el perfil de visión de
-`qwen3.6-35b-a3b` usa 2.048. La tarjeta de Tiel Coder no fija un valor: hereda
-el proyector de Ornith y solo indica que la visión funciona igual que en el
-repositorio base.
-
-## Colocación automática
-
-Los tres perfiles declaran `--gpu-layers auto --fit on` y omiten
-`--n-cpu-moe`: `--fit` coloca los pesos con `-ot` por capa en lugar de usar esa
-palanca. El contexto se declara siempre, porque `--fit` solo ajusta los
-argumentos no declarados y, si se omite, lo reduce al mínimo de `--fit-ctx`.
-
-El tramo final con expertos en CPU que `--fit` resuelve en este hardware no se
-ha medido para este modelo y queda pendiente. Como referencia, en
-`ornith-1.5-35b-a3b` (20.125.923.520 bytes) resolvió `blk.20–39` a 131k y
-`blk.19–39` a 262k; este artefacto es unos 2,6 GB mayor, de modo que cabe
-esperar un tramo igual o más largo. Es una expectativa, no una medición.
-
-## Estado
-
-Los tres perfiles usan `0.0.0.0:8080` sin autenticación y deben ejecutarse como
-alternativas. La prueba funcional la ejecuta el usuario: esta preparación no
-inicia `llama-server` ni realiza inferencias. No hay lanzadores retirados para
-este modelo.
+- No se ejercitó el contexto completo (prompts de hasta 99.544 y 229.933 tokens) ni un prompt largo
+  con imagen.
+- No se midió la calidad de `IQ4_XS` frente a `Q4_K_XL`.
+- Los perfiles escuchan en `0.0.0.0:8080` sin autenticación: solo red privada de confianza y un
+  perfil a la vez.
 
 ## Dependencias
 
 - `config/models/tiel-coder-35b-a3b-mtp.psd1`
-- `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-131k-1024.cmd`
-- `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-262k-1024.cmd`
-- `scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-vision-131k-1024.cmd`
+- `scripts/models/tiel-coder-35b-a3b-mtp/*.cmd`
 - `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs

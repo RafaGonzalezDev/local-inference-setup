@@ -1,5 +1,6 @@
 # Nail Qwen3.6 35B A3B
 
+- Publicador: `peculiar-ragdoll` (Hugging Face), que también publica Occult Nail y Tiel Coder
 - Modelo: `Nail-Qwen3.6-35B-A3B-UD-Q4_K_S.gguf`
 - Modelo MTP: `mtp/Nail-Qwen3.6-35B-A3B-MTP-UD-IQ4_XS.gguf`
 - Proyector: `mmproj-F16.gguf`

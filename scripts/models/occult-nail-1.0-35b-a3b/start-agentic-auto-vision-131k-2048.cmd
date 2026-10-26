@@ -2,29 +2,29 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem Automatic device placement profile for full-context workloads; --fit resolves the layer split.
+rem Automatic device placement vision profile; --fit does not account for the projector, so the margin is wider.
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe"
 
 rem Model
-set "MODEL_ARGS=--model "%LLM_ROOT%\models\sage-a1.5-35b-a3b\Sage-A1.5-Q4_K_M.gguf""
+set "MODEL_ARGS=--model "%LLM_ROOT%\models\occult-nail-1.0-35b-a3b\Occult-Nail-1.0-35B-A3B-UD-Q4_K_XL.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 262144 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 2048 --threads 8 --threads-batch 8 --batch-size 2048 --ubatch-size 2048 --jinja"
 
 rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
-set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias sage-a1.5-35b-a3b,sage-a1.5-35b-a3b-262k"
+set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias occult-nail-1.0-35b-a3b,occult-nail-1.0-35b-a3b-vision-131k"
 
 rem Reasoning
 set "REASONING_ARGS=--reasoning auto"
 
-rem Sampling recommended by InternScience for Sage-A1.5.
-set "SAMPLING_ARGS=--temp 1.0 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 1.5 --repeat-penalty 1"
+rem Sampling
+set "SAMPLING_ARGS=--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 0 --repeat-penalty 1"
 
 rem Runtime, cache, logging, and reasoning budget
 set "RUNTIME_ARGS=--log-verbosity 3 --load-mode none --cache-type-k q8_0 --cache-type-v q8_0 --reasoning-budget 8192"
 
 rem Vision
-set "VISION_ARGS="
+set "VISION_ARGS=--mmproj "%LLM_ROOT%\models\occult-nail-1.0-35b-a3b\mmproj-F16.gguf" --image-min-tokens 2048"
 
 rem MTP speculative decoding
 set "MTP_ARGS="

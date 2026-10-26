@@ -26,28 +26,22 @@ All profiles are automatic: every launcher declares `--gpu-layers auto --fit on`
 and lets the runtime resolve the device placement. The hand-tuned profiles that
 pinned `--gpu-layers 999` with `--n-cpu-moe` were retired on 2026-09-30. Their
 reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01. Every
-launcher pins `b11551-cuda13.4` except `flint`, which pins `b11827-cuda13.4`
-because no earlier build supports its architecture; `b11269-cuda13.4` was removed on
-2026-10-22 and can be reinstalled for rollback.
+launcher pins `b11551-cuda13.4`. `b11269-cuda13.4` was removed on 2026-10-22 and
+`b11827-cuda13.4`, used only by the retired `flint`, on 2026-10-26; both can be
+reinstalled.
 
-| Identifier | Profiles | Profile aliases |
-| --- | --- | --- |
-| `gemma-4-12b-v2` | `text-auto`, `vision-auto` | `gemma-4-12b-v2-text`, `gemma-4-12b-v2-vision` |
-| `gemma-4-26b-a4b` | `text-auto`, `text-auto-mtp`, `vision-auto`, `agentic-auto`, `agentic-auto-vision`, `vision-auto-mtp` | `gemma-4-26b-a4b-text`, `gemma-4-26b-a4b-text-mtp`, `gemma-4-26b-a4b-vision`, `gemma-4-26b-a4b-agentic`, `gemma-4-26b-a4b-agentic-vision`, `gemma-4-26b-a4b-vision-mtp` |
-| `qwen3.6-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `qwen3.6-35b-a3b-131k`, `qwen3.6-35b-a3b-262k`, `qwen3.6-35b-a3b-mtp-131k`, `qwen3.6-35b-a3b-vision-131k` |
-| `nemotron-3.5-lightning-30b-a3b` | `agentic-auto-131k-2048` | `nemotron-3.5-lightning-30b-a3b-131k` |
-| `ornith-1.5-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024` | `ornith-1.5-35b-a3b-131k`, `ornith-1.5-35b-a3b-262k` |
-| `ling-3.0-tiny` | `agentic-auto-262k-1024` | `ling-3.0-tiny-262k` |
-| `ornith-1.5-9b` | `agentic-auto-262k-1024` | `ornith-1.5-9b-262k` |
-| `tiel-coder-35b-a3b-mtp` | `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-mtp-vision-131k-1024` | `tiel-coder-35b-a3b-mtp-131k`, `tiel-coder-35b-a3b-mtp-262k`, `tiel-coder-35b-a3b-mtp-vision-131k` |
-| `tiel-coder-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `tiel-coder-35b-a3b-131k`, `tiel-coder-35b-a3b-262k`, `tiel-coder-35b-a3b-vision-131k` |
-| `swift-1.5-qwen3.8-27b-gsq-rco-mtp` | `agentic-auto-mtp-32k-1024`, `agentic-auto-mtp-65k-1024`, `agentic-auto-mtp-96k-1024`, `agentic-auto-mtp-131k-1024` | `swift-1.5-qwen3.8-27b-gsq-rco-mtp-32k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-65k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-96k`, `swift-1.5-qwen3.8-27b-gsq-rco-mtp-131k` |
-| `minicpm-v-4.7-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `minicpm-v-4.7-35b-a3b-131k`, `minicpm-v-4.7-35b-a3b-262k`, `minicpm-v-4.7-35b-a3b-vision-131k` |
-| `lfm2.5-24b-a2b` | `agentic-auto-131k-512` | `lfm2.5-24b-a2b-131k` |
-| `flint` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
-| `sage-a1.5-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `sage-a1.5-35b-a3b-131k`, `sage-a1.5-35b-a3b-262k`, `sage-a1.5-35b-a3b-mtp-131k`, `sage-a1.5-35b-a3b-vision-131k` |
-| `nemotron-3.5-bolt-e4b` | `agentic-auto-65k-1024` | `nemotron-3.5-bolt-e4b-65k` |
-| `nail-qwen3.6-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `nail-qwen3.6-35b-a3b-131k`, `nail-qwen3.6-35b-a3b-262k`, `nail-qwen3.6-35b-a3b-mtp-131k`, `nail-qwen3.6-35b-a3b-vision-131k` |
+The publisher is the Hugging Face organization whose GGUF files are installed; each
+manifest pins the exact repository and revision.
+
+| Identifier | Publisher | Profiles | Profile aliases |
+| --- | --- | --- | --- |
+| `qwen3.6-35b-a3b` | `unsloth` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `qwen3.6-35b-a3b-131k`, `qwen3.6-35b-a3b-262k`, `qwen3.6-35b-a3b-mtp-131k`, `qwen3.6-35b-a3b-vision-131k` |
+| `ornith-1.5-35b-a3b` | `AtomicChat` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024` | `ornith-1.5-35b-a3b-131k`, `ornith-1.5-35b-a3b-262k` |
+| `tiel-coder-35b-a3b-mtp` | `peculiar-ragdoll` | `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-mtp-vision-131k-1024` | `tiel-coder-35b-a3b-mtp-131k`, `tiel-coder-35b-a3b-mtp-262k`, `tiel-coder-35b-a3b-mtp-vision-131k` |
+| `lfm2.5-24b-a2b` | `LiquidAI` | `agentic-auto-131k-512` | `lfm2.5-24b-a2b-131k` |
+| `nemotron-3.5-bolt-e4b` | `nvidia` | `agentic-auto-65k-1024` | `nemotron-3.5-bolt-e4b-65k` |
+| `nail-qwen3.6-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `nail-qwen3.6-35b-a3b-131k`, `nail-qwen3.6-35b-a3b-262k`, `nail-qwen3.6-35b-a3b-mtp-131k`, `nail-qwen3.6-35b-a3b-vision-131k` |
+| `occult-nail-1.0-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `occult-nail-1.0-35b-a3b-131k`, `occult-nail-1.0-35b-a3b-262k`, `occult-nail-1.0-35b-a3b-vision-131k` |
 
 ## Repository Structure
 
@@ -74,7 +68,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-
 ```
 
 `-Version b11269` reinstalls the previous pinned build if a rollback is needed;
-`-Version b11827` installs the runtime that `flint` requires.
+`-Version b11827` reinstalls the nightly build that the retired `flint` used.
 
 2. Download a model:
 
@@ -93,25 +87,15 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Mo
 The launchers are grouped by model (representative commands below):
 
 ```bat
-scripts\models\gemma-4-12b-v2\start-text-auto.cmd
-scripts\models\gemma-4-12b-v2\start-vision-auto.cmd
-scripts\models\gemma-4-26b-a4b\start-vision-auto-mtp.cmd
-scripts\models\qwen3.6-35b-a3b\start-agentic-auto-mtp-131k-1024.cmd
 scripts\models\qwen3.6-35b-a3b\start-agentic-auto-131k-2048.cmd
+scripts\models\qwen3.6-35b-a3b\start-agentic-auto-mtp-131k-1024.cmd
 scripts\models\ornith-1.5-35b-a3b\start-agentic-auto-262k-1024.cmd
 scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-131k-1024.cmd
 scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-vision-131k-1024.cmd
-scripts\models\tiel-coder-35b-a3b\start-agentic-auto-131k-2048.cmd
-scripts\models\tiel-coder-35b-a3b\start-agentic-auto-vision-131k-2048.cmd
-scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-auto-131k-2048.cmd
-scripts\models\ling-3.0-tiny\start-agentic-auto-262k-1024.cmd
-scripts\models\ornith-1.5-9b\start-agentic-auto-262k-1024.cmd
-scripts\models\swift-1.5-qwen3.8-27b-gsq-rco-mtp\start-agentic-auto-mtp-65k-1024.cmd
-scripts\models\minicpm-v-4.7-35b-a3b\start-agentic-auto-131k-2048.cmd
-scripts\models\minicpm-v-4.7-35b-a3b\start-agentic-auto-vision-131k-2048.cmd
 scripts\models\lfm2.5-24b-a2b\start-agentic-auto-131k-512.cmd
 scripts\models\nemotron-3.5-bolt-e4b\start-agentic-auto-65k-1024.cmd
 scripts\models\nail-qwen3.6-35b-a3b\start-agentic-auto-131k-2048.cmd
+scripts\models\occult-nail-1.0-35b-a3b\start-agentic-auto-131k-2048.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
@@ -131,7 +115,7 @@ The terminal remains linked to `llama-server` and displays loading, prompt proce
 
 `/v1/models` reports the bare model id and the profile id of the running launcher; a request may name either one. `/health` answers only while a launcher is running, so it doubles as the check for whether port 8080 is free.
 
-Profiles, including Ornith 1.5 9B, listen on `0.0.0.0:8080`
+Profiles listen on `0.0.0.0:8080`
 without authentication. Use a private trusted network only. The Pi/OpenCode
 WSL clients use `http://192.168.1.100:8080/v1`; Windows-only loopback did not
 work from this WSL setup. Restart an existing server after changing a
@@ -149,7 +133,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-Ll
 Verify model hashes:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-ModelIntegrity.ps1 -Model gemma-4-12b-v2
+powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/common/Test-ModelIntegrity.ps1 -Model qwen3.6-35b-a3b
 ```
 
 Run a brief functional test:

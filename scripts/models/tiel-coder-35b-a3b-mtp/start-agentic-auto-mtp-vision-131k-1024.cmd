@@ -6,7 +6,7 @@ rem Automatic device placement MTP vision profile; --fit does not account for th
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe"
 
 rem Model
-set "MODEL_ARGS=--model "%LLM_ROOT%\models\tiel-coder-35b-a3b-mtp\Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf""
+set "MODEL_ARGS=--model "%LLM_ROOT%\models\tiel-coder-35b-a3b-mtp\Tiel-Coder-35B-A3B-MTP-UD-IQ4_XS.gguf""
 
 rem Context and performance
 set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 2048 --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"

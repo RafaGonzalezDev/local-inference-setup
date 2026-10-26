@@ -6,12 +6,12 @@
     DeferredInference = $false
     Artifacts = @(
         @{
-            File = 'Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf'
-            RemoteFile = 'Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf'
-            Size = 22749880160
-            Sha256 = '54f46c4ce544c225122b0f066c2336f10404be7bc53b0cc94d1dbbc5e826bdc1'
+            File = 'Tiel-Coder-35B-A3B-MTP-UD-IQ4_XS.gguf'
+            RemoteFile = 'Tiel-Coder-35B-A3B-MTP-UD-IQ4_XS.gguf'
+            Size = 18119933792
+            Sha256 = '96b4c5430b5a693447a0aafce58840466829e1788e46fc037b23dfbafab009bf'
             Repository = 'peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP'
-            Revision = 'bbe9e566f39e4fc9652ac66b71968289a03c520a'
+            Revision = 'bb5f3f441849fc24c2d9037c310bc995404bfa0c'
         }
         @{
             File = 'mmproj-BF16.gguf'
@@ -19,7 +19,7 @@
             Size = 902822016
             Sha256 = 'd9ce31026d1cb1f3f8d5152e2e2a014d9d2b302b6c93a7dc07bb0a0487f52837'
             Repository = 'peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP'
-            Revision = 'bbe9e566f39e4fc9652ac66b71968289a03c520a'
+            Revision = 'bb5f3f441849fc24c2d9037c310bc995404bfa0c'
         }
     )
 }

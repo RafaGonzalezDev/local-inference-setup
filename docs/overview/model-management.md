@@ -7,7 +7,7 @@ To recover a model from its pinned repository and revision:
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy RemoteSigned `
   -File scripts\setup\Download-Model.ps1 `
-  -Model gemma-4-12b-v2
+  -Model qwen3.6-35b-a3b
 ```
 
 The script resumes `.partial` downloads, checks size and SHA-256, and never silently overwrites a different artifact.
