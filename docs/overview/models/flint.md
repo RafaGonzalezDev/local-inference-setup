@@ -39,13 +39,15 @@ partes y el imatrix; solo se descargó la variante pedida.
 
 | Lanzador | Contexto | Batch/UBatch | Visión | Alias de perfil |
 | --- | ---: | ---: | :---: | --- |
-| `start-agentic-auto-131k-2048.cmd` | 131.072 | 2048/2048 | no | `flint-131k` |
+| `start-agentic-auto-131k-1024.cmd` | 131.072 | 1024/1024 | no | `flint-131k` |
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | no | `flint-262k` |
 
 Ambos copian la estructura de los perfiles agentic de `qwen3.6-35b-a3b`:
 `--gpu-layers auto --fit on --fit-target 1024`, contexto explícito, ocho hilos, caché KV `q8_0`,
 Flash Attention, `--parallel 1`, `--cache-ram 0`, `--split-mode none`, Jinja y `--load-mode none`.
-Batch/ubatch son los puntos de partida del catálogo para MoE, no óptimos medidos.
+Batch/ubatch no son óptimos medidos. El perfil 131K se publicó como
+`start-agentic-auto-131k-2048.cmd` con `2048/2048` y desde el 2026-10-25 usa `1024/1024`; el alias
+`flint-131k` no cambia.
 
 Muestreo y razonamiento:
 
@@ -70,6 +72,8 @@ Muestreo y razonamiento:
 | 131K | 112.544 tokens de prompt, 256 de salida | 1.668,28 t/s (67,5 s) | 37,90 t/s | 15.657 MiB | 30.751 MiB |
 | 262K | 225.076 tokens de prompt, 256 de salida | 929,64 t/s (242,1 s) | 27,85 t/s | 15.581 MiB | 33.022 MiB |
 
+- Las mediciones del perfil 131K (en esta tabla y en la de diagnóstico) se tomaron el 2026-10-22 con
+  el lanzador anterior, `batch/ubatch 2048/2048`; no se han repetido con `1024/1024`.
 - Una petición por carga, con `nvidia-smi` muestreado cada ~0,8 s: son picos observados, no máximos
   continuos. El escritorio ocupaba 1,5–1,9 GB de la tarjeta antes de cada arranque.
 - El decode se midió al final de prompts largos; no se midió con contexto corto.
@@ -102,7 +106,7 @@ Muestreo y razonamiento:
 ## Dependencias
 
 - `config/models/flint.psd1`
-- `scripts/models/flint/start-agentic-auto-131k-2048.cmd`
+- `scripts/models/flint/start-agentic-auto-131k-1024.cmd`
 - `scripts/models/flint/start-agentic-auto-262k-1024.cmd`
 - `runtimes/llama.cpp/b11827-cuda13.4/`
 
