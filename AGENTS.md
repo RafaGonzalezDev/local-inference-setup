@@ -134,7 +134,7 @@ El usuario ha pedido de forma permanente que cada alta, baja o cambio de perfil 
 
 - Cada catálogo de cliente debe tener exactamente una entrada por alias de perfil servido (el segundo `--alias` de cada lanzador): ni alias ausentes ni IDs canónicos sin sufijo. Compruébalo contra todos los lanzadores, no solo contra el modelo nuevo.
 - En el espejo, incluye solo los cambios de la tarea; si `D:\LLM` tiene cambios ajenos sin espejar, infórmalo en vez de arrastrarlos.
-- Un commit con `/conventional-commit` y push a `origin main` por repositorio; muestra el hash de cada uno.
+- Un commit con `/conventional-commit` y push a `origin main` por repositorio. Al terminar el turno, indica el hash y la URL del remoto de cada repositorio modificado.
 - Copia también el catálogo local a los clientes activos de WSL (Pi y OpenCode) con copia de seguridad previa, como indica `handoff.md`.
 
 Los pasos, convenciones de nombres, límites de salida y comprobaciones están en [handoff.md](<handoff.md>).
