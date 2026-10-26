@@ -16,5 +16,6 @@
         'flint'
         'sage-a1.5-35b-a3b'
         'nemotron-3.5-bolt-e4b'
+        'nail-qwen3.6-35b-a3b'
     )
 }

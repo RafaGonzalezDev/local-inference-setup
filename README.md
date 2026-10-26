@@ -47,6 +47,7 @@ because no earlier build supports its architecture; `b11269-cuda13.4` was remove
 | `flint` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
 | `sage-a1.5-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `sage-a1.5-35b-a3b-131k`, `sage-a1.5-35b-a3b-262k`, `sage-a1.5-35b-a3b-mtp-131k`, `sage-a1.5-35b-a3b-vision-131k` |
 | `nemotron-3.5-bolt-e4b` | `agentic-auto-65k-1024` | `nemotron-3.5-bolt-e4b-65k` |
+| `nail-qwen3.6-35b-a3b` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `nail-qwen3.6-35b-a3b-131k`, `nail-qwen3.6-35b-a3b-262k`, `nail-qwen3.6-35b-a3b-mtp-131k`, `nail-qwen3.6-35b-a3b-vision-131k` |
 
 ## Repository Structure
 
@@ -110,6 +111,7 @@ scripts\models\minicpm-v-4.7-35b-a3b\start-agentic-auto-131k-2048.cmd
 scripts\models\minicpm-v-4.7-35b-a3b\start-agentic-auto-vision-131k-2048.cmd
 scripts\models\lfm2.5-24b-a2b\start-agentic-auto-131k-512.cmd
 scripts\models\nemotron-3.5-bolt-e4b\start-agentic-auto-65k-1024.cmd
+scripts\models\nail-qwen3.6-35b-a3b\start-agentic-auto-131k-2048.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.

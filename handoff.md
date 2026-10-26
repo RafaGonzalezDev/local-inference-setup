@@ -1,6 +1,6 @@
 # Handoff
 
-Sesión del 2026-10-25: alta de `nemotron-3.5-bolt-e4b` en `D:\LLM` y su propagación a los clientes y al
+Sesión del 2026-10-26: alta de `nail-qwen3.6-35b-a3b` en `D:\LLM` y su propagación a los clientes y al
 espejo público. Este documento fija el **procedimiento que debe repetirse cada vez que se añade un modelo**;
 el detalle técnico del modelo está en su ficha y changelog (ver rutas abajo).
 
@@ -44,19 +44,19 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- `nemotron-3.5-bolt-e4b` instalado y validado en D:\LLM: ver
-  [docs/overview/models/nemotron-3.5-bolt-e4b.md](docs/overview/models/nemotron-3.5-bolt-e4b.md).
-- Registrado y subido (2026-10-25):
-  - dotfiles-dsh `bcad8be` — https://github.com/RafaGonzalezDev/dotfiles-dsh
-  - dotfiles-opencode `87d8086` — https://github.com/RafaGonzalezDev/dotfiles-opencode
-  - dotfiles-pi `9486349` — https://github.com/RafaGonzalezDev/dotfiles-pi
+- `nail-qwen3.6-35b-a3b` instalado y validado en D:\LLM: ver
+  [docs/overview/models/nail-qwen3.6-35b-a3b.md](docs/overview/models/nail-qwen3.6-35b-a3b.md).
+- Registrado y subido (2026-10-26):
+  - dotfiles-dsh `7543050` — https://github.com/RafaGonzalezDev/dotfiles-dsh
+  - dotfiles-opencode `2cebce3` — https://github.com/RafaGonzalezDev/dotfiles-opencode
+  - dotfiles-pi `741d700` — https://github.com/RafaGonzalezDev/dotfiles-pi
   - local-inference-setup: espejo con este alta — https://github.com/RafaGonzalezDev/local-inference-setup
-- Verificado en el servidor: `enable_thinking: false` sin razonamiento; `thinking_budget_tokens: 64` cortó
-  el razonamiento a unas 36 palabras.
-- DSH global actualizado (2026-10-25): `nemotron-3.5-bolt-e4b-65k` añadido a
-  `C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml` (22 modelos locales); copia previa
-  `cordis.patch.yml.bak-20261025-025047-nemotron-bolt`. Solo difiere del repositorio en
-  `agent-default-model` (`llama-cpp` / `lfm2.5-24b-a2b-131k`, elegido en la GUI). DSH no se ha reiniciado.
+- Verificado en el servidor: `enable_thinking: false` y `reasoning_effort: "none"` sin razonamiento;
+  `thinking_budget_tokens: 64` cortó el razonamiento a unas 35 palabras.
+- DSH global actualizado (2026-10-26): los cuatro alias `nail-qwen3.6-35b-a3b-*` añadidos a
+  `C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml` (26 modelos locales); copia previa
+  `cordis.patch.yml.bak-20261026-164831-nail`. Solo difiere del repositorio en
+  `agent-default-model` (`llama-cpp` / `flint-262k`, elegido en la GUI). DSH no se ha reiniciado.
 - **No** se ha instalado la configuración en los clientes activos de OpenCode ni Pi: solo cambian en sus
   repositorios.
 
@@ -68,15 +68,15 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   finales de línea). `cordis.patch.yml` usa LF.
 - Las listas de los clientes contienen IDs anteriores que no coinciden con alias de perfil actuales
   (p. ej. `gemma-4-12b-v2` sin sufijo). No se corrigieron: fuera de alcance.
-- Solo un perfil puede escuchar en `0.0.0.0:8080`. Durante esta sesión el usuario arrancó el perfil de
-  Bolt desde el Explorador; no detener servidores que no inició el agente.
+- Solo un perfil puede escuchar en `0.0.0.0:8080`; no detener servidores que no inició el agente.
+  El script de calibración de esta sesión no se versionó; la ficha de Nail describe qué mide.
 - El handoff anterior (2026-10-13, barrido funcional de `b11551`, MiniCPM-V, DSpark) se puede consultar en el
   historial git de `local-inference-setup`.
 
 ## Artifacts to reference
 
 - [AGENTS.md](AGENTS.md) y [docs/overview/adding-a-model.md](docs/overview/adding-a-model.md): alta en D:\LLM.
-- [docs/changelog/2026-10-25-nemotron-3.5-bolt-e4b.md](docs/changelog/2026-10-25-nemotron-3.5-bolt-e4b.md).
+- [docs/changelog/2026-10-26-nail-qwen3.6-35b-a3b.md](docs/changelog/2026-10-26-nail-qwen3.6-35b-a3b.md).
 - `dotfiles-dsh/skills/dsh-model-catalog/SKILL.md`: política de nombres y contrato de razonamiento de DSH.
 - `dotfiles-opencode/docs/frameworks.md` y `dotfiles-pi/docs/overview/local-models.md`: tablas de
   variantes/niveles de razonamiento y límites de salida.
