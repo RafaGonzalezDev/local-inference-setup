@@ -122,7 +122,20 @@ Entrega el modelo registrado y los lanzadores visibles, pesos íntegros si se pi
 
 ## Propagación a clientes
 
-El usuario ha pedido de forma permanente que cada modelo nuevo se registre también en los clientes: `dotfiles-dsh`, la configuración global de DSH (`C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml`, con copia de seguridad previa y edición aditiva), `dotfiles-opencode` y `dotfiles-pi`. Después se hace un commit convencional y push por repositorio, y se copia este directorio a `local-inference-setup`. Los pasos, archivos y comprobaciones están en [handoff.md](<handoff.md>).
+El usuario ha pedido de forma permanente que cada alta, baja o cambio de perfil de `D:\LLM` (nombre de lanzador, alias, contexto, visión o contrato de razonamiento) se complete en estos cuatro repositorios, sin pedirlo de nuevo:
+
+| Repositorio | Qué se actualiza |
+| --- | --- |
+| `C:\Users\rafat\Desktop\Code\dotfiles-dsh` | `config/profiles/desktop/cordis.patch.yml`; además, la configuración global de DSH (`C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml`, sin git) con copia de seguridad previa y edición aditiva |
+| `C:\Users\rafat\Desktop\Code\dotfiles-opencode` | los cinco `frameworks/*/opencode.json`, `docs/frameworks.md` y `docs/changelog/frameworks.md` |
+| `C:\Users\rafat\Desktop\Code\dotfiles-pi` | `agent/models.json` y `docs/overview/local-models.md` |
+| `C:\Users\rafat\Desktop\Code\local-inference-setup` | espejo de `AGENTS.md`, `README.md`, `handoff.md`, `config/`, `docs/` y `scripts/` de este directorio |
+
+- Cada catálogo de cliente debe tener exactamente una entrada por alias de perfil servido (el segundo `--alias` de cada lanzador): ni alias ausentes ni IDs canónicos sin sufijo. Compruébalo contra todos los lanzadores, no solo contra el modelo nuevo.
+- En el espejo, incluye solo los cambios de la tarea; si `D:\LLM` tiene cambios ajenos sin espejar, infórmalo en vez de arrastrarlos.
+- Un commit con `/conventional-commit` y push a `origin main` por repositorio; muestra el hash de cada uno.
+
+Los pasos, convenciones de nombres, límites de salida y comprobaciones están en [handoff.md](<handoff.md>).
 
 ## Referencias externas
 

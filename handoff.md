@@ -1,7 +1,7 @@
 # Handoff
 
-Sesión del 2026-10-26: alta de `nail-qwen3.6-35b-a3b` en `D:\LLM` y su propagación a los clientes y al
-espejo público. Este documento fija el **procedimiento que debe repetirse cada vez que se añade un modelo**;
+Sesión del 2026-10-26: alta de `nail-qwen3.6-35b-a3b` en `D:\LLM`, su propagación a los clientes y al
+espejo público, y sincronización completa de los catálogos de cliente con todos los lanzadores. Este documento fija el **procedimiento que debe repetirse cada vez que se añade un modelo**;
 el detalle técnico del modelo está en su ficha y changelog (ver rutas abajo).
 
 ## Next session focus
@@ -17,8 +17,9 @@ pasos, en este orden, sin pedirlos de nuevo:
    siempre razona (LFM2.5, Flint), usar la receta alternativa de cada cliente.
 3. **Registrar un ID por alias de perfil** (el segundo `--alias` del lanzador, p. ej.
    `nemotron-3.5-bolt-e4b-65k`) en los tres dotfiles. `input`/`modalities` con imagen solo en perfiles de
-   visión. Límite de salida: 16.384 a 65K, 24.576 a 131K, 32.768 (pi, dsh) / 32.000 (opencode) a 262K,
-   salvo que la tarjeta pida más.
+   visión. Límite de salida: 12.288 a 32K, 16.384 a 65K, 24.576 a 96K y 131K, 32.768 (pi, dsh) /
+   32.000 (opencode) a 262K, salvo que la tarjeta pida más. Comprobar después que cada catálogo tiene
+   exactamente los alias de todos los lanzadores (script de verificación abajo).
 4. **Actualizar también la configuración global de DSH**
    (`C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml`), no solo `dotfiles-dsh`: copia de seguridad
    `cordis.patch.yml.bak-<yyyyMMdd-HHmmss>-<model>` en el mismo directorio y edición **aditiva** de la
@@ -57,8 +58,15 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml` (26 modelos locales); copia previa
   `cordis.patch.yml.bak-20261026-164831-nail`. Solo difiere del repositorio en
   `agent-default-model` (`llama-cpp` / `flint-262k`, elegido en la GUI). DSH no se ha reiniciado.
+- Catálogos sincronizados con los 42 alias de perfil de los lanzadores (2026-10-26): dotfiles-dsh
+  `1b60c3a`, dotfiles-opencode `a55087b`, dotfiles-pi `a54a67b`. Los IDs sin sufijo de Pi y OpenCode
+  (`gemma-4-12b-v2`, `gemma-4-26b-a4b`, `ling-3.0-tiny`, `nemotron-3.5-lightning-30b-a3b`,
+  `ornith-1.5-9b`) se sustituyeron por sus alias de perfil; DSH global también tiene los 42 (copia previa
+  `cordis.patch.yml.bak-20261026-170046-catalog-sync`).
+- Flint: el lanzador 131K es `start-agentic-auto-131k-1024.cmd` (batch 1024) y la documentación ya lo
+  refleja; el motivo del cambio de batch del 2026-10-25 no está registrado.
 - **No** se ha instalado la configuración en los clientes activos de OpenCode ni Pi: solo cambian en sus
-  repositorios.
+  repositorios. Las selecciones guardadas con un ID sin sufijo deben pasar a un alias de perfil.
 
 ## Key context
 
@@ -66,8 +74,6 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   incluyó en el commit. No lo toques sin preguntar.
 - `dotfiles-opencode` usa CRLF en los `opencode.json`: al insertar por script, normalizar a CRLF (no mezclar
   finales de línea). `cordis.patch.yml` usa LF.
-- Las listas de los clientes contienen IDs anteriores que no coinciden con alias de perfil actuales
-  (p. ej. `gemma-4-12b-v2` sin sufijo). No se corrigieron: fuera de alcance.
 - Solo un perfil puede escuchar en `0.0.0.0:8080`; no detener servidores que no inició el agente.
   El script de calibración de esta sesión no se versionó; la ficha de Nail describe qué mide.
 - El handoff anterior (2026-10-13, barrido funcional de `b11551`, MiniCPM-V, DSpark) se puede consultar en el
@@ -116,4 +122,15 @@ node -e "const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modul
 # DSH global: mismos IDs que el repositorio; el diff solo debe mostrar ajustes de la GUI
 node -e "const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');const d=Y.parse(require('fs').readFileSync('C:/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml','utf8').replace(/!!js/g,''));const m=d.find(e=>e.id==='llm-pi-ai').config.providers['llama-cpp'].models;console.log(m.length,new Set(m.map(x=>x.id)).size)"
 diff /c/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml dotfiles-dsh/config/profiles/desktop/cordis.patch.yml
+
+# Paridad: cada catálogo contiene exactamente los alias de perfil de todos los lanzadores
+grep -ho -- '--alias [^ "]*' /d/LLM/scripts/models/*/*.cmd | sed 's/--alias [^,]*,//' | sort > served.txt
+node -e "
+const fs=require('fs');const srv=fs.readFileSync('served.txt','utf8').trim().split('\n');
+const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');
+const dsh=f=>Y.parse(fs.readFileSync(f,'utf8').replace(/!!js/g,'')).find(e=>e.id==='llm-pi-ai').config.providers['llama-cpp'].models.map(m=>m.id);
+const lists={dsh:dsh('dotfiles-dsh/config/profiles/desktop/cordis.patch.yml'),dshGlobal:dsh('C:/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml'),pi:require('./dotfiles-pi/agent/models.json').providers['llama-cpp'].models.map(m=>m.id)};
+for(const f of ['conductor','learning','orchestrated','streamlined','vanilla'])lists['oc-'+f]=Object.keys(require('./dotfiles-opencode/frameworks/'+f+'/opencode.json').provider.llamacpp.models);
+for(const[k,v] of Object.entries(lists))console.log(k,v.length,'missing:',srv.filter(x=>!v.includes(x)).join(' ')||'-','extra:',v.filter(x=>!srv.includes(x)).join(' ')||'-')"
+rm served.txt
 ```
