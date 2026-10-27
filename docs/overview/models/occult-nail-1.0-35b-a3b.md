@@ -30,17 +30,18 @@ cuantización la eligió el usuario. El proyector es byte a byte el de `unsloth/
 
 | Lanzador | Contexto | Batch/UBatch | Visión | Alias de perfil |
 | --- | ---: | ---: | :---: | --- |
-| `start-agentic-auto-131k-2048.cmd` | 131.072 | 2048/2048 | no | `occult-nail-1.0-35b-a3b-131k` |
+| `start-agentic-auto-131k-1024.cmd` | 131.072 | 1024/1024 | no | `occult-nail-1.0-35b-a3b-131k` |
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | no | `occult-nail-1.0-35b-a3b-262k` |
-| `start-agentic-auto-vision-131k-2048.cmd` | 131.072 | 2048/2048 | sí | `occult-nail-1.0-35b-a3b-vision-131k` |
+| `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | sí | `occult-nail-1.0-35b-a3b-vision-131k` |
 
-Son copias sin cambios de los tres perfiles sin MTP de `qwen3.6-35b-a3b`: `b11551`, `--fit-target
-1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`, presupuesto 8.192,
-`--image-min-tokens 2048` y muestreo `--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0` sin
+Son copias de los tres perfiles sin MTP de `qwen3.6-35b-a3b`, con batch/ubatch `1024/1024` en los
+tres perfiles (el 131K y el de visión bajaron de `2048/2048` el 2026-10-27 para igualar a Nail):
+`b11551`, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`, presupuesto
+8.192, `--image-min-tokens 2048` y muestreo `--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0` sin
 penalizaciones. La tarjeta no recomienda muestreo, así que se hereda el de Qwen3.6; Nail, con la
 misma plantilla, recomienda `temp 1.0`.
 
-## Validación medida (2026-10-26)
+## Validación medida (2026-10-26, batch/ubatch 2048)
 
 Una ejecución por perfil, sin cambiar parámetros. `/props` confirma el contexto y `/v1/models`
 publica el alias canónico y el de perfil. La plantilla termina en `<|im_start|>assistant\n<think>\n`.
@@ -62,6 +63,8 @@ publica el alias canónico y el de perfil. La plantilla termina en `<|im_start|>
 ## Límites y no verificado
 
 - No se ejercitó el contexto completo ni un prompt largo con imagen. No se midió la calidad.
+- El batch/ubatch `1024/1024` de los perfiles 131K y visión 131K no se ha recalibrado ni medido: la
+tabla anterior corresponde a `2048/2048`.
 - Modelo sin salvaguardas de rechazo: úsalo solo en esta red privada y con criterio propio.
 - Los perfiles escuchan en `0.0.0.0:8080` sin autenticación: un perfil a la vez.
 

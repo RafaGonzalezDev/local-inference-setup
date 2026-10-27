@@ -41,7 +41,7 @@ manifest pins the exact repository and revision.
 | `lfm2.5-24b-a2b` | `LiquidAI` | `agentic-auto-131k-512` | `lfm2.5-24b-a2b-131k` |
 | `nemotron-3.5-bolt-e4b` | `nvidia` | `agentic-auto-65k-1024` | `nemotron-3.5-bolt-e4b-65k` |
 | `nail-qwen3.6-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `nail-qwen3.6-35b-a3b-131k`, `nail-qwen3.6-35b-a3b-262k`, `nail-qwen3.6-35b-a3b-mtp-131k`, `nail-qwen3.6-35b-a3b-vision-131k` |
-| `occult-nail-1.0-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-2048` | `occult-nail-1.0-35b-a3b-131k`, `occult-nail-1.0-35b-a3b-262k`, `occult-nail-1.0-35b-a3b-vision-131k` |
+| `occult-nail-1.0-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024` | `occult-nail-1.0-35b-a3b-131k`, `occult-nail-1.0-35b-a3b-262k`, `occult-nail-1.0-35b-a3b-vision-131k` |
 
 ## Repository Structure
 
@@ -95,7 +95,7 @@ scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-vision-131k-1024.cm
 scripts\models\lfm2.5-24b-a2b\start-agentic-auto-131k-512.cmd
 scripts\models\nemotron-3.5-bolt-e4b\start-agentic-auto-65k-1024.cmd
 scripts\models\nail-qwen3.6-35b-a3b\start-agentic-auto-131k-2048.cmd
-scripts\models\occult-nail-1.0-35b-a3b\start-agentic-auto-131k-2048.cmd
+scripts\models\occult-nail-1.0-35b-a3b\start-agentic-auto-131k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
