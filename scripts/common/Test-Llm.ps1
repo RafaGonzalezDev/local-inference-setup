@@ -14,7 +14,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$rootDirectory = if ($RootDirectory) { $RootDirectory } else { Split-Path -Parent (Split-Path -Parent $PSScriptRoot) }
+$rootDirectory = if ($RootDirectory) { (Resolve-Path -LiteralPath $RootDirectory).Path } else { Split-Path -Parent (Split-Path -Parent $PSScriptRoot) }
 $launcherDirectory = Join-Path $rootDirectory 'scripts\models'
 $catalog = Import-PowerShellDataFile -Path (Join-Path $rootDirectory 'config\catalog.psd1')
 $resultDirectory = Join-Path $rootDirectory 'logs\validation'

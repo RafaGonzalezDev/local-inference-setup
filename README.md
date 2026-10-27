@@ -26,15 +26,16 @@ All profiles are automatic: every launcher declares `--gpu-layers auto --fit on`
 and lets the runtime resolve the device placement. The hand-tuned profiles that
 pinned `--gpu-layers 999` with `--n-cpu-moe` were retired on 2026-09-30. Their
 reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01. Every
-launcher pins `b11669-cuda13.4` (llama.cpp v0.7.0) since 2026-10-27; `b11551-cuda13.4`
-stays installed for rollback. `b11269-cuda13.4` was removed on 2026-10-22 and
+launcher except `lfm3-1.7b` pins `b11669-cuda13.4` (llama.cpp v0.7.0) since 2026-10-27;
+`b11551-cuda13.4` stays installed for rollback. `lfm3-1.7b` pins `19ff817-cuda13.4`, a
+runtime built from source because no official release supports LFM3 yet
+([build record](docs/overview/inference-backend.md#source-built-runtime-19ff817)). `b11269-cuda13.4` was removed on 2026-10-22 and
 `b11827-cuda13.4`, used only by the retired `flint`, on 2026-10-26; both can be
 reinstalled.
 
-The LiquidAI LFM3 models (`lfm3-1.7b`, `lfm3-audio-2b`, `lfm3-omni-2b`) live apart in
-[experimental/lfm3](experimental/lfm3/README.md) with their own catalog, launchers and a
-llama.cpp runtime built from source, because no official release supports them yet. They are
-not in the table below nor in any client catalog.
+The LiquidAI audio and omni models (`lfm3-audio-2b`, `lfm3-omni-2b`) live apart in
+[experimental/lfm3](experimental/lfm3/README.md) with their own catalog and launchers; they use
+the same `19ff817-cuda13.4` runtime and are not in the table below nor in any client catalog.
 
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
@@ -46,8 +47,9 @@ manifest pins the exact repository and revision.
 | `tiel-coder-35b-a3b-mtp` | `peculiar-ragdoll` | `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-mtp-vision-131k-1024` | `tiel-coder-35b-a3b-mtp-131k`, `tiel-coder-35b-a3b-mtp-262k`, `tiel-coder-35b-a3b-mtp-vision-131k` |
 | `lfm2.5-24b-a2b` | `LiquidAI` | `agentic-auto-131k-512` | `lfm2.5-24b-a2b-131k` |
 | `nemotron-3.5-bolt-e4b` | `nvidia` | `agentic-auto-65k-1024` | `nemotron-3.5-bolt-e4b-65k` |
-| `nail-qwen3.6-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-2048`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-2048` | `nail-qwen3.6-35b-a3b-131k`, `nail-qwen3.6-35b-a3b-262k`, `nail-qwen3.6-35b-a3b-mtp-131k`, `nail-qwen3.6-35b-a3b-vision-131k` |
+| `nail-qwen3.6-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-1024` | `nail-qwen3.6-35b-a3b-131k`, `nail-qwen3.6-35b-a3b-262k`, `nail-qwen3.6-35b-a3b-mtp-131k`, `nail-qwen3.6-35b-a3b-vision-131k` |
 | `occult-nail-1.0-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024` | `occult-nail-1.0-35b-a3b-131k`, `occult-nail-1.0-35b-a3b-262k`, `occult-nail-1.0-35b-a3b-vision-131k` |
+| `lfm3-1.7b` | `LiquidAI` | `agentic-auto-262k-1024` | `lfm3-1.7b-262k` |
 
 ## Repository Structure
 
@@ -100,8 +102,9 @@ scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-131k-1024.cmd
 scripts\models\tiel-coder-35b-a3b-mtp\start-agentic-auto-mtp-vision-131k-1024.cmd
 scripts\models\lfm2.5-24b-a2b\start-agentic-auto-131k-512.cmd
 scripts\models\nemotron-3.5-bolt-e4b\start-agentic-auto-65k-1024.cmd
-scripts\models\nail-qwen3.6-35b-a3b\start-agentic-auto-131k-2048.cmd
+scripts\models\nail-qwen3.6-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\occult-nail-1.0-35b-a3b\start-agentic-auto-131k-1024.cmd
+scripts\models\lfm3-1.7b\start-agentic-auto-262k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.

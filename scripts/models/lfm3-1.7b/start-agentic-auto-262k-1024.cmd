@@ -2,7 +2,7 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem Text agentic profile at the native 262,144-token context; source-built runtime with LFM3 support.
+rem Text agentic profile at the native 262,144-token context; runtime built from source (no release supports LFM3 yet).
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\19ff817-cuda13.4\llama-server.exe"
 
 rem Model

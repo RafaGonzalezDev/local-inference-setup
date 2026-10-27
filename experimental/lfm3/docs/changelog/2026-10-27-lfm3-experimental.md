@@ -1,5 +1,8 @@
 # 2026-10-27 - Despliegue experimental LFM3
 
+> 2026-10-28: `lfm3-1.7b`, el runtime y el script de compilación se movieron al directorio
+> principal ([changelog](../../../../docs/changelog/2026-10-28-lfm3-1.7b.md)).
+
 **Qué**: nuevo directorio `experimental/lfm3` con `lfm3-1.7b`, `lfm3-audio-2b` y `lfm3-omni-2b`
 (LiquidAI, `Q8_0` y proyectores `Q8_0`), un perfil por modelo y un runtime de llama.cpp compilado
 desde el commit `19ff817` (fusión de la PR #31257).
@@ -7,7 +10,7 @@ desde el commit `19ff817` (fusión de la PR #31257).
 **Por qué**: el usuario quiere probar todas las capacidades de la familia LFM3 (texto, audio, voz e
 imagen) sin mezclarla con los modelos de codificación agentic. Ninguna release de llama.cpp las
 soportaba; compilar desde código está permitido con notificación al usuario, que se le dio antes de
-compilar. Ver [runtime](../runtime.md).
+compilar. Ver [backend](../../../../docs/overview/inference-backend.md#source-built-runtime-19ff817).
 
 **Dónde**: `experimental/lfm3/{README.md,config,docs,scripts}`; pesos, runtime, fuente y registros
 en `experimental/lfm3/{models,runtimes,src,logs}` (no versionados). En `D:\LLM`: referencia en

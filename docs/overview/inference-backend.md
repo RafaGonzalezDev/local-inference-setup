@@ -25,7 +25,7 @@ stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
 
 ## Installed Runtimes
 
-Two official `llama.cpp` runtimes are installed. Every launcher pins `b11669`
+Two official `llama.cpp` runtimes and one source build are installed. Every launcher except `lfm3-1.7b` pins `b11669`
 since 2026-10-27; `b11551`, the previous pinned build, stays installed for
 rollback. `b11269` was uninstalled on 2026-10-22 and `b11827`, which only the
 retired `flint` used, on 2026-10-26; `Install-LlamaRuntime.ps1` installs any of
@@ -77,6 +77,47 @@ removed with `flint` on 2026-10-26 and can be reinstalled with `-Version b11827`
 - CUDA runtime SHA-256: `738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`
 - Validated GPU: NVIDIA RTX 5080
 - Validated driver: 616.56
+
+### Source-built runtime (19ff817)
+
+`lfm3-1.7b` and the experimental `lfm3-audio-2b` and `lfm3-omni-2b` use
+`runtimes\llama.cpp\19ff817-cuda13.4`, **built locally from source**, because no
+official release contained LFM3 support when they were added: the `lfm3` text
+architecture (PR #31252) and LFM3-Audio/Omni (PR #31257) were merged on
+2026-10-27, after the latest nightly then available (`b11936`). It has no SHA-256
+published upstream; the hashes below identify this local build only.
+
+- Commit: `19ff817fb25e9a1b838b1d7f9f4325f7bf9779c4` (merge commit of PR #31257 on
+  `master`, which already contains PR #31252)
+- Reported version: `0.7.0-dev (build 1, commit 19ff817)`; the build number is the
+  commit count of the shallow checkout, not an upstream `bNNNNN`
+- Script: [Build-LlamaRuntime.cmd](../../scripts/setup/Build-LlamaRuntime.cmd); source
+  and build tree in `packages\llama.cpp\19ff817\src`
+- Toolchain: Visual Studio 2022 Build Tools (MSVC 19.44.35222.0, bundled CMake and
+  Ninja), CUDA Toolkit 13.4.59
+- Options: `GGML_CUDA=ON`, `CMAKE_CUDA_ARCHITECTURES=120` (RTX 5080 only),
+  `GGML_NATIVE=ON` (host CPU), `LLAMA_OPENSSL=OFF` (weights come from
+  `Download-Model.ps1`); not portable to other CPUs or GPUs
+- Hashes also stored in `runtimes\llama.cpp\19ff817-cuda13.4.sha256.txt`
+
+| File | SHA-256 |
+| --- | --- |
+| `llama-server.exe` | `09d2510772010308343cdc684d28102f3c9ea71e296770ea7c9293d73e35c408` |
+| `llama-tts.exe` | `e74f6fe7bec261a491687d644c0d4ee7cf49788f9ed39a887ef70d6e182abeda` |
+| `llama-mtmd-cli.exe` | `9e4bcc5bdf325bb6919bae7c2bd6ba8fa8327efc8b50741b36fb96fa2df48210` |
+| `llama-cli.exe` | `a32cfb6f13d33be46baaf5166227c0083227165d76c0da065c5efef10126e2d0` |
+| `llama.dll` | `9c4afbd60edd4b816c90aca8253be72af2fdd61d9e9ff4e0923210feaa69307f` |
+| `mtmd.dll` | `de038aefdda9ae37bb4c9d5b33930ec58c14c60196bb7fef1968448b50c874c2` |
+| `ggml.dll` | `eb9898fcf97805449acf43a28043f57828c7e0dd98deeabc493e2b525be89b59` |
+| `ggml-base.dll` | `ea624059b213fdbf2f96140eb43bd03e47ae0038ed5da15f9ab640246745f786` |
+| `ggml-cpu.dll` | `7c5deb5bbe8ce9adfa098c2b09b39f0156e95f01dc4b28afe0fc1766a22f2d06` |
+| `ggml-cuda.dll` | `c03ab3b0faacbc0f7e0ddd9580c62afe55b1dcc83d63a4b56062a32e6048a9d1` |
+| `cudart64_13.dll` (CUDA 13.4) | `05bfafcb97bd53b0089568a96e1e5bd6921637bd0853ff7f5342bd31a6a16890` |
+
+MSVC output is not bit-for-bit reproducible, so a rebuild yields new hashes. When
+an official release contains both PRs, install it with `Install-LlamaRuntime.ps1`,
+point the LFM3 launchers at it and repeat their tests; this runtime and its source
+tree can then be removed.
 
 The installer accepts both the legacy numeric version output and the current
 semantic-version output while still requiring the pinned build and commit. Both

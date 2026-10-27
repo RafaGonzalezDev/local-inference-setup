@@ -38,13 +38,14 @@ de 4 bits con más margen, y `UD-IQ4_XS` la recomendada para 24 GB en la tarjeta
 
 | Lanzador | Contexto | Batch/UBatch | Visión | MTP | Alias de perfil |
 | --- | ---: | ---: | :---: | :---: | --- |
-| `start-agentic-auto-131k-2048.cmd` | 131.072 | 2048/2048 | no | no | `nail-qwen3.6-35b-a3b-131k` |
+| `start-agentic-auto-131k-1024.cmd` | 131.072 | 1024/1024 | no | no | `nail-qwen3.6-35b-a3b-131k` |
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | no | no | `nail-qwen3.6-35b-a3b-262k` |
 | `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1024/1024 | no | sí, n-max 3 | `nail-qwen3.6-35b-a3b-mtp-131k` |
-| `start-agentic-auto-vision-131k-2048.cmd` | 131.072 | 2048/2048 | sí | no | `nail-qwen3.6-35b-a3b-vision-131k` |
+| `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | sí | no | `nail-qwen3.6-35b-a3b-vision-131k` |
 
 Los cuatro son copias de los lanzadores de `qwen3.6-35b-a3b` sobre el runtime `b11669-cuda13.4`:
-mismos contexto, batch, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`,
+mismo contexto y estructura, batch fijo 1024/1024 para todos los perfiles,
+`--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`,
 `--reasoning-budget 8192`, `--image-min-tokens 2048` y `--spec-type draft-mtp --spec-draft-n-max 3`.
 El perfil MTP usa el GGUF de `mtp\` y los otros tres el `UD-Q4_K_S`.
 

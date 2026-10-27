@@ -57,8 +57,9 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `b11827`. Ver [el changelog de retirada](docs/changelog/2026-10-26-model-set-retirement.md).
 - 2026-10-27: runtime del catálogo a `b11669` (v0.7.0) sin smoke por perfil, por decisión del usuario; solo
   A/B de Nail 131K y MTP 131K ([changelog](docs/changelog/2026-10-27-llama-runtime-b11669.md)).
-  Familia LFM3 en [experimental/lfm3](experimental/lfm3/README.md) con runtime compilado desde el
-  commit `19ff817`; fuera de los catálogos de cliente.
+  LFM3-Audio y LFM3-Omni en [experimental/lfm3](experimental/lfm3/README.md), fuera de los catálogos de
+  cliente. 2026-10-28: `lfm3-1.7b` entra en el catálogo principal y en los clientes (alias
+  `lfm3-1.7b-262k`) con el runtime compilado `19ff817-cuda13.4`; 8 modelos y 19 perfiles.
 - Occult Nail y Tiel IQ4_XS calibrados bajo carga en todos sus perfiles; contrato de razonamiento
   verificado (`enable_thinking: false`, `reasoning_effort: "none"` y `thinking_budget_tokens`).
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y

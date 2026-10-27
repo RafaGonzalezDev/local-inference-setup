@@ -1,26 +1,9 @@
 # LFM3 models
 
-All three publications are by LiquidAI under the LFM Open License v1.0 (`lfm1.0`), not gated.
-Weights are the official GGUF conversions, pinned in `config/models/*.psd1`; the SHA-256 values
+Both publications are by LiquidAI under the LFM Open License v1.0 (`lfm1.0`), not gated.
+`lfm3-1.7b` moved to the main catalog on 2026-10-28
+([model card](../../../docs/overview/models/lfm3-1.7b.md)). Weights are the official GGUF conversions, pinned in `config/models/*.psd1`; the SHA-256 values
 are the Hugging Face LFS checksums of the pinned revision.
-
-## lfm3-1.7b
-
-- Source: [LiquidAI/LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B) (revision
-  `40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd`); GGUF
-  [LiquidAI/LFM3-1.7B-GGUF](https://huggingface.co/LiquidAI/LFM3-1.7B-GGUF) at
-  `b3f2ae5d73cd3c91bf40e8ba752c648aa05dffdf`.
-- Artifact: `LFM3-1.7B-Q8_0.gguf`, 1,846,238,496 bytes, SHA-256
-  `8f6b24182258205e9e01e21f1f24a1f208c1e8115578825d202ce39976af20b6`.
-- Architecture `lfm3` (text), 262,144-token context (`max_position_embeddings`), reasoning on by
-  default (`enable_thinking=False` can be inconsistent per the card), XML tool calls, deferred tool
-  search. Post-trained for agent harnesses; the card does not recommend it for agentic coding.
-- Quantization: `Q8_0` (1.85 GB) because memory is not a constraint at this size. The repository
-  also publishes a QAD `Q4_0` trained to recover Q4 accuracy; not installed.
-- Profile `start-agentic-auto-262k-1024.cmd`, alias `lfm3-1.7b-262k`: native context,
-  `--reasoning auto` with budget 8,192, sampling from the card's general profile and
-  `generation_config` (`--temp 0.1 --top-k 50 --repeat-penalty 1.1`). For math and STEM the card
-  recommends `temperature 1.0, top_p 0.95, top_k 20` per request.
 
 ## lfm3-audio-2b
 

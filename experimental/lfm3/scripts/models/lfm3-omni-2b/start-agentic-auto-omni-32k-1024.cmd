@@ -3,7 +3,7 @@ setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem Text, image and audio in, text or speech out (POST /tts) at the 32,768-token card context; source-built runtime.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\19ff817-cuda13.4\llama-server.exe"
+set "SERVER=%LLM_ROOT%\..\..\runtimes\llama.cpp\19ff817-cuda13.4\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\lfm3-omni-2b\LFM3-Omni-2B-Q8_0.gguf""

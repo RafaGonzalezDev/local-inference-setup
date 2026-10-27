@@ -1,12 +1,12 @@
 @echo off
 setlocal
-rem Builds llama.cpp from a pinned commit for the LFM3 family (source build, not an official release).
-for %%I in ("%~dp0..\..") do set "LFM3_ROOT=%%~fI"
+rem Builds llama.cpp from a pinned commit (LFM3 support, PRs #31252 and #31257); not an official release.
+for %%I in ("%~dp0..\..") do set "LLM_ROOT=%%~fI"
 
 set "COMMIT=19ff817fb25e9a1b838b1d7f9f4325f7bf9779c4"
-set "SOURCE=%LFM3_ROOT%\src\llama.cpp"
+set "SOURCE=%LLM_ROOT%\packages\llama.cpp\19ff817\src"
 set "BUILD=%SOURCE%\build-cuda13.4"
-set "RUNTIME=%LFM3_ROOT%\runtimes\llama.cpp\19ff817-cuda13.4"
+set "RUNTIME=%LLM_ROOT%\runtimes\llama.cpp\19ff817-cuda13.4"
 set "VS=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
 set "CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.4"
 
