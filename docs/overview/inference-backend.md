@@ -25,15 +25,30 @@ stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
 
 ## Installed Runtimes
 
-One official `llama.cpp` runtime is installed, and every launcher pins it:
-`b11551`. The previous pinned build `b11269` was uninstalled on 2026-10-22, and
-`b11827`, which only the retired `flint` used, on 2026-10-26;
-`Install-LlamaRuntime.ps1` installs any of the three with `-Version`.
+Two official `llama.cpp` runtimes are installed. Every launcher pins `b11669`
+since 2026-10-27; `b11551`, the previous pinned build, stays installed for
+rollback. `b11269` was uninstalled on 2026-10-22 and `b11827`, which only the
+retired `flint` used, on 2026-10-26; `Install-LlamaRuntime.ps1` installs any of
+the four with `-Version`.
 
-`b11551` is a nightly. It was chosen because it was the first build that
-contained MiniCPM-V 4.7 support (PR #29416, the canvas M-RoPE key
-`rope.section_order` and the `v.tok_embd_sep` projector tensor); MiniCPM-V was
-retired on 2026-10-26 and the remaining models were validated on this build.
+`b11669` is the build behind the stable release v0.7.0: the release ships no
+binaries and its `nightly-tag.txt` asset points to `b11669`. Every flag and value
+the launchers use is present in its `--help`. No profile has been smoke-tested or
+calibrated on it yet; see the
+[runtime changelog](../changelog/2026-10-27-llama-runtime-b11669.md).
+
+- Version: `b11669` (v0.7.0)
+- Commit: `620d2225c`
+- Reported version: `0.7.0-dev (build 11669, commit 620d2225c)`
+- Directory: `runtimes\llama.cpp\b11669-cuda13.4`
+- Package: `llama-b11669-bin-win-cuda-13.4-x64.zip`
+- SHA-256: `3b92d5c064f5032e603e531d3ec8961f3bd6613e5dfad047399a92dec8e95dbc`
+- CUDA runtime SHA-256: `738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`
+- Functional validation: pending
+
+`b11551` (nightly) was the first build that contained MiniCPM-V 4.7 support
+(PR #29416); MiniCPM-V was retired on 2026-10-26 and the remaining models were
+validated on it. Returning to it is editing one `SERVER` line per launcher:
 
 - Version: `b11551` (nightly)
 - Commit: `69f201a20` (merge commit of PR #29416)

@@ -26,9 +26,15 @@ All profiles are automatic: every launcher declares `--gpu-layers auto --fit on`
 and lets the runtime resolve the device placement. The hand-tuned profiles that
 pinned `--gpu-layers 999` with `--n-cpu-moe` were retired on 2026-09-30. Their
 reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01. Every
-launcher pins `b11551-cuda13.4`. `b11269-cuda13.4` was removed on 2026-10-22 and
+launcher pins `b11669-cuda13.4` (llama.cpp v0.7.0) since 2026-10-27; `b11551-cuda13.4`
+stays installed for rollback. `b11269-cuda13.4` was removed on 2026-10-22 and
 `b11827-cuda13.4`, used only by the retired `flint`, on 2026-10-26; both can be
 reinstalled.
+
+The LiquidAI LFM3 models (`lfm3-1.7b`, `lfm3-audio-2b`, `lfm3-omni-2b`) live apart in
+[experimental/lfm3](experimental/lfm3/README.md) with their own catalog, launchers and a
+llama.cpp runtime built from source, because no official release supports them yet. They are
+not in the table below nor in any client catalog.
 
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.

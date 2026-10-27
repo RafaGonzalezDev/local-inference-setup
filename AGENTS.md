@@ -12,19 +12,20 @@ Reconsulta el inventario en cada sesión (`config/catalog.psd1`, `scripts/models
 
 - Raíz de este despliegue: `D:\LLM`. Los lanzadores calculan la raíz relativa, no dependen del directorio de trabajo.
 - Hardware documentado en [README.md](<README.md>): Ryzen 7 9800X3D, RTX 5080 con 16 GB de VRAM y 64 GB de RAM DDR5-6000. Comprueba memoria libre, disco y driver antes de descargar o calibrar; memoria total no equivale a disponible.
-- Runtime en uso: `b11551-cuda13.4` (build `11551`, commit `69f201a20`), al que apuntan todos los lanzadores; `b11827-cuda13.4` (build `11827`, commit `970b51ce7`), que solo usaba el retirado `flint`, se desinstaló el 2026-10-26; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) se desinstaló el 2026-10-22 y puede reinstalarse para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551|b11827`; el valor por defecto es `b11551`.
+- Runtime en uso: `b11669-cuda13.4` (build `11669`, commit `620d2225c`, release estable v0.7.0), al que apuntan todos los lanzadores desde el 2026-10-27, sin validación funcional por perfil; `b11551-cuda13.4` (build `11551`, commit `69f201a20`), el anterior, sigue instalado para revertir; `b11827-cuda13.4` (build `11827`, commit `970b51ce7`), que solo usaba el retirado `flint`, se desinstaló el 2026-10-26; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) se desinstaló el 2026-10-22 y puede reinstalarse para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551|b11669|b11827`; el valor por defecto es `b11669`.
 - [Catálogo](<config/catalog.psd1>): modelos activos. Los manifiestos `config/models/<model-id>.psd1` contienen únicamente metadatos de descarga e integridad.
+- [experimental/lfm3](<experimental/lfm3/README.md>): despliegue aparte de la familia LFM3 con catálogo, manifiestos, lanzadores y runtime compilado desde el código fuente propios. Sigue el mismo contrato de lanzadores, pero queda fuera del catálogo principal, de la validación global sin `-RootDirectory` y de la propagación a clientes.
 - Los GGUF instalados bajo `models/<model-id>/` y los argumentos literales de `scripts/models/<model-id>/start-*.cmd` son la fuente de verdad operativa. La documentación histórica y los catálogos de clientes no seleccionan perfiles.
 - [ADR-0001](<docs/adr/ADR-0001-self-contained-model-launchers.md>): cada lanzador invoca directamente su servidor, sin motor de arranque común, herencia de parámetros, PID global ni argumentos ocultos.
 - Consulta [backend](<docs/overview/inference-backend.md>), [gestión](<docs/overview/model-management.md>) y [guía de incorporación](<docs/overview/adding-a-model.md>). Prioriza archivos actuales frente a changelogs de modelos o runtimes retirados.
 
 ```powershell
-& .\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe --version
-& .\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe --help
+& .\runtimes\llama.cpp\b11669-cuda13.4\llama-server.exe --version
+& .\runtimes\llama.cpp\b11669-cuda13.4\llama-server.exe --help
 nvidia-smi
 ```
 
-Consulta documentación oficial actual, pero confirma los flags en `--help` del ejecutable elegido: `master` puede diferir del build instalado. No actualices el runtime automáticamente. Si falta soporte real de arquitectura, cuantización, plantilla, visión o MTP, explica la incompatibilidad y solicita aprobación antes de cambiar runtime o usar un fork. Cada runtime nuevo necesita carpeta propia, paquetes verificados y pruebas; nunca mezcles DLL ni cambies el `PATH` global.
+Consulta documentación oficial actual, pero confirma los flags en `--help` del ejecutable elegido: `master` puede diferir del build instalado. No actualices el runtime automáticamente. Si falta soporte real de arquitectura, cuantización, plantilla, visión o MTP, explica la incompatibilidad y solicita aprobación antes de cambiar runtime o usar un fork. Compilar desde una PR o un commit de `ggml-org/llama.cpp` está permitido, pero notifícalo siempre al usuario y registra commit, toolchain y SHA-256 de los binarios resultantes. Cada runtime nuevo necesita carpeta propia, paquetes verificados (o compilación registrada) y pruebas; nunca mezcles DLL ni cambies el `PATH` global.
 
 ## Procedimiento desde un enlace de Hugging Face
 

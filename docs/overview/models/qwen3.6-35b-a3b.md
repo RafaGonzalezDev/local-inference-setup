@@ -109,7 +109,7 @@ y penalización de presencia 1,5. Todos los perfiles agentic usaban temperatura
 - `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-262k-1024.cmd`
 - `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-mtp-131k-1024.cmd`
 - `scripts/models/qwen3.6-35b-a3b/start-agentic-auto-vision-131k-2048.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11669-cuda13.4/`
 
 ## Related ADRs
 

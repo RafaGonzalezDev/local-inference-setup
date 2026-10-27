@@ -6,13 +6,15 @@ param(
     [string]$VisionImage,
     [switch]$ConfigurationOnly,
     [switch]$RequireInstalledFiles,
-    [switch]$IncludeDeferred
+    [switch]$IncludeDeferred,
+
+    [string]$RootDirectory
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$rootDirectory = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$rootDirectory = if ($RootDirectory) { $RootDirectory } else { Split-Path -Parent (Split-Path -Parent $PSScriptRoot) }
 $launcherDirectory = Join-Path $rootDirectory 'scripts\models'
 $catalog = Import-PowerShellDataFile -Path (Join-Path $rootDirectory 'config\catalog.psd1')
 $resultDirectory = Join-Path $rootDirectory 'logs\validation'

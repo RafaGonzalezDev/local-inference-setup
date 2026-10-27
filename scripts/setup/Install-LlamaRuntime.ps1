@@ -2,8 +2,8 @@
 param(
     [string]$RootDirectory,
 
-    [ValidateSet('b11269', 'b11551', 'b11827')]
-    [string]$Version = 'b11551'
+    [ValidateSet('b11269', 'b11551', 'b11669', 'b11827')]
+    [string]$Version = 'b11669'
 )
 
 Set-StrictMode -Version Latest
@@ -24,6 +24,11 @@ $releases = @{
     b11551 = @{
         Commit = '69f201a'
         Sha256 = '80c5f94fe5ecd8090fe682c89861a949efb4a3487782cfcd99252a18f571afc7'
+    }
+    # Build behind the v0.7.0 stable release (nightly-tag.txt of v0.7.0).
+    b11669 = @{
+        Commit = '620d222'
+        Sha256 = '3b92d5c064f5032e603e531d3ec8961f3bd6613e5dfad047399a92dec8e95dbc'
     }
     # Nightly build after Flint support (PR #30928) and Jinja hex escapes (PR #30929).
     b11827 = @{

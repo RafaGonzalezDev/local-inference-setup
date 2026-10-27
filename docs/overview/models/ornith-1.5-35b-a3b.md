@@ -83,7 +83,7 @@ de Qwen3.6 35B A3B.
 - `config/models/ornith-1.5-35b-a3b.psd1`
 - `scripts/models/ornith-1.5-35b-a3b/start-agentic-auto-131k-2048.cmd`
 - `scripts/models/ornith-1.5-35b-a3b/start-agentic-auto-262k-1024.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11669-cuda13.4/`
 
 ## Related ADRs
 

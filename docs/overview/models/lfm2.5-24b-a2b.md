@@ -36,7 +36,7 @@ Hay un solo perfil, y es deliberado:
   Una variante VL sería otro modelo, con su propio repositorio y proyector.
 - **No hay perfil especulativo**: el repositorio no publica cabezal MTP ni borrador.
 
-El perfil comparte la configuración de los perfiles agentic del catálogo: `b11551-cuda13.4`,
+El perfil comparte la configuración de los perfiles agentic del catálogo: `b11669-cuda13.4`,
 `--gpu-layers auto --fit on --fit-target 1024`, contexto explícito, ocho hilos, caché KV `q8_0`,
 Flash Attention, `--parallel 1`, `--cache-ram 0`, `--split-mode none`, Jinja y `--load-mode none`.
 
@@ -93,7 +93,7 @@ Contexto declarado 131.072; `/props` lo confirma y `/v1/models` publica
 
 - `config/models/lfm2.5-24b-a2b.psd1`
 - `scripts/models/lfm2.5-24b-a2b/start-agentic-auto-131k-512.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11669-cuda13.4/`
 
 ## Related ADRs
 

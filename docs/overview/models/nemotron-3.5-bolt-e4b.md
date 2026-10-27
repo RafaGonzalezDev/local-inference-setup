@@ -82,7 +82,7 @@ de la API de Hugging Face y coincide con el archivo instalado.
 
 - `config/models/nemotron-3.5-bolt-e4b.psd1`
 - `scripts/models/nemotron-3.5-bolt-e4b/start-agentic-auto-65k-1024.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11669-cuda13.4/`
 
 ## Source
 

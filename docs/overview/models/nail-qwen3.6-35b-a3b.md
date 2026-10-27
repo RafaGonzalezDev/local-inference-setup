@@ -43,7 +43,7 @@ de 4 bits con más margen, y `UD-IQ4_XS` la recomendada para 24 GB en la tarjeta
 | `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1024/1024 | no | sí, n-max 3 | `nail-qwen3.6-35b-a3b-mtp-131k` |
 | `start-agentic-auto-vision-131k-2048.cmd` | 131.072 | 2048/2048 | sí | no | `nail-qwen3.6-35b-a3b-vision-131k` |
 
-Los cuatro son copias de los lanzadores de `qwen3.6-35b-a3b` sobre el runtime `b11551-cuda13.4`:
+Los cuatro son copias de los lanzadores de `qwen3.6-35b-a3b` sobre el runtime `b11669-cuda13.4`:
 mismos contexto, batch, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`,
 `--reasoning-budget 8192`, `--image-min-tokens 2048` y `--spec-type draft-mtp --spec-draft-n-max 3`.
 El perfil MTP usa el GGUF de `mtp\` y los otros tres el `UD-Q4_K_S`.
@@ -103,7 +103,7 @@ o `["text", "image", "video"]` en visión. La plantilla aplicada termina en
 
 - `config/models/nail-qwen3.6-35b-a3b.psd1`
 - `scripts/models/nail-qwen3.6-35b-a3b/*.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11669-cuda13.4/`
 
 ## Related ADRs
 

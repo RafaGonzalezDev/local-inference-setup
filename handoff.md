@@ -47,7 +47,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- Catálogo activo (2026-10-26): 7 modelos y 18 perfiles en `b11551`: `qwen3.6-35b-a3b`,
+- Catálogo activo (2026-10-26): 7 modelos y 18 perfiles en `b11551` (desde el 2026-10-27, en `b11669`): `qwen3.6-35b-a3b`,
   `ornith-1.5-35b-a3b`, `tiel-coder-35b-a3b-mtp` (ahora `UD-IQ4_XS`), `lfm2.5-24b-a2b`,
   `nemotron-3.5-bolt-e4b`, `nail-qwen3.6-35b-a3b` y `occult-nail-1.0-35b-a3b`. Nail, Occult Nail y Tiel
   los publica `peculiar-ragdoll`; el README tiene columna de publicador.
@@ -55,6 +55,10 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `gemma-4-26b-a4b`, `ornith-1.5-9b`, `nemotron-3.5-lightning-30b-a3b`, `ling-3.0-tiny`,
   `swift-1.5-qwen3.8-27b-gsq-rco-mtp`, `minicpm-v-4.7-35b-a3b`, `flint`, `sage-a1.5-35b-a3b`, y el runtime
   `b11827`. Ver [el changelog de retirada](docs/changelog/2026-10-26-model-set-retirement.md).
+- 2026-10-27: runtime del catálogo a `b11669` (v0.7.0) sin smoke por perfil, por decisión del usuario; solo
+  A/B de Nail 131K y MTP 131K ([changelog](docs/changelog/2026-10-27-llama-runtime-b11669.md)).
+  Familia LFM3 en [experimental/lfm3](experimental/lfm3/README.md) con runtime compilado desde el
+  commit `19ff817`; fuera de los catálogos de cliente.
 - Occult Nail y Tiel IQ4_XS calibrados bajo carga en todos sus perfiles; contrato de razonamiento
   verificado (`enable_thinking: false`, `reasoning_effort: "none"` y `thinking_budget_tokens`).
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
