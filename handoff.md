@@ -63,10 +63,11 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 - Occult Nail y Tiel IQ4_XS calibrados bajo carga en todos sus perfiles; contrato de razonamiento
   verificado (`enable_thinking: false`, `reasoning_effort: "none"` y `thinking_budget_tokens`).
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
-  `~/.config/opencode/opencode.json`) listan exactamente los 18 alias. Cada archivo vivo tiene copia
-  `*.bak-<timestamp>-{profile-aliases,retirement}`; DSH global, `cordis.patch.yml.bak-*-retirement`.
-- DSH global: `agent-default-model` pasó de `flint-262k` a `nail-qwen3.6-35b-a3b-262k` (elección del
-  usuario); es la única diferencia con el repositorio. DSH no se ha reiniciado.
+  `~/.config/opencode/opencode.json`) listan exactamente los 19 alias (2026-10-28, con `lfm3-1.7b-262k`). Cada archivo vivo tiene copia
+  `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b}`; DSH global, `cordis.patch.yml.bak-*-lfm3-1.7b`.
+- DSH global: a 2026-10-28 solo difiere del repositorio en ajustes de la GUI: `agent-default-model`
+  sin `reasoningEffort: high` y `ui-chat.transcriptView: standard` (el repositorio, `detailed`). DSH
+  necesita reiniciarse para listar `lfm3-1.7b-262k`.
 - Estado de OpenCode en WSL (`~/.local/state/opencode/model.json`): recientes, favoritos y variantes
   migrados a alias de perfil y sin modelos retirados (copias `.bak-*`).
 
