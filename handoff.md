@@ -66,7 +66,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   razonamiento completo solo se verificó en Occult Nail y en las versiones anteriores de Tiel y Nail.
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
   `~/.config/opencode/opencode.json`) listan exactamente los 16 alias (2026-10-28). Cada archivo vivo tiene copia
-  `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement,mtp-retirement}`; DSH global,
+  `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement,mtp-retirement}` (OpenCode también `modalities-fix`, del 2026-10-29); DSH global,
   `cordis.patch.yml.bak-*-{lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement,mtp-retirement}`.
 - DSH global: a 2026-10-28 solo difiere del repositorio en ajustes de la GUI: `agent-default-model`
   sin `reasoningEffort: high` y `ui-chat.transcriptView: standard` (el repositorio, `detailed`). DSH
