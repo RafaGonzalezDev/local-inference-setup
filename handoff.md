@@ -13,10 +13,10 @@ pasos, en este orden, sin pedirlos de nuevo:
    calibración y smoke, README, ficha y changelog (todo según AGENTS.md).
 2. **Verificar el contrato de razonamiento del cliente** con el perfil arrancado: que
    `chat_template_kwargs.enable_thinking: false` deja `reasoning_content` vacío y que
-   `thinking_budget_tokens` corta el razonamiento. Si la plantilla usa `reasoning_effort` (Tiel) o
-   siempre razona (LFM2.5), usar la receta alternativa de cada cliente.
+   `thinking_budget_tokens` corta el razonamiento. Si la plantilla usa `reasoning_effort` (Tiel), usar
+   la receta alternativa de cada cliente.
 3. **Registrar un ID por alias de perfil** (el segundo `--alias` del lanzador, p. ej.
-   `nemotron-3.5-bolt-e4b-65k`) en los tres dotfiles. `input`/`modalities` con imagen solo en perfiles de
+   `nail-qwen3.6-35b-a3b-131k`) en los tres dotfiles. `input`/`modalities` con imagen solo en perfiles de
    visión. Límite de salida: 12.288 a 32K, 16.384 a 65K, 24.576 a 96K y 131K, 32.768 (pi, dsh) /
    32.000 (opencode) a 262K, salvo que la tarjeta pida más. Comprobar después que cada catálogo tiene
    exactamente los alias de todos los lanzadores (script de verificación abajo).
@@ -47,27 +47,28 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- Catálogo activo (2026-10-26): 7 modelos y 18 perfiles en `b11551` (desde el 2026-10-27, en `b11669`): `qwen3.6-35b-a3b`,
-  `ornith-1.5-35b-a3b`, `tiel-coder-35b-a3b-mtp` (ahora `UD-IQ4_XS`), `lfm2.5-24b-a2b`,
-  `nemotron-3.5-bolt-e4b`, `nail-qwen3.6-35b-a3b` y `occult-nail-1.0-35b-a3b`. Nail, Occult Nail y Tiel
-  los publica `peculiar-ragdoll`; el README tiene columna de publicador.
+- Catálogo activo (2026-10-28): 3 modelos y 10 perfiles en `b11669`: `tiel-coder-35b-a3b-mtp`
+  (`UD-IQ4_XS`), `nail-qwen3.6-35b-a3b` y `occult-nail-1.0-35b-a3b`, todos de `peculiar-ragdoll`; el
+  README tiene columna de publicador.
 - Retirados el 2026-10-26 a elección del usuario, con sus pesos: `tiel-coder-35b-a3b`, `gemma-4-12b-v2`,
   `gemma-4-26b-a4b`, `ornith-1.5-9b`, `nemotron-3.5-lightning-30b-a3b`, `ling-3.0-tiny`,
   `swift-1.5-qwen3.8-27b-gsq-rco-mtp`, `minicpm-v-4.7-35b-a3b`, `flint`, `sage-a1.5-35b-a3b`, y el runtime
   `b11827`. Ver [el changelog de retirada](docs/changelog/2026-10-26-model-set-retirement.md).
 - 2026-10-27: runtime del catálogo a `b11669` (v0.7.0) sin smoke por perfil, por decisión del usuario; solo
   A/B de Nail 131K y MTP 131K ([changelog](docs/changelog/2026-10-27-llama-runtime-b11669.md)).
-  LFM3-Audio y LFM3-Omni en [experimental/lfm3](experimental/lfm3/README.md), fuera de los catálogos de
-  cliente. 2026-10-28: `lfm3-1.7b` entra en el catálogo principal y en los clientes (alias
-  `lfm3-1.7b-262k`) con el runtime compilado `19ff817-cuda13.4`; 8 modelos y 19 perfiles.
+  2026-10-28: retirados `lfm3-1.7b`, `lfm3-audio-2b` y `lfm3-omni-2b` con el runtime compilado
+  `19ff817-cuda13.4` ([changelog](docs/changelog/2026-10-28-lfm3-retirement.md)). También retirados
+  `lfm2.5-24b-a2b`, `nemotron-3.5-bolt-e4b`, `ornith-1.5-35b-a3b` y `qwen3.6-35b-a3b`, con sus pesos
+  ([changelog](docs/changelog/2026-10-28-model-set-retirement.md)).
 - Occult Nail y Tiel IQ4_XS calibrados bajo carga en todos sus perfiles; contrato de razonamiento
   verificado (`enable_thinking: false`, `reasoning_effort: "none"` y `thinking_budget_tokens`).
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
-  `~/.config/opencode/opencode.json`) listan exactamente los 19 alias (2026-10-28, con `lfm3-1.7b-262k`). Cada archivo vivo tiene copia
-  `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b}`; DSH global, `cordis.patch.yml.bak-*-lfm3-1.7b`.
+  `~/.config/opencode/opencode.json`) listan exactamente los 10 alias (2026-10-28). Cada archivo vivo tiene copia
+  `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement}`; DSH global,
+  `cordis.patch.yml.bak-*-{lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement}`.
 - DSH global: a 2026-10-28 solo difiere del repositorio en ajustes de la GUI: `agent-default-model`
   sin `reasoningEffort: high` y `ui-chat.transcriptView: standard` (el repositorio, `detailed`). DSH
-  necesita reiniciarse para listar `lfm3-1.7b-262k`.
+  necesita reiniciarse para dejar de listar `lfm3-1.7b-262k`.
 - Estado de OpenCode en WSL (`~/.local/state/opencode/model.json`): recientes, favoritos y variantes
   migrados a alias de perfil y sin modelos retirados (copias `.bak-*`).
 
@@ -101,7 +102,6 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 - ¿Instalar también los dotfiles de OpenCode y Pi en sus clientes activos tras cada alta? (DSH global ya
   forma parte del procedimiento.)
-- ¿Añadir el borrador DFlash de Bolt como perfil propio (requiere descarga, prueba y medición)?
 
 ## Verification steps
 

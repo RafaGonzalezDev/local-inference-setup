@@ -84,7 +84,7 @@ Todos los perfiles son automáticos: use `--gpu-layers auto --fit on
 proyector), omita `--n-cpu-moe` y declare siempre `--ctx-size`, ya que `--fit`
 solo ajusta los argumentos no declarados y, si se omite, reduce el contexto a
 `--fit-ctx`. Inserte `auto` tras el primer segmento del nombre, por ejemplo
-`start-agentic-auto-131k-2048.cmd` o `start-agentic-auto-mtp-131k-1024.cmd`.
+`start-agentic-auto-131k-1024.cmd` o `start-agentic-auto-mtp-131k-1024.cmd`.
 Declare el alias canónico primero y un alias de perfil único después, separados
 por coma. El alias de perfil identifica el servidor iniciado; no lo selecciona.
 

@@ -34,7 +34,7 @@ cuantización la eligió el usuario. El proyector es byte a byte el de `unsloth/
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | no | `occult-nail-1.0-35b-a3b-262k` |
 | `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | sí | `occult-nail-1.0-35b-a3b-vision-131k` |
 
-Son copias de los tres perfiles sin MTP de `qwen3.6-35b-a3b`, con batch/ubatch `1024/1024` en los
+Son copias de los tres perfiles sin MTP de `qwen3.6-35b-a3b` (retirado el 2026-10-28), con batch/ubatch `1024/1024` en los
 tres perfiles (el 131K y el de visión bajaron de `2048/2048` el 2026-10-27 para igualar a Nail):
 `b11669`, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`, presupuesto
 8.192, `--image-min-tokens 2048` y muestreo `--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0` sin

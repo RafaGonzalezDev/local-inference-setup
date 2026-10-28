@@ -7,7 +7,7 @@ To recover a model from its pinned repository and revision:
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy RemoteSigned `
   -File scripts\setup\Download-Model.ps1 `
-  -Model qwen3.6-35b-a3b
+  -Model nail-qwen3.6-35b-a3b
 ```
 
 The script resumes `.partial` downloads, checks size and SHA-256, and never silently overwrites a different artifact.
@@ -40,8 +40,8 @@ Individual functional test:
 
 ```powershell
 & scripts\common\Test-Llm.ps1 `
-  -Model qwen3.6-35b-a3b `
-  -Profile agentic-auto-vision-131k-2048
+  -Model nail-qwen3.6-35b-a3b `
+  -Profile agentic-auto-vision-131k-1024
 ```
 
 The test waits for `/health`, makes a request of up to 16 tokens, and stops the process tree it initiated. Vision profiles reuse `tests\assets\panels-1080p.png`. These are not benchmarks.
