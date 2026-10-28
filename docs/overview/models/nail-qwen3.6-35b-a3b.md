@@ -41,13 +41,19 @@ de 4 bits con más margen, y `UD-IQ4_XS` la recomendada para 24 GB en la tarjeta
 | `start-agentic-auto-131k-1024.cmd` | 131.072 | 1024/1024 | no | no | `nail-qwen3.6-35b-a3b-131k` |
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | no | no | `nail-qwen3.6-35b-a3b-262k` |
 | `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1024/1024 | no | sí, n-max 3 | `nail-qwen3.6-35b-a3b-mtp-131k` |
+| `start-agentic-auto-mtp-262k-1024.cmd` | 262.144 | 1024/1024 | no | sí, n-max 3 | `nail-qwen3.6-35b-a3b-mtp-262k` |
 | `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | sí | no | `nail-qwen3.6-35b-a3b-vision-131k` |
+| `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1024/1024 | sí | no | `nail-qwen3.6-35b-a3b-vision-262k` |
 
-Los cuatro son copias de los lanzadores de `qwen3.6-35b-a3b` (retirado el 2026-10-28) sobre el runtime `b11669-cuda13.4`:
+Los perfiles `mtp-262k` y `vision-262k` se añadieron el 2026-10-28 (el primero con el GGUF de `mtp\`,
+el segundo copiando el de visión 131K con contexto 262K); no se han probado. Los perfiles de visión
+no llevan MTP, por eso el proyector no se descarga del repositorio MTP.
+
+Los cuatro originales son copias de los lanzadores de `qwen3.6-35b-a3b` (retirado el 2026-10-28) sobre el runtime `b11669-cuda13.4`:
 mismo contexto y estructura, batch fijo 1024/1024 para todos los perfiles,
 `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`,
 `--reasoning-budget 8192`, `--image-min-tokens 2048` y `--spec-type draft-mtp --spec-draft-n-max 3`.
-El perfil MTP usa el GGUF de `mtp\` y los otros tres el `UD-Q4_K_S`.
+Los perfiles MTP usan el GGUF de `mtp\` (`UD-IQ4_XS`) y los demás el `UD-Q4_K_S`.
 
 - Único cambio respecto a Qwen3.6: el muestreo que recomienda la tarjeta, `--temp 1.0 --top-p 0.95
   --top-k 20 --min-p 0` sin penalizaciones (`--presence-penalty 0 --repeat-penalty 1`). Qwen3.6

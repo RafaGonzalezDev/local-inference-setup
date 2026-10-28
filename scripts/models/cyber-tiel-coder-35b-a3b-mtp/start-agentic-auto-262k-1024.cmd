@@ -2,17 +2,17 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem Automatic device placement MTP vision profile; --fit does not account for the projector, so the margin is wider.
+rem Automatic device placement profile for full-context workloads; --fit resolves the layer split.
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11669-cuda13.4\llama-server.exe"
 
 rem Model
-set "MODEL_ARGS=--model "%LLM_ROOT%\models\tiel-coder-35b-a3b-mtp\Tiel-Coder-35B-A3B-MTP-UD-IQ4_XS.gguf""
+set "MODEL_ARGS=--model "%LLM_ROOT%\models\cyber-tiel-coder-35b-a3b-mtp\Cyber-Tiel-Coder-35B-A3B-MTP-UD-Q4_K_S.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 2048 --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 262144 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
 
 rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
-set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias tiel-coder-35b-a3b-mtp,tiel-coder-35b-a3b-mtp-vision-131k"
+set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias cyber-tiel-coder-35b-a3b-mtp,cyber-tiel-coder-35b-a3b-262k"
 
 rem Reasoning
 set "REASONING_ARGS=--reasoning auto"
@@ -24,10 +24,10 @@ rem Runtime, cache, logging, and reasoning budget
 set "RUNTIME_ARGS=--log-verbosity 3 --load-mode none --cache-type-k q8_0 --cache-type-v q8_0 --reasoning-budget 8192"
 
 rem Vision
-set "VISION_ARGS=--mmproj "%LLM_ROOT%\models\tiel-coder-35b-a3b-mtp\mmproj-BF16.gguf" --image-min-tokens 1024"
+set "VISION_ARGS="
 
-rem MTP speculative decoding; the nextn head lives in the main GGUF
-set "MTP_ARGS=--spec-type draft-mtp --spec-draft-n-max 3"
+rem MTP speculative decoding is off; the nextn head in the GGUF is ignored without --spec-type draft-mtp
+set "MTP_ARGS="
 
 "%SERVER%" ^
   %MODEL_ARGS% ^

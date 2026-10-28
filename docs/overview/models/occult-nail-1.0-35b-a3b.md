@@ -33,6 +33,7 @@ cuantización la eligió el usuario. El proyector es byte a byte el de `unsloth/
 | `start-agentic-auto-131k-1024.cmd` | 131.072 | 1024/1024 | no | `occult-nail-1.0-35b-a3b-131k` |
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | no | `occult-nail-1.0-35b-a3b-262k` |
 | `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | sí | `occult-nail-1.0-35b-a3b-vision-131k` |
+| `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1024/1024 | sí | `occult-nail-1.0-35b-a3b-vision-262k` |
 
 Son copias de los tres perfiles sin MTP de `qwen3.6-35b-a3b` (retirado el 2026-10-28), con batch/ubatch `1024/1024` en los
 tres perfiles (el 131K y el de visión bajaron de `2048/2048` el 2026-10-27 para igualar a Nail):
@@ -40,6 +41,10 @@ tres perfiles (el 131K y el de visión bajaron de `2048/2048` el 2026-10-27 para
 8.192, `--image-min-tokens 2048` y muestreo `--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0` sin
 penalizaciones. La tarjeta no recomienda muestreo, así que se hereda el de Qwen3.6; Nail, con la
 misma plantilla, recomienda `temp 1.0`.
+
+El perfil `vision-262k` se añadió el 2026-10-28 copiando el de visión 131K con contexto 262K; no se
+ha probado. No hay perfiles MTP: la publicación `peculiar-ragdoll/Occult-Nail-1.0-35B-A3B-GGUF` no
+trae cabezal MTP y no existe una publicación `-MTP` de este modelo (comprobado el 2026-10-28).
 
 ## Validación medida (2026-10-26, batch/ubatch 2048)
 

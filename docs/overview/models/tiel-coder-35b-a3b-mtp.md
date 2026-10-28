@@ -34,7 +34,16 @@ sin cambios y compartido por todas las cuantizaciones; es idéntico al de la rev
 | --- | ---: | ---: | :---: | :---: | --- |
 | `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1.024/1.024 | no | sí, n-max 3 | `tiel-coder-35b-a3b-mtp-131k` |
 | `start-agentic-auto-mtp-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | sí, n-max 3 | `tiel-coder-35b-a3b-mtp-262k` |
-| `start-agentic-auto-mtp-vision-131k-1024.cmd` | 131.072 | 1.024/1.024 | sí | sí, n-max 3 | `tiel-coder-35b-a3b-mtp-vision-131k` |
+| `start-agentic-auto-131k-1024.cmd` | 131.072 | 1.024/1.024 | no | no | `tiel-coder-35b-a3b-131k` |
+| `start-agentic-auto-262k-1024.cmd` | 262.144 | 1.024/1.024 | no | no | `tiel-coder-35b-a3b-262k` |
+| `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1.024/1.024 | sí | no | `tiel-coder-35b-a3b-vision-131k` |
+| `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1.024/1.024 | sí | no | `tiel-coder-35b-a3b-vision-262k` |
+
+El 2026-10-28 se añadieron los perfiles sin MTP y los de visión a 262K, y se retiró
+`start-agentic-auto-mtp-vision-131k-1024.cmd` (alias `tiel-coder-35b-a3b-mtp-vision-131k`): los
+perfiles de visión no llevan MTP. Los perfiles sin MTP usan el mismo GGUF, que conserva el cabezal
+`nextn`, con `MTP_ARGS` vacío; la publicación solo incluye MTP, y sin `--spec-type draft-mtp` el
+cabezal queda sin usar. Los cuatro lanzadores nuevos no se han probado.
 
 Al cambiar la cuantización, los lanzadores solo cambiaron la ruta del GGUF. Mantienen la base del
 entorno: `b11669`, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto` y
@@ -69,6 +78,7 @@ context» en los tres perfiles.
   `reasoning_content` vacío; `thinking_budget_tokens: 64` lo corta.
 - Visión: `tests/assets/panels-1080p.png` (2.242 tokens) se describe como tres paneles rojo, verde y azul.
 - No se comparó con `--spec-type none`: no hay medición de la ganancia de MTP.
+- La fila «MTP visión 131K» es de un perfil retirado el 2026-10-28; se conserva como medición histórica.
 
 ## Límites y no verificado
 

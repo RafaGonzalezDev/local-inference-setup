@@ -47,9 +47,10 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- Catálogo activo (2026-10-28): 3 modelos y 10 perfiles en `b11669`: `tiel-coder-35b-a3b-mtp`
-  (`UD-IQ4_XS`), `nail-qwen3.6-35b-a3b` y `occult-nail-1.0-35b-a3b`, todos de `peculiar-ragdoll`; el
-  README tiene columna de publicador.
+- Catálogo activo (2026-10-28): 4 modelos y 22 perfiles en `b11669`: `tiel-coder-35b-a3b-mtp`
+  (`UD-IQ4_XS`), `nail-qwen3.6-35b-a3b`, `occult-nail-1.0-35b-a3b` y `cyber-tiel-coder-35b-a3b-mtp`
+  (`UD-Q4_K_S`, lanzadores copiados de Tiel y sin probar por decisión del usuario), todos de
+  `peculiar-ragdoll`; el README tiene columna de publicador.
 - Retirados el 2026-10-26 a elección del usuario, con sus pesos: `tiel-coder-35b-a3b`, `gemma-4-12b-v2`,
   `gemma-4-26b-a4b`, `ornith-1.5-9b`, `nemotron-3.5-lightning-30b-a3b`, `ling-3.0-tiny`,
   `swift-1.5-qwen3.8-27b-gsq-rco-mtp`, `minicpm-v-4.7-35b-a3b`, `flint`, `sage-a1.5-35b-a3b`, y el runtime
@@ -63,7 +64,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 - Occult Nail y Tiel IQ4_XS calibrados bajo carga en todos sus perfiles; contrato de razonamiento
   verificado (`enable_thinking: false`, `reasoning_effort: "none"` y `thinking_budget_tokens`).
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
-  `~/.config/opencode/opencode.json`) listan exactamente los 10 alias (2026-10-28). Cada archivo vivo tiene copia
+  `~/.config/opencode/opencode.json`) listan exactamente los 22 alias (2026-10-28). Cada archivo vivo tiene copia
   `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement}`; DSH global,
   `cordis.patch.yml.bak-*-{lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement}`.
 - DSH global: a 2026-10-28 solo difiere del repositorio en ajustes de la GUI: `agent-default-model`
