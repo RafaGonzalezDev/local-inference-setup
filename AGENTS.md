@@ -134,7 +134,45 @@ El usuario ha pedido de forma permanente que cada alta, baja o cambio de perfil 
 - Cada catálogo de cliente debe tener exactamente una entrada por alias de perfil servido (el segundo `--alias` de cada lanzador): ni alias ausentes ni IDs canónicos sin sufijo. Compruébalo contra todos los lanzadores, no solo contra el modelo nuevo.
 - En el espejo, incluye solo los cambios de la tarea; si `D:\LLM` tiene cambios ajenos sin espejar, infórmalo en vez de arrastrarlos.
 - Un commit con `/conventional-commit` y push a `origin main` por repositorio. Al terminar el turno, indica el hash y la URL del remoto de cada repositorio modificado.
-- Copia también el catálogo local a los clientes activos de WSL (Pi y OpenCode) con copia de seguridad previa, como indica `handoff.md`.
+- Copia también el catálogo local a los clientes activos de WSL (Pi y OpenCode), siguiendo «Clientes activos en WSL» más abajo.
+
+### Clientes activos en WSL
+
+Se actualizan después de los repositorios (`dotfiles-pi` y `dotfiles-opencode` ya validados y con la paridad de alias comprobada), copiando desde ellos. El usuario de WSL es `rafa` y los repositorios son accesibles en `/mnt/c/Users/rafat/Desktop/Code`.
+
+| Archivo en WSL | Qué se hace |
+| --- | --- |
+| `~/.pi/agent/models.json` | Se sustituye entero por `dotfiles-pi/agent/models.json` (`providers.llama-cpp.models`) |
+| `~/.config/opencode/opencode.json` | Se sustituye solo `provider.llamacpp.models` por el de `dotfiles-opencode/frameworks/vanilla/opencode.json`; no se toca nada más (otros proveedores, `mcp`, `agent`) |
+| `~/.local/state/opencode/model.json` | Solo al retirar alias: se quitan de `recent` y `favorite` las entradas con `providerID: llamacpp` y ese `modelID`, y de `variant` la clave `llamacpp/<alias>` |
+
+1. Antes de escribir, copia de seguridad de cada archivo que vayas a tocar, junto al original: `<archivo>.bak-<yyyyMMdd-HHmmss>-<etiqueta>`. Si el archivo vivo de Pi no coincide con el `HEAD` del repositorio, informa de la diferencia antes de sobrescribirlo.
+2. Aplica el cambio con el bloque siguiente (ejecútalo desde PowerShell tal cual; sustituye `<etiqueta>`):
+
+```powershell
+wsl -e bash -lc 'set -e; ts=$(date +%Y%m%d-%H%M%S); cd /mnt/c/Users/rafat/Desktop/Code
+cp ~/.pi/agent/models.json ~/.pi/agent/models.json.bak-$ts-<etiqueta>
+cp ~/.config/opencode/opencode.json ~/.config/opencode/opencode.json.bak-$ts-<etiqueta>
+cp ~/.local/state/opencode/model.json ~/.local/state/opencode/model.json.bak-$ts-<etiqueta>
+cp dotfiles-pi/agent/models.json ~/.pi/agent/models.json
+python3 - <<EOF
+import json
+p = "/home/rafa/.config/opencode/opencode.json"
+live = json.load(open(p)); repo = json.load(open("dotfiles-opencode/frameworks/vanilla/opencode.json"))
+live["provider"]["llamacpp"]["models"] = repo["provider"]["llamacpp"]["models"]
+json.dump(live, open(p, "w"), indent=2, ensure_ascii=False); open(p, "a").write("\n")
+EOF'
+```
+
+3. Si se retiró algún alias, limpia `model.json`. El archivo está en **una sola línea**: reescríbelo con `json.dumps(estado, ensure_ascii=False)` sin `indent`, para no cambiar su formato.
+4. Verifica con una lectura aparte: ambos JSON se cargan; Pi y OpenCode tienen exactamente los alias servidos por los lanzadores (mismo recuento que en los repositorios); no queda ningún alias retirado en los tres archivos; en `opencode.json` solo cambió `provider.llamacpp.models` (compara con la copia `.bak` quitando esa clave); existen las tres copias `.bak`.
+5. No reinicies ni cierres clientes en ejecución: Pi y OpenCode releen la configuración al arrancar, y DSH hay que reiniciarlo para ver los cambios del catálogo global. Dilo en el cierre.
+
+Trampas que ya han ocurrido:
+
+- No encadenes una tubería de PowerShell a `wsl` (`wsl ... | grep ...`): PowerShell no tiene `grep` y la orden entera falla antes de ejecutarse, sin copias ni cambios. Haz las comprobaciones en una llamada `wsl -e bash -lc '...'` aparte y comprueba que las `.bak` existen.
+- Si repites el bloque, las copias `.bak` nuevas ya contienen el cambio anterior: para revertir usa el primer juego, no el último.
+- Las copias `.bak` y la lista de etiquetas se registran en `handoff.md` (sección «Current status»).
 
 Los pasos, convenciones de nombres, límites de salida y comprobaciones están en [handoff.md](<handoff.md>).
 
