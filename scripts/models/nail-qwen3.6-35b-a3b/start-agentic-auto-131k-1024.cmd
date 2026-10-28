@@ -6,7 +6,7 @@ rem Automatic device placement profile for high-prefill workloads; --fit resolve
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe"
 
 rem Model
-set "MODEL_ARGS=--model "%LLM_ROOT%\models\nail-qwen3.6-35b-a3b\Nail-Qwen3.6-35B-A3B-UD-Q4_K_S.gguf""
+set "MODEL_ARGS=--model "%LLM_ROOT%\models\nail-qwen3.6-35b-a3b\Nail-Qwen3.6-35B-A3B-UD-Q4_K_XL.gguf""
 
 rem Context and performance
 set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"

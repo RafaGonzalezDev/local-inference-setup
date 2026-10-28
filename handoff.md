@@ -47,10 +47,10 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- Catálogo activo (2026-10-28): 4 modelos y 22 perfiles en `b11551`: `tiel-coder-35b-a3b-mtp`
-  (`UD-IQ4_XS`), `nail-qwen3.6-35b-a3b`, `occult-nail-1.0-35b-a3b` y `cyber-tiel-coder-35b-a3b-mtp`
-  (`UD-Q4_K_S`, lanzadores copiados de Tiel y sin probar por decisión del usuario), todos de
-  `peculiar-ragdoll`; el README tiene columna de publicador.
+- Catálogo activo (2026-10-28): 4 modelos y 16 perfiles en `b11551`, todos `UD-Q4_K_XL` sin MTP y de
+  `peculiar-ragdoll`: `tiel-coder-35b-a3b`, `nail-qwen3.6-35b-a3b`, `occult-nail-1.0-35b-a3b` y
+  `cyber-tiel-coder-35b-a3b`. Los perfiles MTP se retiraron y Tiel y Cyber Tiel perdieron el sufijo
+  `-mtp` ([changelog](docs/changelog/2026-10-28-q4-k-xl-without-mtp.md)). Lanzadores con 6 hilos.
 - Retirados el 2026-10-26 a elección del usuario, con sus pesos: `tiel-coder-35b-a3b`, `gemma-4-12b-v2`,
   `gemma-4-26b-a4b`, `ornith-1.5-9b`, `nemotron-3.5-lightning-30b-a3b`, `ling-3.0-tiny`,
   `swift-1.5-qwen3.8-27b-gsq-rco-mtp`, `minicpm-v-4.7-35b-a3b`, `flint`, `sage-a1.5-35b-a3b`, y el runtime
@@ -62,15 +62,15 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `19ff817-cuda13.4` ([changelog](docs/changelog/2026-10-28-lfm3-retirement.md)). También retirados
   `lfm2.5-24b-a2b`, `nemotron-3.5-bolt-e4b`, `ornith-1.5-35b-a3b` y `qwen3.6-35b-a3b`, con sus pesos
   ([changelog](docs/changelog/2026-10-28-model-set-retirement.md)).
-- Occult Nail y Tiel IQ4_XS calibrados bajo carga en todos sus perfiles; contrato de razonamiento
-  verificado (`enable_thinking: false`, `reasoning_effort: "none"` y `thinking_budget_tokens`).
+- Los 16 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28). El contrato de
+  razonamiento completo solo se verificó en Occult Nail y en las versiones anteriores de Tiel y Nail.
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
-  `~/.config/opencode/opencode.json`) listan exactamente los 22 alias (2026-10-28). Cada archivo vivo tiene copia
-  `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement}`; DSH global,
-  `cordis.patch.yml.bak-*-{lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement}`.
+  `~/.config/opencode/opencode.json`) listan exactamente los 16 alias (2026-10-28). Cada archivo vivo tiene copia
+  `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement,mtp-retirement}`; DSH global,
+  `cordis.patch.yml.bak-*-{lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement,mtp-retirement}`.
 - DSH global: a 2026-10-28 solo difiere del repositorio en ajustes de la GUI: `agent-default-model`
   sin `reasoningEffort: high` y `ui-chat.transcriptView: standard` (el repositorio, `detailed`). DSH
-  necesita reiniciarse para dejar de listar `lfm3-1.7b-262k`.
+  necesita reiniciarse para dejar de listar los alias MTP retirados.
 - Estado de OpenCode en WSL (`~/.local/state/opencode/model.json`): recientes, favoritos y variantes
   migrados a alias de perfil y sin modelos retirados (copias `.bak-*`).
 

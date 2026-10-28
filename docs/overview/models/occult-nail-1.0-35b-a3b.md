@@ -64,6 +64,10 @@ publica el alias canónico y el de perfil. La plantilla termina en `<|im_start|>
 - Contrato de razonamiento (131K): `enable_thinking: false` y `reasoning_effort: "none"` dejan
   `reasoning_content` vacío; `thinking_budget_tokens: 64` lo corta en ~39 palabras.
 - Visión: `tests/assets/panels-1080p.png` (2.280 tokens) se describe como tres paneles rojo, verde y azul.
+- Referencia del 2026-10-28 con el script de la serie `UD-Q4_K_XL` (prompt de 99.143 tokens, 128 de
+  decode largo), perfil 131K: 1.957,48 t/s de prefill, 53,01 y 74,86 t/s de decode largo y corto y
+  15.306 MiB de VRAM pico con 6 hilos; con 8 hilos, 1.956,75, 57,33 y 76,58 t/s. El prefill de la
+  tabla superior no es comparable porque el prompt era otro.
 
 ## Límites y no verificado
 

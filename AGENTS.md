@@ -76,9 +76,9 @@ Copia un lanzador cercano por arquitectura/capacidad y conserva su estructura, n
 | --- | --- |
 | MoE, texto agentic (Nail) | [Nail texto 131K](<scripts/models/nail-qwen3.6-35b-a3b/start-agentic-auto-131k-1024.cmd>) |
 | MoE, texto agentic (Nail visión) | [Nail visión 131K](<scripts/models/nail-qwen3.6-35b-a3b/start-agentic-auto-vision-131k-1024.cmd>) |
-| MTP integrado | [Tiel MTP 131K](<scripts/models/tiel-coder-35b-a3b-mtp/start-agentic-auto-mtp-131k-1024.cmd>) |
+| MoE, texto agentic (Tiel) | [Tiel texto 131K](<scripts/models/tiel-coder-35b-a3b/start-agentic-auto-131k-1024.cmd>) |
 
-No queda ningún perfil activo con borrador externo ni denso de contexto escalonado: sus referencias (Gemma 4 26B y Swift 1.5) se retiraron el 2026-10-26 y sus lanzadores siguen en el historial git de `local-inference-setup`.
+No queda ningún perfil activo con MTP, borrador externo ni denso de contexto escalonado: los MTP se retiraron el 2026-10-28 (ver [changelog](<docs/changelog/2026-10-28-q4-k-xl-without-mtp.md>)), y Gemma 4 26B y Swift 1.5 el 2026-10-26. Sus lanzadores siguen en el historial git de `local-inference-setup`.
 
 Contrato de cada `.cmd`:
 
@@ -101,7 +101,7 @@ Antes de declarar un perfil viable, confirma el contexto efectivo y aplica la [c
 - Usa `--reasoning auto`: `--reasoning on` impide que `reasoning_effort: "none"` desactive el razonamiento por petición (ver [backend](<docs/overview/inference-backend.md#reasoning>)). Comprueba con `/apply-template` que la plantilla abre el bloque de razonamiento por defecto.
 - Muestreo, razonamiento y plantilla se obtienen de la publicación concreta. No fuerces `--reasoning on`, `--reasoning-effort xhigh` ni presupuesto 8192 en cualquier modelo. Aquí existen presupuestos 8192 y `-1` (sin límite). Verifica el formato real de salida y compatibilidad del cliente; no presupongas `reasoning_content` separado.
 - Visión: `VISION_ARGS=--mmproj "..."` y opciones de imagen justificadas por ese modelo. Los perfiles de visión nunca llevan MTP (decisión del usuario, 2026-10-28) y cada modelo con proyector ofrece perfiles de visión a 131K y 262K. El margen mayor contempla el proyector, que la política local de `--fit` no presupone contabilizado; confirma uso real de memoria.
-- MTP integrado: cada modelo con cabezal MTP ofrece también perfiles sin MTP (el mismo GGUF con `MTP_ARGS` vacío si la publicación no tiene versión sin MTP). `--spec-type draft-mtp --spec-draft-n-max 3` es la referencia de Qwen/Tiel/Nail, con GGUF que conserva `nextn`; no requiere archivo borrador externo. Un borrador externo usa otra receta (la retirada Gemma usaba `--spec-draft-model "..." --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-ngl auto`). No intercambies ambas recetas. Comprueba inicialización del borrador en logs; las estimaciones de ajuste pueden no reflejar todo el coste del MTP. La aceptación de borradores no prueba aceleración: mide tokens/s si afirmas rendimiento.
+- MTP integrado: no se usa desde el 2026-10-28 (decisión del usuario): con expertos en CPU, la baja aceptación en prosa y razonamiento lo hacía más lento que sin MTP. Instala la publicación sin cabezal si existe. Si se reintroduce, cada modelo con cabezal MTP ofrece también perfiles sin MTP (el mismo GGUF con `MTP_ARGS` vacío si la publicación no tiene versión sin MTP). `--spec-type draft-mtp --spec-draft-n-max 3` es la referencia de Qwen/Tiel/Nail, con GGUF que conserva `nextn`; no requiere archivo borrador externo. Un borrador externo usa otra receta (la retirada Gemma usaba `--spec-draft-model "..." --spec-type draft-mtp --spec-draft-n-max 4 --spec-draft-ngl auto`). No intercambies ambas recetas. Comprueba inicialización del borrador en logs; las estimaciones de ajuste pueden no reflejar todo el coste del MTP. La aceptación de borradores no prueba aceleración: mide tokens/s si afirmas rendimiento.
 
 ### 5. Descargar, validar y documentar
 

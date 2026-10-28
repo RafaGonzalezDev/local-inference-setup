@@ -2,17 +2,17 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem Automatic device placement MTP profile for high-prefill workloads; --fit resolves the layer split.
+rem Automatic device placement profile for full-context workloads; --fit resolves the layer split.
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe"
 
 rem Model
-set "MODEL_ARGS=--model "%LLM_ROOT%\models\tiel-coder-35b-a3b-mtp\Tiel-Coder-35B-A3B-MTP-UD-IQ4_XS.gguf""
+set "MODEL_ARGS=--model "%LLM_ROOT%\models\tiel-coder-35b-a3b\Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 262144 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"
 
 rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
-set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias tiel-coder-35b-a3b-mtp,tiel-coder-35b-a3b-mtp-131k"
+set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias tiel-coder-35b-a3b,tiel-coder-35b-a3b-262k"
 
 rem Reasoning
 set "REASONING_ARGS=--reasoning auto"
@@ -26,8 +26,8 @@ set "RUNTIME_ARGS=--log-verbosity 3 --load-mode none --cache-type-k q8_0 --cache
 rem Vision
 set "VISION_ARGS="
 
-rem MTP speculative decoding; the nextn head lives in the main GGUF
-set "MTP_ARGS=--spec-type draft-mtp --spec-draft-n-max 3"
+rem MTP speculative decoding
+set "MTP_ARGS="
 
 "%SERVER%" ^
   %MODEL_ARGS% ^
