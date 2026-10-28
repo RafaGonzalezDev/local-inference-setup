@@ -9,7 +9,7 @@ rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\nail-qwen3.6-35b-a3b\mtp\Nail-Qwen3.6-35B-A3B-MTP-UD-IQ4_XS.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 8 --threads-batch 8 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"
 
 rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias nail-qwen3.6-35b-a3b,nail-qwen3.6-35b-a3b-mtp-131k"
