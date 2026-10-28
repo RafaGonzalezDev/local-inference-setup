@@ -21,7 +21,7 @@ rem Sampling; author recommendation for Nail (temperature 1.0, no penalties)
 set "SAMPLING_ARGS=--temp 1.0 --top-p 0.95 --top-k 20 --min-p 0 --presence-penalty 0 --repeat-penalty 1"
 
 rem Runtime, cache, logging, and reasoning budget
-set "RUNTIME_ARGS=--log-verbosity 3 --load-mode none --cache-type-k q8_0 --cache-type-v q8_0 --reasoning-budget 8192"
+set "RUNTIME_ARGS=--log-verbosity 3 --no-log-timestamps --no-log-prefix --load-mode none --cache-type-k q8_0 --cache-type-v q8_0 --reasoning-budget 8192"
 
 rem Vision
 set "VISION_ARGS=--mmproj "%LLM_ROOT%\models\nail-qwen3.6-35b-a3b\mmproj-F16.gguf" --image-min-tokens 2048"
