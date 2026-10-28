@@ -12,15 +12,15 @@ Reconsulta el inventario en cada sesión (`config/catalog.psd1`, `scripts/models
 
 - Raíz de este despliegue: `D:\LLM`. Los lanzadores calculan la raíz relativa, no dependen del directorio de trabajo.
 - Hardware documentado en [README.md](<README.md>): Ryzen 7 9800X3D, RTX 5080 con 16 GB de VRAM y 64 GB de RAM DDR5-6000. Comprueba memoria libre, disco y driver antes de descargar o calibrar; memoria total no equivale a disponible.
-- Runtime en uso: `b11669-cuda13.4` (build `11669`, commit `620d2225c`, release estable v0.7.0), al que apuntan todos los lanzadores desde el 2026-10-27, sin validación funcional por perfil; el runtime `19ff817-cuda13.4`, compilado desde el código fuente para LFM3, se eliminó el 2026-10-28 junto con esos modelos; `b11551-cuda13.4` (build `11551`, commit `69f201a20`), el anterior, sigue instalado para revertir; `b11827-cuda13.4` (build `11827`, commit `970b51ce7`), que solo usaba el retirado `flint`, se desinstaló el 2026-10-26; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) se desinstaló el 2026-10-22 y puede reinstalarse para revertir. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551|b11669|b11827`; el valor por defecto es `b11669`.
+- Runtime en uso: `b11551-cuda13.4` (build `11551`, commit `69f201a20`), al que apuntan todos los lanzadores; `b11669-cuda13.4` (v0.7.0) se usó el 2026-10-27 y se eliminó el 2026-10-28 porque el usuario midió un rendimiento sustancialmente inferior con él a través de Pi; el runtime `19ff817-cuda13.4`, compilado desde el código fuente para LFM3, se eliminó el 2026-10-28 junto con esos modelos; `b11827-cuda13.4` (build `11827`, commit `970b51ce7`), que solo usaba el retirado `flint`, se desinstaló el 2026-10-26; `b11269-cuda13.4` (build `11269`, commit `cee37ffea`) se desinstaló el 2026-10-22. Todos pueden reinstalarse. [Install-LlamaRuntime.ps1](<scripts/setup/Install-LlamaRuntime.ps1>) fija paquetes y SHA-256 y acepta `-Version b11269|b11551|b11669|b11827`; el valor por defecto es `b11551`. Antes de adoptar un runtime nuevo, compara el rendimiento con el actual en el cliente real del usuario (Pi), no solo con pruebas sintéticas.
 - [Catálogo](<config/catalog.psd1>): modelos activos. Los manifiestos `config/models/<model-id>.psd1` contienen únicamente metadatos de descarga e integridad.
 - Los GGUF instalados bajo `models/<model-id>/` y los argumentos literales de `scripts/models/<model-id>/start-*.cmd` son la fuente de verdad operativa. La documentación histórica y los catálogos de clientes no seleccionan perfiles.
 - [ADR-0001](<docs/adr/ADR-0001-self-contained-model-launchers.md>): cada lanzador invoca directamente su servidor, sin motor de arranque común, herencia de parámetros, PID global ni argumentos ocultos.
 - Consulta [backend](<docs/overview/inference-backend.md>), [gestión](<docs/overview/model-management.md>) y [guía de incorporación](<docs/overview/adding-a-model.md>). Prioriza archivos actuales frente a changelogs de modelos o runtimes retirados.
 
 ```powershell
-& .\runtimes\llama.cpp\b11669-cuda13.4\llama-server.exe --version
-& .\runtimes\llama.cpp\b11669-cuda13.4\llama-server.exe --help
+& .\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe --version
+& .\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe --help
 nvidia-smi
 ```
 

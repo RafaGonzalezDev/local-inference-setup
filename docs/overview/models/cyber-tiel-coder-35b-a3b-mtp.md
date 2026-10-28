@@ -45,7 +45,7 @@ partida y describe `UD-Q4_K_S` como «tight 4-bit», útil cuando `Q4_K_M` deja 
 | `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1.024/1.024 | sí | no | `cyber-tiel-coder-35b-a3b-vision-262k` |
 
 Los seis son copias exactas de los de `tiel-coder-35b-a3b-mtp`, a petición del usuario, cambiando solo
-el modelo, el proyector y los alias: `b11669-cuda13.4`, `--fit-target 1024` (2048 en visión), caché KV
+el modelo, el proyector y los alias: `b11551-cuda13.4`, `--fit-target 1024` (2048 en visión), caché KV
 `q8_0`, `--reasoning auto`, presupuesto 8.192 y batch/ubatch 1.024/1.024.
 
 - Muestreo `--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0`, sin penalizaciones: es el de coding agentic
@@ -99,4 +99,4 @@ mediciones propias de este modelo.
 - `scripts/models/cyber-tiel-coder-35b-a3b-mtp/start-agentic-auto-262k-1024.cmd`
 - `scripts/models/cyber-tiel-coder-35b-a3b-mtp/start-agentic-auto-vision-131k-1024.cmd`
 - `scripts/models/cyber-tiel-coder-35b-a3b-mtp/start-agentic-auto-vision-262k-1024.cmd`
-- `runtimes/llama.cpp/b11669-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`

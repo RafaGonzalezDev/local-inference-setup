@@ -46,7 +46,7 @@ perfiles de visión no llevan MTP. Los perfiles sin MTP usan el mismo GGUF, que 
 cabezal queda sin usar. Los cuatro lanzadores nuevos no se han probado.
 
 Al cambiar la cuantización, los lanzadores solo cambiaron la ruta del GGUF. Mantienen la base del
-entorno: `b11669`, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto` y
+entorno: `b11551`, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto` y
 presupuesto 8.192.
 
 - Muestreo `temp 0.6 --top-p 0.95 --top-k 20 --min-p 0`, sin penalizaciones: la tarjeta recomienda
@@ -92,7 +92,7 @@ context» en los tres perfiles.
 
 - `config/models/tiel-coder-35b-a3b-mtp.psd1`
 - `scripts/models/tiel-coder-35b-a3b-mtp/*.cmd`
-- `runtimes/llama.cpp/b11669-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs
 

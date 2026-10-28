@@ -49,7 +49,7 @@ Los perfiles `mtp-262k` y `vision-262k` se añadieron el 2026-10-28 (el primero 
 el segundo copiando el de visión 131K con contexto 262K); no se han probado. Los perfiles de visión
 no llevan MTP, por eso el proyector no se descarga del repositorio MTP.
 
-Los cuatro originales son copias de los lanzadores de `qwen3.6-35b-a3b` (retirado el 2026-10-28) sobre el runtime `b11669-cuda13.4`:
+Los cuatro originales son copias de los lanzadores de `qwen3.6-35b-a3b` (retirado el 2026-10-28) sobre el runtime `b11551-cuda13.4`:
 mismo contexto y estructura, batch fijo 1024/1024 para todos los perfiles,
 `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`,
 `--reasoning-budget 8192`, `--image-min-tokens 2048` y `--spec-type draft-mtp --spec-draft-n-max 3`.
@@ -110,7 +110,7 @@ o `["text", "image", "video"]` en visión. La plantilla aplicada termina en
 
 - `config/models/nail-qwen3.6-35b-a3b.psd1`
 - `scripts/models/nail-qwen3.6-35b-a3b/*.cmd`
-- `runtimes/llama.cpp/b11669-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs
 

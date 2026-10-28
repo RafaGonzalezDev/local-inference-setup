@@ -37,7 +37,7 @@ cuantización la eligió el usuario. El proyector es byte a byte el de `unsloth/
 
 Son copias de los tres perfiles sin MTP de `qwen3.6-35b-a3b` (retirado el 2026-10-28), con batch/ubatch `1024/1024` en los
 tres perfiles (el 131K y el de visión bajaron de `2048/2048` el 2026-10-27 para igualar a Nail):
-`b11669`, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`, presupuesto
+`b11551`, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`, presupuesto
 8.192, `--image-min-tokens 2048` y muestreo `--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0` sin
 penalizaciones. La tarjeta no recomienda muestreo, así que se hereda el de Qwen3.6; Nail, con la
 misma plantilla, recomienda `temp 1.0`.
@@ -77,7 +77,7 @@ tabla anterior corresponde a `2048/2048`.
 
 - `config/models/occult-nail-1.0-35b-a3b.psd1`
 - `scripts/models/occult-nail-1.0-35b-a3b/*.cmd`
-- `runtimes/llama.cpp/b11669-cuda13.4/`
+- `runtimes/llama.cpp/b11551-cuda13.4/`
 
 ## Related ADRs
 

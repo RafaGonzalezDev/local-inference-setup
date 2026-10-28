@@ -47,7 +47,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- Catálogo activo (2026-10-28): 4 modelos y 22 perfiles en `b11669`: `tiel-coder-35b-a3b-mtp`
+- Catálogo activo (2026-10-28): 4 modelos y 22 perfiles en `b11551`: `tiel-coder-35b-a3b-mtp`
   (`UD-IQ4_XS`), `nail-qwen3.6-35b-a3b`, `occult-nail-1.0-35b-a3b` y `cyber-tiel-coder-35b-a3b-mtp`
   (`UD-Q4_K_S`, lanzadores copiados de Tiel y sin probar por decisión del usuario), todos de
   `peculiar-ragdoll`; el README tiene columna de publicador.
@@ -55,8 +55,9 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `gemma-4-26b-a4b`, `ornith-1.5-9b`, `nemotron-3.5-lightning-30b-a3b`, `ling-3.0-tiny`,
   `swift-1.5-qwen3.8-27b-gsq-rco-mtp`, `minicpm-v-4.7-35b-a3b`, `flint`, `sage-a1.5-35b-a3b`, y el runtime
   `b11827`. Ver [el changelog de retirada](docs/changelog/2026-10-26-model-set-retirement.md).
-- 2026-10-27: runtime del catálogo a `b11669` (v0.7.0) sin smoke por perfil, por decisión del usuario; solo
-  A/B de Nail 131K y MTP 131K ([changelog](docs/changelog/2026-10-27-llama-runtime-b11669.md)).
+- 2026-10-27: runtime del catálogo a `b11669` (v0.7.0) sin smoke por perfil ([changelog](docs/changelog/2026-10-27-llama-runtime-b11669.md)).
+  2026-10-28: vuelto a `b11551` y eliminados `b11669` y los paquetes sin uso, porque el usuario midió un decode
+  sustancialmente mayor con `b11551` a través de Pi ([changelog](docs/changelog/2026-10-28-runtime-back-to-b11551.md)).
   2026-10-28: retirados `lfm3-1.7b`, `lfm3-audio-2b` y `lfm3-omni-2b` con el runtime compilado
   `19ff817-cuda13.4` ([changelog](docs/changelog/2026-10-28-lfm3-retirement.md)). También retirados
   `lfm2.5-24b-a2b`, `nemotron-3.5-bolt-e4b`, `ornith-1.5-35b-a3b` y `qwen3.6-35b-a3b`, con sus pesos

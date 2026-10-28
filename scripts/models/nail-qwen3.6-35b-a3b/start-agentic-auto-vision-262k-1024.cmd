@@ -3,7 +3,7 @@ setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem Automatic device placement vision profile; --fit does not account for the projector, so the margin is wider.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11669-cuda13.4\llama-server.exe"
+set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11551-cuda13.4\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\nail-qwen3.6-35b-a3b\Nail-Qwen3.6-35B-A3B-UD-Q4_K_S.gguf""
