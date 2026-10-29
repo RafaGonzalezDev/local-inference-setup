@@ -1,10 +1,12 @@
 # LFM3 deployment
 
-Self-contained deployment for the LiquidAI LFM3 family, kept apart from the main catalog in `D:\LLM`
-with its own llama.cpp runtime, `b11981-cuda13.4` (build 11981, commit `da6c30ade`). That release
-contains native LFM3 support (PR #31252, #31257), video input for the family (PR #31283) and realtime
-voice conversation with tool calls on `/v1/realtime` (PR #31269, #31287); no source build is needed.
-The main catalog stays on `b11551`.
+Self-contained deployment for LiquidAI LFM3-1.7B, kept apart from the main catalog in `D:\LLM` with
+its own llama.cpp runtime, `b11981-cuda13.4` (build 11981, commit `da6c30ade`). That release contains
+native LFM3 support (PR #31252); no source build is needed. The main catalog stays on `b11551`.
+
+The VL, Audio and Omni models of the family were installed here on 2026-10-29 and removed the same day
+because their results were poor for the user
+([changelog](../../docs/changelog/2026-10-29-lfm3-multimodal-retirement.md)).
 
 The directory follows the same layout and launcher contract as `D:\LLM`
 ([ADR-0001](../../docs/adr/ADR-0001-self-contained-model-launchers.md)): launchers compute
@@ -12,23 +14,18 @@ The directory follows the same layout and launcher contract as `D:\LLM`
 
 | Path | Content |
 | --- | --- |
-| `config/catalog.psd1`, `config/models/*.psd1` | Catalog and pinned manifests (revision, size, SHA-256) |
-| `scripts/models/<model-id>/start-*.cmd` | Self-contained launchers |
-| `docs/` | Model notes and changelog |
+| `config/catalog.psd1`, `config/models/*.psd1` | Catalog and pinned manifest (revision, size, SHA-256) |
+| `scripts/models/<model-id>/start-*.cmd` | Self-contained launcher |
+| `docs/` | Model notes |
 | `models/`, `runtimes/`, `packages/`, `logs/` | Weights, runtime, packages and validation logs (not mirrored) |
 
-## Models
+## Model
 
-| Model ID | Publication | Weights / projector | Context | Launcher | Profile alias | Clients |
+| Model ID | Publication | Weights | Context | Launcher | Profile alias | Clients |
 | --- | --- | --- | ---: | --- | --- | --- |
-| `lfm3-1.7b` | [LFM3-1.7B-GGUF](https://huggingface.co/LiquidAI/LFM3-1.7B-GGUF) | `Q8_0` / - | 262,144 | `start-agentic-auto-262k-1024.cmd` | `lfm3-1.7b-262k` | Pi, OpenCode |
-| `lfm3-vl-2b` | [LFM3-VL-2B-GGUF](https://huggingface.co/LiquidAI/LFM3-VL-2B-GGUF) | `Q8_0` / `Q8_0` | 128,000 | `start-agentic-auto-vision-128k-1024.cmd` | `lfm3-vl-2b-vision-128k` | - |
-| `lfm3-audio-2b` | [LFM3-Audio-2B-GGUF](https://huggingface.co/LiquidAI/LFM3-Audio-2B-GGUF) | `Q8_0` / `Q8_0` | 32,768 | `start-agentic-auto-audio-32k-1024.cmd` | `lfm3-audio-2b-audio-32k` | - |
-| `lfm3-omni-2b` | [LFM3-Omni-2B-GGUF](https://huggingface.co/LiquidAI/LFM3-Omni-2B-GGUF) | `Q8_0` / `Q8_0` | 32,768 | `start-agentic-auto-omni-32k-1024.cmd` | `lfm3-omni-2b-omni-32k` | Pi, OpenCode (text and image) |
+| `lfm3-1.7b` | [LFM3-1.7B-GGUF](https://huggingface.co/LiquidAI/LFM3-1.7B-GGUF) | `Q8_0` | 262,144 | `start-agentic-auto-262k-1024.cmd` | `lfm3-1.7b-262k` | Pi, OpenCode |
 
-Not installed: `LFM3-1.7B-Base` (no GGUF, base model for fine-tuning) and the d1 decision models
-(`d1-2B`, `d1-Omni-2B`: no text generation, partial llama.cpp support). Details, capabilities and test
-status: [docs/models.md](docs/models.md).
+Details and test status: [docs/models.md](docs/models.md).
 
 ## Usage
 
@@ -37,15 +34,15 @@ Run from `D:\LLM`. The shared scripts take `-RootDirectory`:
 ```powershell
 # Runtime and weights (pinned and verified)
 & .\scripts\setup\Install-LlamaRuntime.ps1 -RootDirectory .\experimental\lfm3 -Version b11981
-& .\scripts\setup\Download-Model.ps1 -Model lfm3-omni-2b -RootDirectory .\experimental\lfm3
+& .\scripts\setup\Download-Model.ps1 -Model lfm3-1.7b -RootDirectory .\experimental\lfm3
 & .\scripts\common\Test-ModelIntegrity.ps1 -RootDirectory .\experimental\lfm3
 
 # Static validation
 & .\scripts\common\Test-Llm.ps1 -RootDirectory .\experimental\lfm3 -ConfigurationOnly -RequireInstalledFiles
 
-# Start a profile (terminal-bound, Ctrl+C to stop); it uses port 8080 like the main profiles
-& .\experimental\lfm3\scripts\models\lfm3-omni-2b\start-agentic-auto-omni-32k-1024.cmd
+# Start the profile (terminal-bound, Ctrl+C to stop); it uses port 8080 like the main profiles
+& .\experimental\lfm3\scripts\models\lfm3-1.7b\start-agentic-auto-262k-1024.cmd
 ```
 
-Profiles listen on `0.0.0.0:8080` without authentication: trusted private network only, and only
-one profile (main or LFM3) can run at a time. Video input needs `ffmpeg` and `ffprobe` in `PATH`.
+The profile listens on `0.0.0.0:8080` without authentication: trusted private network only, and only
+one profile (main or LFM3) can run at a time.
