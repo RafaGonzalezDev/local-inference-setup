@@ -49,16 +49,25 @@ Run from `D:\LLM`. The shared scripts take `-RootDirectory`:
 
 ## Transcription
 
-With `lfm3-audio-2b` or `lfm3-omni-2b` running, double-click `scripts\transcribe-audio.cmd` to pick a
-file, or call the script directly:
+Double-click `scripts\transcribe-audio.cmd`. If no server answers on port 8080 it starts
+`lfm3-audio-2b` in the same window (log in `logs\transcription-server.*.log`), then asks for a file
+again after each transcript; Cancel stops the server and closing the window ends it too. A server
+already running with audio (Audio or Omni) is reused and left running; one without audio is an error,
+and the script never stops a server it did not start. Each transcript is saved next to the audio as
+`<name>.transcript.txt` (a timestamped name if that exists) and opened in the default editor, one
+paragraph per segment with its offset in the audio (`[00:01:30]`).
+
+From PowerShell, with a server already running:
 
 ```powershell
 & .\experimental\lfm3\scripts\Transcribe-Audio.ps1 -Path .\meeting.m4a -Language Spanish -OutFile .\meeting.txt
 ```
 
 It accepts any format ffmpeg reads, including the audio track of a video, converts it to 16 kHz mono
-WAV and sends it in segments of about 30 s (`-SegmentSeconds`) cut at the nearest pause, because a
-single request over long audio drops text (a 135 s test lost a third of it). `-Language auto` lets the
+WAV and sends it in segments of about 30 s (`-SegmentSeconds`) cut at the longest pause in the second
+half of each segment, because a single request over long audio drops text (a 135 s test lost a third of
+it). A segment that starts mid-sentence gives the rest of that sentence back to the previous
+paragraph; when the model ends a segment with a period of its own, the sentence still splits. `-Language auto` lets the
 model detect the language, and `-Prompt` replaces the default `Perform ASR in <Language>.` system prompt.
 The llama.cpp Web UI is not used: it offers its built-in tools to the model, which LFM3-Audio called
 instead of answering, and it skips audio files whose MIME type it does not list (for example `.m4a`
