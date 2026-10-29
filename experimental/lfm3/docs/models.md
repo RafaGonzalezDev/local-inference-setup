@@ -30,11 +30,11 @@ ones installed on 2026-10-27/28 (same SHA-256); only the repository revision mov
 
 ## lfm3-vl-2b
 
-- Image and video in, text out. Native context 128,000 (input plus output); the profile uses 98,304
-  because the 131K label (131,072) exceeds it. Thinks before answering. The card targets documents,
+- Image and video in, text out. Native context 128,000 (input plus output), which the profile uses
+  in full; its `128k` label is that exact integer, not 131,072. Thinks before answering. The card targets documents,
   charts, app screens, object grounding and recorded video; it does not recommend it for coding,
   multi-turn conversation or complex reasoning.
-- Profile `start-agentic-auto-vision-96k-1024.cmd`, alias `lfm3-vl-2b-vision-96k`: card sampling
+- Profile `start-agentic-auto-vision-128k-1024.cmd`, alias `lfm3-vl-2b-vision-128k`: card sampling
   (`--temp 0.1 --top-p 1 --top-k 50 --min-p 0 --repeat-penalty 1.1`), `--no-reasoning-preserve` as the
   card's llama.cpp command, `--fit-target 2048` for the projector. Video uses ffmpeg (sampled at
   `--video-fps`, default 4; the model card samples at 2 fps). No audio track. Not in any client.
@@ -87,7 +87,7 @@ ones installed on 2026-10-27/28 (same SHA-256); only the repository revision mov
 
 | Check | `lfm3-1.7b` | `lfm3-vl-2b` | `lfm3-audio-2b` | `lfm3-omni-2b` |
 | --- | --- | --- | --- | --- |
-| Context (`/props`) | 262,144 | 98,304 | 32,768 | 32,768 |
+| Context (`/props`) | 262,144 | 128,000 | 32,768 | 32,768 |
 | Text | correct, with reasoning | - | - | - |
 | `enable_thinking: false` | no reasoning | - | - | - |
 | Tool call `get_weather` | `{"location":"Madrid"}` | - | - | `{"location":"Madrid"}` |
@@ -98,8 +98,12 @@ ones installed on 2026-10-27/28 (same SHA-256); only the repository revision mov
 | Realtime, text | - | - | invented a `web_search` call with no tools declared | correct, first token 0.11 s |
 | Realtime, voice (English) | - | - | correct, first output 0.09 s, 4.6 s of speech | correct, first output 0.08 s, 5.0 s of speech |
 | Realtime, voice (Spanish) | - | - | not tested | first output 0.11 s, 15.3 s of speech in 1.8 s; two place names wrong |
-| VRAM peak | 6,670 MiB | 5,721 MiB | 5,439 MiB | 6,146 MiB |
+| VRAM peak | 6,670 MiB | 6,340 MiB (127,965-token load) | 5,439 MiB | 6,146 MiB |
 
+- VL load at 128,000: image plus a 127,080-token prompt and 885 generated tokens, prefill
+  15,161 t/s, decode 177 t/s, VRAM peak 6,340 MiB. It named the image colours correctly but got the
+  retrieval question wrong (sensor 0, 327 units; the log said sensor 53, 95 degrees): long-context recall
+  is weak. Log: `logs/validation/load-lfm3-vl-2b-128k-*.json`.
 - Speech samples: `logs/validation/audio-samples/` (not mirrored).
 - Not tested: long prompts near each context limit, live ASR, video longer than 4 s, quality beyond
   these checks, and Pi or OpenCode sessions against the registered profiles.

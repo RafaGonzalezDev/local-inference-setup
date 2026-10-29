@@ -22,7 +22,7 @@ The directory follows the same layout and launcher contract as `D:\LLM`
 | Model ID | Publication | Weights / projector | Context | Launcher | Profile alias | Clients |
 | --- | --- | --- | ---: | --- | --- | --- |
 | `lfm3-1.7b` | [LFM3-1.7B-GGUF](https://huggingface.co/LiquidAI/LFM3-1.7B-GGUF) | `Q8_0` / - | 262,144 | `start-agentic-auto-262k-1024.cmd` | `lfm3-1.7b-262k` | Pi, OpenCode |
-| `lfm3-vl-2b` | [LFM3-VL-2B-GGUF](https://huggingface.co/LiquidAI/LFM3-VL-2B-GGUF) | `Q8_0` / `Q8_0` | 98,304 | `start-agentic-auto-vision-96k-1024.cmd` | `lfm3-vl-2b-vision-96k` | - |
+| `lfm3-vl-2b` | [LFM3-VL-2B-GGUF](https://huggingface.co/LiquidAI/LFM3-VL-2B-GGUF) | `Q8_0` / `Q8_0` | 128,000 | `start-agentic-auto-vision-128k-1024.cmd` | `lfm3-vl-2b-vision-128k` | - |
 | `lfm3-audio-2b` | [LFM3-Audio-2B-GGUF](https://huggingface.co/LiquidAI/LFM3-Audio-2B-GGUF) | `Q8_0` / `Q8_0` | 32,768 | `start-agentic-auto-audio-32k-1024.cmd` | `lfm3-audio-2b-audio-32k` | - |
 | `lfm3-omni-2b` | [LFM3-Omni-2B-GGUF](https://huggingface.co/LiquidAI/LFM3-Omni-2B-GGUF) | `Q8_0` / `Q8_0` | 32,768 | `start-agentic-auto-omni-32k-1024.cmd` | `lfm3-omni-2b-omni-32k` | Pi, OpenCode (text and image) |
 
