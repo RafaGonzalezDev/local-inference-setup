@@ -9,7 +9,7 @@ rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\tiel-coder-35b-a3b\Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 0 --flash-attn on --split-mode none --fit on --fit-target 2048 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 8192 --flash-attn on --split-mode none --fit on --fit-target 2048 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"
 
 rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias tiel-coder-35b-a3b,tiel-coder-35b-a3b-vision-131k"
