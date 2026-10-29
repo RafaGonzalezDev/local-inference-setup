@@ -47,22 +47,5 @@ Run from `D:\LLM`. The shared scripts take `-RootDirectory`:
 & .\experimental\lfm3\scripts\models\lfm3-omni-2b\start-agentic-auto-omni-32k-1024.cmd
 ```
 
-## Transcription
-
-With `lfm3-audio-2b` or `lfm3-omni-2b` running, double-click `scripts\transcribe-audio.cmd` to pick a
-file, or call the script directly:
-
-```powershell
-& .\experimental\lfm3\scripts\Transcribe-Audio.ps1 -Path .\meeting.m4a -Language Spanish -OutFile .\meeting.txt
-```
-
-It accepts any format ffmpeg reads, including the audio track of a video, converts it to 16 kHz mono
-WAV and sends it in segments of about 30 s (`-SegmentSeconds`) cut at the nearest pause, because a
-single request over long audio drops text (a 135 s test lost a third of it). `-Language auto` lets the
-model detect the language, and `-Prompt` replaces the default `Perform ASR in <Language>.` system prompt.
-The llama.cpp Web UI is not used: it offers its built-in tools to the model, which LFM3-Audio called
-instead of answering, and it skips audio files whose MIME type it does not list (for example `.m4a`
-or `.flac`).
-
 Profiles listen on `0.0.0.0:8080` without authentication: trusted private network only, and only
 one profile (main or LFM3) can run at a time. Video input needs `ffmpeg` and `ffprobe` in `PATH`.
