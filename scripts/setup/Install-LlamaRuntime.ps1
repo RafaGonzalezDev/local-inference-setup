@@ -2,7 +2,7 @@
 param(
     [string]$RootDirectory,
 
-    [ValidateSet('b11269', 'b11551', 'b11669', 'b11827')]
+    [ValidateSet('b11269', 'b11551', 'b11669', 'b11827', 'b11981')]
     [string]$Version = 'b11551'
 )
 
@@ -34,6 +34,11 @@ $releases = @{
     b11827 = @{
         Commit = '970b51c'
         Sha256 = '5d54c5fa2f26d9c80fa7439692e5929e8f7f1e7b2d00e3d6ab5a919154c768fa'
+    }
+    # Nightly build after v0.8.0 (b11960) with LFM3 text, VL, Audio and Omni support (PR #31252, #31257, #31283).
+    b11981 = @{
+        Commit = 'da6c30a'
+        Sha256 = 'b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691'
     }
 }
 $versionNumber = $Version.Substring(1)

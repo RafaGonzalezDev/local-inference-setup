@@ -41,6 +41,11 @@ retired on 2026-10-28 and every model moved to its `UD-Q4_K_XL` build without an
 Tiel Coder and Cyber Tiel dropped the `-mtp` suffix from their IDs
 ([changelog](docs/changelog/2026-10-28-q4-k-xl-without-mtp.md)).
 
+Since 2026-10-29 the LFM3 family (`lfm3-1.7b`, `lfm3-vl-2b`, `lfm3-audio-2b`, `lfm3-omni-2b`)
+lives in [experimental/lfm3](experimental/lfm3/README.md) with its own official runtime
+`b11981-cuda13.4`, outside this catalog; `lfm3-1.7b-262k` and `lfm3-omni-2b-omni-32k` are also
+registered in Pi and OpenCode ([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 

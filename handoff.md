@@ -62,6 +62,11 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `19ff817-cuda13.4` ([changelog](docs/changelog/2026-10-28-lfm3-retirement.md)). También retirados
   `lfm2.5-24b-a2b`, `nemotron-3.5-bolt-e4b`, `ornith-1.5-35b-a3b` y `qwen3.6-35b-a3b`, con sus pesos
   ([changelog](docs/changelog/2026-10-28-model-set-retirement.md)).
+- 2026-10-29: familia LFM3 (`lfm3-1.7b`, `lfm3-vl-2b`, `lfm3-audio-2b`, `lfm3-omni-2b`, `Q8_0`) en
+  `experimental/lfm3` con su runtime oficial `b11981-cuda13.4`, fuera del catálogo principal
+  ([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)). Pi y OpenCode (repositorios y WSL, copias
+  `*.bak-<timestamp>-lfm3-b11981`) listan además `lfm3-1.7b-262k` y `lfm3-omni-2b-omni-32k`; DSH no, por
+  decisión del usuario. En la comprobación de paridad, añade esos dos alias a `served.txt`.
 - Los 16 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28). El contrato de
   razonamiento completo solo se verificó en Occult Nail y en las versiones anteriores de Tiel y Nail.
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
@@ -130,6 +135,8 @@ diff /c/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml dotfiles-dsh/config/p
 
 # Paridad: cada catálogo contiene exactamente los alias de perfil de todos los lanzadores
 grep -ho -- '--alias [^ "]*' /d/LLM/scripts/models/*/*.cmd | sed 's/--alias [^,]*,//' | sort > served.txt
+# Pi y OpenCode también listan estos dos perfiles de experimental/lfm3; en DSH aparecen como "missing", y es lo esperado
+printf '%s\n' lfm3-1.7b-262k lfm3-omni-2b-omni-32k >> served.txt
 node -e "
 const fs=require('fs');const srv=fs.readFileSync('served.txt','utf8').trim().split('\n');
 const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');

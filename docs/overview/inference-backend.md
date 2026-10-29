@@ -84,6 +84,12 @@ models) was installed from 2026-10-27 and deleted on 2026-10-28 with those model
 is allowed when a model needs support no release has yet, provided the user is told and the commit,
 toolchain and binary SHA-256 values are recorded.
 
+Since 2026-10-29 the LFM3 deployment in `experimental/lfm3` has its own official runtime,
+`experimental/lfm3/runtimes/llama.cpp/b11981-cuda13.4` (build 11981, commit `da6c30ade`, package SHA-256
+`b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691`, same `cudart` archive). It is not used
+by the main catalog and has not been compared with `b11551` for the main models; see the
+[changelog](../changelog/2026-10-29-lfm3-b11981.md).
+
 The installer accepts both the legacy numeric version output and the current
 semantic-version output while still requiring the pinned build and commit. Both
 pin the same `cudart` archive and the 13.4 toolkit, which is why the runtime
