@@ -348,7 +348,9 @@ foreach ($testCase in $testCases) {
         }
 
         $messageContent = 'Reply with exactly: pong'
-        if ($testCase.Vision) {
+        # A projector can be audio-only (LFM3-Audio), so the image goes only where the server reports vision.
+        $sendImage = $testCase.Vision -and (Invoke-RestMethod -Uri "http://127.0.0.1:$($testCase.Port)/props" -TimeoutSec 10).modalities.vision
+        if ($sendImage) {
             if (-not (Test-Path -LiteralPath $VisionImage -PathType Leaf)) {
                 throw "Vision fixture was not found: $VisionImage"
             }
