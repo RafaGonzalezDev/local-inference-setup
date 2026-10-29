@@ -47,21 +47,5 @@ Run from `D:\LLM`. The shared scripts take `-RootDirectory`:
 & .\experimental\lfm3\scripts\models\lfm3-omni-2b\start-agentic-auto-omni-32k-1024.cmd
 ```
 
-## Audio summaries
-
-Double-click `scripts\summarize-audio.cmd` and pick an audio or video file. If no server answers on
-port 8080 it starts `lfm3-omni-2b` in the same window (log in `logs\summary-server.*.log`); Cancel in
-the picker stops it, and closing the window ends it too. A server already running with audio is reused
-and left running. Each summary, one or two paragraphs in Spanish, replaces `scripts\SUMMARY.md`.
-
-The script transcribes the audio in 30 s segments (`Perform ASR in Spanish.`; `-Language auto` lets the
-model detect it) and then asks the model for the summary from that text. Asking for a summary straight
-from the audio did not work: both Audio and Omni returned a transcription of each segment. Long audio
-must be segmented because a single request over 135 s dropped a third of its text. Omni is used
-because Audio cut one summary short mid-sentence. From PowerShell, with a server already running:
-`& .\experimental\lfm3\scripts\Summarize-Audio.ps1 -Path .\note.ogg`. The llama.cpp Web UI is not
-suitable: it offers its built-in tools to the model, which LFM3-Audio called instead of answering, and
-it skips audio files whose MIME type it does not list (`.m4a`, `.flac`).
-
 Profiles listen on `0.0.0.0:8080` without authentication: trusted private network only, and only
 one profile (main or LFM3) can run at a time. Video input needs `ffmpeg` and `ffprobe` in `PATH`.
