@@ -60,7 +60,9 @@ ones installed on 2026-10-27/28 (same SHA-256); only the repository revision mov
 ## How to use each capability
 
 - Speech recognition: chat completion with an `input_audio` part and the system prompt
-  `Perform ASR in <language>.` (`Perform ASR.` lets LFM3-Audio infer the language).
+  `Perform ASR in <language>.` (`Perform ASR.` lets LFM3-Audio infer the language). Keep each request
+  to about 30 s of audio: a 45 s clip came back complete, a 135 s one lost a third of its text with a
+  normal `stop`. Summaries: `scripts/Summarize-Audio.ps1` (see the README).
 - Speech synthesis: `POST /tts` with `input`, optional `lang` and `voice` (`female`/`male`); it returns
   WAV bytes.
 - Image: chat completion with an `image_url` part. Video: an `input_video` part (`data` in base64 or

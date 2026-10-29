@@ -12,3 +12,7 @@ logs/
 
 # Assets de pruebas funcionales
 tests/
+
+# Salidas generadas por los scripts de audio de LFM3 (contenido del usuario)
+experimental/lfm3/scripts/SUMMARY.md
+experimental/lfm3/scripts/TRANSCRIPT.md
