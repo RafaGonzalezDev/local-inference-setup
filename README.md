@@ -47,6 +47,10 @@ in Pi and OpenCode ([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)). The 
 models installed with it were removed the same day
 ([changelog](docs/changelog/2026-10-29-lfm3-multimodal-retirement.md)).
 
+On 2026-10-29 `nemotron-3.5-lightning-30b-a3b`, retired on 2026-10-26, came back with the `AD-IQ4_NL`
+build from `AtomicChat` instead of the earlier NVFP4: K-quants do not fit its tensor shapes, so it is the
+only model not on `UD-Q4_K_XL` ([changelog](docs/changelog/2026-10-29-nemotron-3.5-lightning-30b-a3b.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 
@@ -56,6 +60,7 @@ manifest pins the exact repository and revision.
 | `nail-qwen3.6-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `nail-qwen3.6-35b-a3b-131k`, `nail-qwen3.6-35b-a3b-262k`, `nail-qwen3.6-35b-a3b-vision-131k`, `nail-qwen3.6-35b-a3b-vision-262k` |
 | `occult-nail-1.0-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `occult-nail-1.0-35b-a3b-131k`, `occult-nail-1.0-35b-a3b-262k`, `occult-nail-1.0-35b-a3b-vision-131k`, `occult-nail-1.0-35b-a3b-vision-262k` |
 | `cyber-tiel-coder-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `cyber-tiel-coder-35b-a3b-131k`, `cyber-tiel-coder-35b-a3b-262k`, `cyber-tiel-coder-35b-a3b-vision-131k`, `cyber-tiel-coder-35b-a3b-vision-262k` |
+| `nemotron-3.5-lightning-30b-a3b` | `AtomicChat` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `nemotron-3.5-lightning-30b-a3b-131k`, `nemotron-3.5-lightning-30b-a3b-262k` |
 
 ## Repository Structure
 
@@ -106,6 +111,7 @@ scripts\models\tiel-coder-35b-a3b\start-agentic-auto-vision-131k-1024.cmd
 scripts\models\nail-qwen3.6-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\occult-nail-1.0-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\cyber-tiel-coder-35b-a3b\start-agentic-auto-131k-1024.cmd
+scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-auto-131k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.

@@ -47,9 +47,9 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- Catálogo activo (2026-10-28): 4 modelos y 16 perfiles en `b11551`, todos `UD-Q4_K_XL` sin MTP y de
+- Catálogo activo (2026-10-29): 5 modelos y 18 perfiles en `b11551`, sin MTP. Cuatro son `UD-Q4_K_XL` de
   `peculiar-ragdoll`: `tiel-coder-35b-a3b`, `nail-qwen3.6-35b-a3b`, `occult-nail-1.0-35b-a3b` y
-  `cyber-tiel-coder-35b-a3b`. Los perfiles MTP se retiraron y Tiel y Cyber Tiel perdieron el sufijo
+  `cyber-tiel-coder-35b-a3b`; el quinto, `nemotron-3.5-lightning-30b-a3b`, es `AD-IQ4_NL` de `AtomicChat`. Los perfiles MTP se retiraron y Tiel y Cyber Tiel perdieron el sufijo
   `-mtp` ([changelog](docs/changelog/2026-10-28-q4-k-xl-without-mtp.md)). Lanzadores con 6 hilos.
 - Retirados el 2026-10-26 a elección del usuario, con sus pesos: `tiel-coder-35b-a3b`, `gemma-4-12b-v2`,
   `gemma-4-26b-a4b`, `ornith-1.5-9b`, `nemotron-3.5-lightning-30b-a3b`, `ling-3.0-tiny`,
@@ -68,10 +68,14 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   Pi y OpenCode (repositorios y WSL, copias `*.bak-<timestamp>-{lfm3-b11981,lfm3-multimodal-retirement}`)
   listan además `lfm3-1.7b-262k`; DSH no, por decisión del usuario. En la comprobación de paridad, añade
   ese alias a `served.txt`.
-- Los 16 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28). El contrato de
-  razonamiento completo solo se verificó en Occult Nail y en las versiones anteriores de Tiel y Nail.
+- 2026-10-29: vuelve `nemotron-3.5-lightning-30b-a3b` con `AD-IQ4_NL` de `AtomicChat` y dos perfiles (131K y
+  262K): el catálogo pasa a 5 modelos y 18 perfiles ([changelog](docs/changelog/2026-10-29-nemotron-3.5-lightning-30b-a3b.md)).
+  Copias de los clientes: `*.bak-<timestamp>-nemotron-lightning`.
+- Los 18 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28 y los 2 de Nemotron el
+  2026-10-29). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
+  anteriores de Tiel y Nail.
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
-  `~/.config/opencode/opencode.json`) listan exactamente los 16 alias (2026-10-28). Cada archivo vivo tiene copia
+  `~/.config/opencode/opencode.json`) listan exactamente los 18 alias (2026-10-29). Cada archivo vivo tiene copia
   `*.bak-<timestamp>-{profile-aliases,retirement,lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement,mtp-retirement}` (OpenCode también `modalities-fix`, del 2026-10-29); DSH global,
   `cordis.patch.yml.bak-*-{lfm3-1.7b,lfm3-retirement,model-retirement,qwen-retirement,mtp-retirement}`.
 - DSH global: a 2026-10-28 solo difiere del repositorio en ajustes de la GUI: `agent-default-model`
