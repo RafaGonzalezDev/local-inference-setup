@@ -25,11 +25,12 @@ stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
 
 ## Installed Runtimes
 
-One official `llama.cpp` runtime is installed, and every launcher pins it: `b11551`.
+Two official `llama.cpp` runtimes serve the catalog: `b11551`, pinned by every launcher
+except Flint's, and `b11981`, pinned by the two `flint` launchers since 2026-10-30.
 `b11669` (the build behind the stable release v0.7.0) was installed on 2026-10-27
 and deleted on 2026-10-28; `b11269` was uninstalled on 2026-10-22 and `b11827`,
-which only the retired `flint` used, on 2026-10-26. `Install-LlamaRuntime.ps1`
-installs any of the four with `-Version`; the default is `b11551`.
+which `flint` used until its retirement, on 2026-10-26. `Install-LlamaRuntime.ps1`
+installs any of the five with `-Version`; the default is `b11551`.
 
 `b11551` (nightly) was the first build that contained MiniCPM-V 4.7 support
 (PR #29416); MiniCPM-V was retired on 2026-10-26. It is the build every profile
@@ -64,6 +65,13 @@ from 2026-10-27 to 2026-10-28 and is no longer installed:
 `5d54c5fa2f26d9c80fa7439692e5929e8f7f1e7b2d00e3d6ab5a919154c768fa`) was installed
 for Flint support (PR #30928) and its template's Jinja escapes (PR #30929). It was
 removed with `flint` on 2026-10-26 and can be reinstalled with `-Version b11827`.
+
+`b11981` (nightly after v0.8.0, commit `da6c30ade`, package SHA-256
+`b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691`) runs Flint since
+2026-10-30, chosen by the user over `b11827`. It reports
+`0.8.0-dev (build 11981, commit da6c30ade)` and lives in `runtimes\llama.cpp\b11981-cuda13.4`;
+`experimental\lfm3` keeps its own copy. It has not been compared with `b11551` on the same
+model ([changelog](../changelog/2026-10-30-flint.md)).
 
 `b11269` is no longer installed; returning to it is running the installer with
 `-Version b11269` and editing one `SERVER` line per launcher:

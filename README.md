@@ -26,10 +26,10 @@ All profiles are automatic: every launcher declares `--gpu-layers auto --fit on`
 and lets the runtime resolve the device placement. The hand-tuned profiles that
 pinned `--gpu-layers 999` with `--n-cpu-moe` were retired on 2026-09-30. Their
 reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01. Every
-launcher pins `b11551-cuda13.4`. `b11669-cuda13.4` (llama.cpp v0.7.0) was used on
+launcher pins `b11551-cuda13.4` except Flint's, which pin `b11981-cuda13.4`. `b11669-cuda13.4` (llama.cpp v0.7.0) was used on
 2026-10-27 and removed on 2026-10-28 because it performed worse for the user.
 `b11269-cuda13.4` was removed on 2026-10-22 and
-`b11827-cuda13.4`, used only by the retired `flint`, on 2026-10-26; all three can be
+`b11827-cuda13.4`, which `flint` used until its retirement, on 2026-10-26; all three can be
 reinstalled.
 
 The LiquidAI LFM3 models (`lfm3-1.7b`, `lfm3-audio-2b`, `lfm3-omni-2b`) and the llama.cpp
@@ -51,6 +51,10 @@ On 2026-10-29 `nemotron-3.5-lightning-30b-a3b`, retired on 2026-10-26, came back
 build from `AtomicChat` instead of the earlier NVFP4: K-quants do not fit its tensor shapes, so it is the
 only model not on `UD-Q4_K_XL` ([changelog](docs/changelog/2026-10-29-nemotron-3.5-lightning-30b-a3b.md)).
 
+On 2026-10-30 `flint`, retired on 2026-10-26, came back with the same `UD-Q4_K_XL` revision on the
+official runtime `b11981-cuda13.4`, because `b11551` cannot load its architecture. Its reasoning cannot
+be turned off per request, only capped with a positive budget ([changelog](docs/changelog/2026-10-30-flint.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 
@@ -61,6 +65,7 @@ manifest pins the exact repository and revision.
 | `occult-nail-1.0-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `occult-nail-1.0-35b-a3b-131k`, `occult-nail-1.0-35b-a3b-262k`, `occult-nail-1.0-35b-a3b-vision-131k`, `occult-nail-1.0-35b-a3b-vision-262k` |
 | `cyber-tiel-coder-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `cyber-tiel-coder-35b-a3b-131k`, `cyber-tiel-coder-35b-a3b-262k`, `cyber-tiel-coder-35b-a3b-vision-131k`, `cyber-tiel-coder-35b-a3b-vision-262k` |
 | `nemotron-3.5-lightning-30b-a3b` | `AtomicChat` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `nemotron-3.5-lightning-30b-a3b-131k`, `nemotron-3.5-lightning-30b-a3b-262k` |
+| `flint` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
 
 ## Repository Structure
 
@@ -87,7 +92,7 @@ powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-
 ```
 
 `-Version b11269` reinstalls the previous pinned build if a rollback is needed;
-`-Version b11827` reinstalls the nightly build that the retired `flint` used.
+`-Version b11981` installs the build that the `flint` launchers use.
 
 2. Download a model:
 
@@ -112,6 +117,7 @@ scripts\models\nail-qwen3.6-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\occult-nail-1.0-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\cyber-tiel-coder-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-auto-131k-1024.cmd
+scripts\models\flint\start-agentic-auto-131k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.

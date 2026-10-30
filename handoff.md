@@ -71,8 +71,15 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 - 2026-10-29: vuelve `nemotron-3.5-lightning-30b-a3b` con `AD-IQ4_NL` de `AtomicChat` y dos perfiles (131K y
   262K): el catálogo pasa a 5 modelos y 18 perfiles ([changelog](docs/changelog/2026-10-29-nemotron-3.5-lightning-30b-a3b.md)).
   Copias de los clientes: `*.bak-<timestamp>-nemotron-lightning`.
-- Los 18 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28 y los 2 de Nemotron el
-  2026-10-29). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
+- 2026-10-30: vuelve `flint` (`UD-Q4_K_XL`, misma revisión que el 2026-10-22) con `b11981-cuda13.4` y dos
+  perfiles (`flint-131k`, `flint-262k`): 6 modelos y 20 perfiles ([changelog](docs/changelog/2026-10-30-flint.md)).
+  Calibrados bajo carga, con tool calling y contrato de razonamiento medidos: el razonamiento no se
+  desactiva por petición y `thinking_budget_tokens: 0` lo vuelca en `content`, así que los clientes no
+  deben enviar presupuesto 0 a Flint (sus entradas no ofrecen `off`). Los tres dotfiles, DSH global y WSL
+  listan los 20 alias (Pi y OpenCode, además `lfm3-1.7b-262k`); copias `cordis.patch.yml.bak-20261030-101331-flint`
+  y `*.bak-20261030-101503-flint` en WSL.
+- Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
+  2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
 - Los tres dotfiles, DSH global y los clientes activos de WSL (`~/.pi/agent/models.json` y
   `~/.config/opencode/opencode.json`) listan exactamente los 18 alias (2026-10-29). Cada archivo vivo tiene copia
