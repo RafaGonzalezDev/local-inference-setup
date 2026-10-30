@@ -47,9 +47,11 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 ## Current status
 
-- Catálogo activo (2026-10-29): 5 modelos y 18 perfiles en `b11551`, sin MTP. Cuatro son `UD-Q4_K_XL` de
+- Catálogo activo (2026-10-30): 6 modelos y 20 perfiles en `b11981`, sin MTP. Cuatro son `UD-Q4_K_XL` de
   `peculiar-ragdoll`: `tiel-coder-35b-a3b`, `nail-qwen3.6-35b-a3b`, `occult-nail-1.0-35b-a3b` y
-  `cyber-tiel-coder-35b-a3b`; el quinto, `nemotron-3.5-lightning-30b-a3b`, es `AD-IQ4_NL` de `AtomicChat`. Los perfiles MTP se retiraron y Tiel y Cyber Tiel perdieron el sufijo
+  `cyber-tiel-coder-35b-a3b`; `nemotron-3.5-lightning-30b-a3b` es `AD-IQ4_NL` de `AtomicChat` y `flint`,
+  `UD-Q4_K_XL` de `unsloth`. El 2026-10-30 todos los lanzadores pasaron de `b11551` a `b11981` y se eliminó
+  `b11551` ([changelog](docs/changelog/2026-10-30-llama-runtime-b11981-catalog.md)). Los perfiles MTP se retiraron y Tiel y Cyber Tiel perdieron el sufijo
   `-mtp` ([changelog](docs/changelog/2026-10-28-q4-k-xl-without-mtp.md)). Lanzadores con 6 hilos.
 - Retirados el 2026-10-26 a elección del usuario, con sus pesos: `tiel-coder-35b-a3b`, `gemma-4-12b-v2`,
   `gemma-4-26b-a4b`, `ornith-1.5-9b`, `nemotron-3.5-lightning-30b-a3b`, `ling-3.0-tiny`,

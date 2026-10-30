@@ -41,7 +41,7 @@ idéntico). El proyector es el de Ornith sin cambios, byte a byte el mismo que e
 | `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1.024/1.024 | sí | `cyber-tiel-coder-35b-a3b-vision-131k` |
 | `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1.024/1.024 | sí | `cyber-tiel-coder-35b-a3b-vision-262k` |
 
-Son los de Tiel Coder cambiando solo el modelo, el proyector y los alias: `b11551-cuda13.4`, 6 hilos,
+Son los de Tiel Coder cambiando solo el modelo, el proyector y los alias: `b11981-cuda13.4` (desde el 2026-10-30; calibrados con `b11551`), 6 hilos,
 `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`, presupuesto 8.192 y
 batch/ubatch 1.024/1.024.
 
@@ -93,7 +93,7 @@ contexto, `/v1/models` publica el alias canónico y el de perfil con `ftype Q4_K
 
 - `config/models/cyber-tiel-coder-35b-a3b.psd1`
 - `scripts/models/cyber-tiel-coder-35b-a3b/*.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11981-cuda13.4/`
 
 ## Related ADRs
 

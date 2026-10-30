@@ -39,7 +39,7 @@ eligió el usuario, la misma que Occult Nail.
 | `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | sí | `nail-qwen3.6-35b-a3b-vision-131k` |
 | `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1024/1024 | sí | `nail-qwen3.6-35b-a3b-vision-262k` |
 
-Copias de los lanzadores de `qwen3.6-35b-a3b` (retirado el 2026-10-28) sobre `b11551-cuda13.4`: batch
+Copias de los lanzadores de `qwen3.6-35b-a3b` (retirado el 2026-10-28) sobre `b11551-cuda13.4` (`b11981-cuda13.4` desde el 2026-10-30): batch
 1024/1024, 6 hilos, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning auto`,
 `--reasoning-budget 8192` e `--image-min-tokens 2048`.
 
@@ -88,7 +88,7 @@ contexto, `/v1/models` publica el alias canónico y el de perfil con `ftype Q4_K
 
 - `config/models/nail-qwen3.6-35b-a3b.psd1`
 - `scripts/models/nail-qwen3.6-35b-a3b/*.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11981-cuda13.4/`
 
 ## Related ADRs
 

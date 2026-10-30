@@ -3,7 +3,7 @@ param(
     [string]$RootDirectory,
 
     [ValidateSet('b11269', 'b11551', 'b11669', 'b11827', 'b11981')]
-    [string]$Version = 'b11551'
+    [string]$Version = 'b11981'
 )
 
 Set-StrictMode -Version Latest
@@ -20,7 +20,7 @@ $releases = @{
         Commit = 'cee37ffea'
         Sha256 = '79e8431306e0d5dad9f7d429272226387d449a167d3e9285cdf0ec0edce8b27e'
     }
-    # Nightly build that first contains MiniCPM-V 4.7 support (merge 69f201a, PR #29416).
+    # Nightly build that first contains MiniCPM-V 4.7 support (merge 69f201a, PR #29416); catalog runtime until 2026-10-30.
     b11551 = @{
         Commit = '69f201a'
         Sha256 = '80c5f94fe5ecd8090fe682c89861a949efb4a3487782cfcd99252a18f571afc7'
@@ -35,7 +35,7 @@ $releases = @{
         Commit = '970b51c'
         Sha256 = '5d54c5fa2f26d9c80fa7439692e5929e8f7f1e7b2d00e3d6ab5a919154c768fa'
     }
-    # Nightly build after v0.8.0 (b11960) with LFM3 text, VL, Audio and Omni support (PR #31252, #31257, #31283).
+    # Nightly build after v0.8.0 (b11960) with LFM3 support (PR #31252, #31257, #31283); catalog runtime since 2026-10-30.
     b11981 = @{
         Commit = 'da6c30a'
         Sha256 = 'b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691'

@@ -2,7 +2,8 @@
 
 Self-contained deployment for LiquidAI LFM3-1.7B, kept apart from the main catalog in `D:\LLM` with
 its own llama.cpp runtime, `b11981-cuda13.4` (build 11981, commit `da6c30ade`). That release contains
-native LFM3 support (PR #31252); no source build is needed. The main catalog stays on `b11551`.
+native LFM3 support (PR #31252); no source build is needed. Since 2026-10-30 the main catalog uses the
+same build from its own copy in `runtimes\llama.cpp\b11981-cuda13.4`.
 
 The VL, Audio and Omni models of the family were installed here on 2026-10-29 and removed the same day
 because their results were poor for the user

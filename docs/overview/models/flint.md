@@ -18,8 +18,8 @@ y el mismo archivo ([changelog](../../changelog/2026-10-30-flint.md)).
 
 ## Runtime
 
-Usa `b11981-cuda13.4` (elección del usuario, 2026-10-30), el único runtime del catálogo principal
-distinto de `b11551`. `b11551` no reconoce la arquitectura `flint`: el soporte oficial llegó en el PR
+Usa `b11981-cuda13.4` (elección del usuario, 2026-10-30), el runtime de todo el catálogo desde ese día.
+El anterior, `b11551`, no reconoce la arquitectura `flint`: el soporte oficial llegó en el PR
 #30928 de `llama.cpp` (primer build `b11803`) y la plantilla necesita los escapes hexadecimales del PR
 #30929. La instalación anterior usó `b11827`.
 

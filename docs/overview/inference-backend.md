@@ -25,29 +25,41 @@ stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
 
 ## Installed Runtimes
 
-Two official `llama.cpp` runtimes serve the catalog: `b11551`, pinned by every launcher
-except Flint's, and `b11981`, pinned by the two `flint` launchers since 2026-10-30.
-`b11669` (the build behind the stable release v0.7.0) was installed on 2026-10-27
-and deleted on 2026-10-28; `b11269` was uninstalled on 2026-10-22 and `b11827`,
-which `flint` used until its retirement, on 2026-10-26. `Install-LlamaRuntime.ps1`
-installs any of the five with `-Version`; the default is `b11551`.
+One official `llama.cpp` runtime is installed, and every launcher pins it since
+2026-10-30: `b11981`. `b11551`, the runtime of record until then, was deleted the
+same day; `b11669` (the build behind the stable release v0.7.0) was installed on
+2026-10-27 and deleted on 2026-10-28; `b11269` was uninstalled on 2026-10-22 and
+`b11827`, which `flint` used until its retirement, on 2026-10-26.
+`Install-LlamaRuntime.ps1` installs any of the five with `-Version`; the default
+is `b11981`.
 
-`b11551` (nightly) was the first build that contained MiniCPM-V 4.7 support
-(PR #29416); MiniCPM-V was retired on 2026-10-26. It is the build every profile
-was calibrated on, and on 2026-10-28 the user measured clearly better
-performance with it than with `b11669` through Pi, in both models and several
-situations, so it is the runtime of record
-([changelog](../changelog/2026-10-28-runtime-back-to-b11551.md)).
+`b11981` (nightly after v0.8.0) first ran Flint, which `b11551` cannot load, and on
+2026-10-30 replaced `b11551` in every launcher by the user's decision
+([changelog](../changelog/2026-10-30-llama-runtime-b11981-catalog.md)).
 
-- Version: `b11551` (nightly)
-- Commit: `69f201a20` (merge commit of PR #29416)
-- Reported version: `0.6.0-dev (build 11551, commit 69f201a20)`
-- Directory: `runtimes\llama.cpp\b11551-cuda13.4`
-- Package: `llama-b11551-bin-win-cuda-13.4-x64.zip`
-- SHA-256: `80c5f94fe5ecd8090fe682c89861a949efb4a3487782cfcd99252a18f571afc7`
+- Version: `b11981` (nightly)
+- Commit: `da6c30ade`
+- Reported version: `0.8.0-dev (build 11981, commit da6c30ade)`
+- Directory: `runtimes\llama.cpp\b11981-cuda13.4`
+- Package: `llama-b11981-bin-win-cuda-13.4-x64.zip`
+- SHA-256: `b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691`
 - CUDA runtime SHA-256: `738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`
 - Validated GPU: NVIDIA RTX 5080
 - Validated driver: 616.56
+- Own measurements against `b11551` (131K text profile of each model, two server starts
+  per runtime in A-B-B-A order, 112K-token prompt and a short-prompt decode): prefill
+  about 4 % faster and decode 1.4–3.2 % faster on the four Qwen3.6-based models; Nemotron
+  3.5 Lightning within noise. Synthetic, not measured through Pi; 262K and vision
+  profiles were only smoke-tested.
+
+`b11551` (nightly, commit `69f201a20`, merge of PR #29416 with MiniCPM-V 4.7 support;
+reported version `0.6.0-dev (build 11551, commit 69f201a20)`; package SHA-256
+`80c5f94fe5ecd8090fe682c89861a949efb4a3487782cfcd99252a18f571afc7`) was the runtime of
+record from 2026-10-13 to 2026-10-30, back from `b11669` after the user measured better
+performance with it through Pi
+([changelog](../changelog/2026-10-28-runtime-back-to-b11551.md)). The calibration
+tables in the model cards up to 2026-10-29 were measured with it. It can be
+reinstalled with `-Version b11551`.
 
 `b11669` (v0.7.0, reinstallable with `-Version b11669`) was the runtime of the catalog
 from 2026-10-27 to 2026-10-28 and is no longer installed:
@@ -65,13 +77,6 @@ from 2026-10-27 to 2026-10-28 and is no longer installed:
 `5d54c5fa2f26d9c80fa7439692e5929e8f7f1e7b2d00e3d6ab5a919154c768fa`) was installed
 for Flint support (PR #30928) and its template's Jinja escapes (PR #30929). It was
 removed with `flint` on 2026-10-26 and can be reinstalled with `-Version b11827`.
-
-`b11981` (nightly after v0.8.0, commit `da6c30ade`, package SHA-256
-`b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691`) runs Flint since
-2026-10-30, chosen by the user over `b11827`. It reports
-`0.8.0-dev (build 11981, commit da6c30ade)` and lives in `runtimes\llama.cpp\b11981-cuda13.4`;
-`experimental\lfm3` keeps its own copy. It has not been compared with `b11551` on the same
-model ([changelog](../changelog/2026-10-30-flint.md)).
 
 `b11269` is no longer installed; returning to it is running the installer with
 `-Version b11269` and editing one `SERVER` line per launcher:
@@ -94,8 +99,8 @@ toolchain and binary SHA-256 values are recorded.
 
 Since 2026-10-29 the LFM3 deployment in `experimental/lfm3` has its own official runtime,
 `experimental/lfm3/runtimes/llama.cpp/b11981-cuda13.4` (build 11981, commit `da6c30ade`, package SHA-256
-`b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691`, same `cudart` archive). It is not used
-by the main catalog and has not been compared with `b11551` for the main models; see the
+`b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691`, same `cudart` archive). The main
+catalog uses the same build from its own copy in `runtimes\llama.cpp`; see the
 [changelog](../changelog/2026-10-29-lfm3-b11981.md).
 
 The installer accepts both the legacy numeric version output and the current

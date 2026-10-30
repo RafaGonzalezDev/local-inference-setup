@@ -3,7 +3,7 @@ setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem Automatic device placement profile for high-prefill workloads; --fit resolves the layer split.
-rem Flint support (FlintForCausalLM) first ships in b11803; the catalog runtime b11551 cannot load it.
+rem Flint support (FlintForCausalLM) first ships in b11803; older runtimes cannot load it.
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11981-cuda13.4\llama-server.exe"
 
 rem Model

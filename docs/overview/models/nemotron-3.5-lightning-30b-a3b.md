@@ -62,7 +62,7 @@ no publicada).
 | `start-agentic-auto-131k-1024.cmd` | 131.072 | 1024/1024 | `nemotron-3.5-lightning-30b-a3b-131k` |
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | `nemotron-3.5-lightning-30b-a3b-262k` |
 
-Copias de los lanzadores de Nail sobre `b11551-cuda13.4`: `--fit-target 1024`, 6 hilos, `--cache-ram 8192`,
+Copias de los lanzadores de Nail sobre `b11551-cuda13.4` (`b11981-cuda13.4` desde el 2026-10-30): `--fit-target 1024`, 6 hilos, `--cache-ram 8192`,
 caché KV `q8_0`, `--reasoning auto`, `--reasoning-budget 8192` y logs compactos. Sin MTP, por la política
 actual; con el NVFP4 ya se midió más lento.
 
@@ -105,7 +105,7 @@ en `<|im_start|>assistant\n<think>\n`.
 
 - `config/models/nemotron-3.5-lightning-30b-a3b.psd1`
 - `scripts/models/nemotron-3.5-lightning-30b-a3b/*.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11981-cuda13.4/`
 
 ## Related ADRs
 

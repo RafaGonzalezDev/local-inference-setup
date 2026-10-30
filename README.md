@@ -26,11 +26,13 @@ All profiles are automatic: every launcher declares `--gpu-layers auto --fit on`
 and lets the runtime resolve the device placement. The hand-tuned profiles that
 pinned `--gpu-layers 999` with `--n-cpu-moe` were retired on 2026-09-30. Their
 reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01. Every
-launcher pins `b11551-cuda13.4` except Flint's, which pin `b11981-cuda13.4`. `b11669-cuda13.4` (llama.cpp v0.7.0) was used on
-2026-10-27 and removed on 2026-10-28 because it performed worse for the user.
-`b11269-cuda13.4` was removed on 2026-10-22 and
-`b11827-cuda13.4`, which `flint` used until its retirement, on 2026-10-26; all three can be
-reinstalled.
+launcher pins `b11981-cuda13.4` since 2026-10-30, when it replaced `b11551-cuda13.4`
+after measuring faster on the catalog models; `b11551` was removed the same day
+([changelog](docs/changelog/2026-10-30-llama-runtime-b11981-catalog.md)).
+`b11669-cuda13.4` (llama.cpp v0.7.0) was used on 2026-10-27 and removed on 2026-10-28
+because it performed worse for the user. `b11269-cuda13.4` was removed on 2026-10-22
+and `b11827-cuda13.4`, which `flint` used until its retirement, on 2026-10-26; all four
+can be reinstalled.
 
 The LiquidAI LFM3 models (`lfm3-1.7b`, `lfm3-audio-2b`, `lfm3-omni-2b`) and the llama.cpp
 runtime built from source for them were retired on 2026-10-28
@@ -91,8 +93,8 @@ manifest pins the exact repository and revision.
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-LlamaRuntime.ps1
 ```
 
-`-Version b11269` reinstalls the previous pinned build if a rollback is needed;
-`-Version b11981` installs the build that the `flint` launchers use.
+The default is `b11981`, the build every launcher uses; `-Version b11551` reinstalls
+the previous pinned build if a rollback is needed.
 
 2. Download a model:
 

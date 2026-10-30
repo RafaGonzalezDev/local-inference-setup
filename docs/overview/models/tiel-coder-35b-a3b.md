@@ -40,7 +40,7 @@ Cyber Tiel.
 | `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1.024/1.024 | sí | `tiel-coder-35b-a3b-vision-262k` |
 
 Los lanzadores son los sin MTP del ID anterior, cambiando solo el GGUF, el proyector y el alias
-canónico: `b11551`, 6 hilos, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning
+canónico: `b11981` (desde el 2026-10-30; calibrados con `b11551`), 6 hilos, `--fit-target 1024` (2048 en visión), caché KV `q8_0`, `--reasoning
 auto` y presupuesto 8.192.
 
 - Muestreo `temp 0.6 --top-p 0.95 --top-k 20 --min-p 0`, sin penalizaciones: la tarjeta recomienda
@@ -89,7 +89,7 @@ contexto, `/v1/models` publica el alias canónico y el de perfil con `ftype Q4_K
 
 - `config/models/tiel-coder-35b-a3b.psd1`
 - `scripts/models/tiel-coder-35b-a3b/*.cmd`
-- `runtimes/llama.cpp/b11551-cuda13.4/`
+- `runtimes/llama.cpp/b11981-cuda13.4/`
 
 ## Related ADRs
 
