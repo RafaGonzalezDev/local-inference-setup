@@ -8,5 +8,9 @@
         'nemotron-3.5-lightning-30b-a3b'
         'flint'
         'apex-35b-v1.0'
+        'lfm3-1.7b'
+        'lfm3-vl-2b'
+        'lfm3-audio-2b'
+        'lfm3-omni-2b'
     )
 }

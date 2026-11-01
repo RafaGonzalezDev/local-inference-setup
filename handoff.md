@@ -68,8 +68,8 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   del catálogo principal ([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)); VL, Audio y Omni se
   instalaron y retiraron el mismo día ([changelog](docs/changelog/2026-10-29-lfm3-multimodal-retirement.md)).
   Pi (repositorio y WSL, copias `*.bak-<timestamp>-{lfm3-b11981,lfm3-multimodal-retirement}`) lista además
-  `lfm3-1.7b-262k`; OpenCode lo quitó el 2026-10-31 y DSH no lo tuvo nunca, por decisión del usuario. En la
-  comprobación de paridad, ese alias solo debe aparecer en Pi.
+  `lfm3-1.7b-262k`; OpenCode lo quitó el 2026-10-31. Desde el 2026-11-01 vuelve a estar en los tres
+  clientes (ver más abajo).
 - 2026-10-29: vuelve `nemotron-3.5-lightning-30b-a3b` con `AD-IQ4_NL` de `AtomicChat` y dos perfiles (131K y
   262K): el catálogo pasa a 5 modelos y 18 perfiles ([changelog](docs/changelog/2026-10-29-nemotron-3.5-lightning-30b-a3b.md)).
   Copias de los clientes: `*.bak-<timestamp>-nemotron-lightning`.
@@ -86,6 +86,12 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   dinámico sin tope (DSH lo consigue enviando `thinking_token_budget`, que el servidor ignora). Copias: `cordis.patch.yml.bak-20261101-064129-apex` (DSH global) y
   `*.bak-20261101-064209-apex` en WSL (Pi, OpenCode y `model.json`); después, `opencode.json.bak-20261101-072940-apex-output`,
   `cordis.patch.yml.bak-20261101-074004-apex-dynamic` y `*.bak-20261101-074250-apex-dynamic` en WSL.
+- 2026-11-01: la familia LFM3 entra en el catálogo principal: `lfm3-1.7b` sale de `experimental/lfm3` y
+  vuelven `lfm3-vl-2b`, `lfm3-audio-2b` y `lfm3-omni-2b` (Audio y Omni con la revisión más reciente, de
+  proyector nuevo). Son 11 modelos y 26 perfiles ([changelog](docs/changelog/2026-11-01-lfm3-main-catalog.md)).
+  Los clientes listan los 25 alias servidos menos `lfm3-audio-2b-audio-32k`. Copias:
+  `cordis.patch.yml.bak-20261101-214738-lfm3-main-catalog` (DSH global) y `*.bak-20261101-215112-lfm3-main-catalog`
+  en WSL (Pi, OpenCode y `model.json`). Pendiente: que el usuario borre `experimental/` (duplicado ya verificado).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
@@ -155,8 +161,8 @@ diff /c/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml dotfiles-dsh/config/p
 
 # Paridad: cada catálogo contiene exactamente los alias de perfil de todos los lanzadores
 grep -ho -- '--alias [^ "]*' /d/LLM/scripts/models/*/*.cmd | sed 's/--alias [^,]*,//' | sort > served.txt
-# Solo Pi lista también este perfil de experimental/lfm3; en DSH y OpenCode aparece como "missing", y es lo esperado
-printf '%s\n' lfm3-1.7b-262k >> served.txt
+# LFM3 Audio no se registra en ningún cliente (ninguno envía audio)
+sed -i '/^lfm3-audio-2b-audio-32k$/d' served.txt
 node -e "
 const fs=require('fs');const srv=fs.readFileSync('served.txt','utf8').trim().split('\n');
 const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');

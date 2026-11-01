@@ -43,11 +43,12 @@ retired on 2026-10-28 and every model moved to its `UD-Q4_K_XL` build without an
 Tiel Coder and Cyber Tiel dropped the `-mtp` suffix from their IDs
 ([changelog](docs/changelog/2026-10-28-q4-k-xl-without-mtp.md)).
 
-Since 2026-10-29 `lfm3-1.7b` lives in [experimental/lfm3](experimental/lfm3/README.md) with its own
-official runtime `b11981-cuda13.4`, outside this catalog, and its profile `lfm3-1.7b-262k` is registered
-in Pi ([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)); OpenCode dropped it on 2026-10-31. The VL, Audio and Omni
-models installed with it were removed the same day
-([changelog](docs/changelog/2026-10-29-lfm3-multimodal-retirement.md)).
+From 2026-10-29 `lfm3-1.7b` ran from `experimental/lfm3` with its own copy of `b11981-cuda13.4`
+([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)); the VL, Audio and Omni models installed with it
+were removed the same day ([changelog](docs/changelog/2026-10-29-lfm3-multimodal-retirement.md)). On
+2026-11-01 the four LFM3 models joined this catalog, since it runs the same build: Audio and Omni with
+the newer projectors that quantize the codec decoder. Every LFM3 alias except Audio's is registered in
+Pi, OpenCode and DSH ([changelog](docs/changelog/2026-11-01-lfm3-main-catalog.md)).
 
 On 2026-10-29 `nemotron-3.5-lightning-30b-a3b`, retired on 2026-10-26, came back with the `AD-IQ4_NL`
 build from `AtomicChat` instead of the earlier NVFP4: K-quants do not fit its tensor shapes, so it is the
@@ -73,6 +74,10 @@ manifest pins the exact repository and revision.
 | `nemotron-3.5-lightning-30b-a3b` | `AtomicChat` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `nemotron-3.5-lightning-30b-a3b-131k`, `nemotron-3.5-lightning-30b-a3b-262k` |
 | `flint` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
 | `apex-35b-v1.0` | `Apexintelligence-AI` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `apex-35b-v1.0-131k`, `apex-35b-v1.0-262k` |
+| `lfm3-1.7b` | `LiquidAI` | `agentic-auto-262k-1024` | `lfm3-1.7b-262k` |
+| `lfm3-vl-2b` | `LiquidAI` | `agentic-auto-vision-128k-1024` | `lfm3-vl-2b-vision-128k` |
+| `lfm3-audio-2b` | `LiquidAI` | `agentic-auto-audio-32k-1024` | `lfm3-audio-2b-audio-32k` |
+| `lfm3-omni-2b` | `LiquidAI` | `agentic-auto-omni-32k-1024` | `lfm3-omni-2b-omni-32k` |
 
 ## Repository Structure
 
@@ -126,6 +131,10 @@ scripts\models\cyber-tiel-coder-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\flint\start-agentic-auto-131k-1024.cmd
 scripts\models\apex-35b-v1.0\start-agentic-auto-131k-1024.cmd
+scripts\models\lfm3-1.7b\start-agentic-auto-262k-1024.cmd
+scripts\models\lfm3-vl-2b\start-agentic-auto-vision-128k-1024.cmd
+scripts\models\lfm3-audio-2b\start-agentic-auto-audio-32k-1024.cmd
+scripts\models\lfm3-omni-2b\start-agentic-auto-omni-32k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.
