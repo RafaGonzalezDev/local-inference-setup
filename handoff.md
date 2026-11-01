@@ -82,7 +82,8 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   y `*.bak-20261030-101503-flint` en WSL.
 - 2026-11-01: alta de `apex-35b-v1.0` (`Q4_K_S` con imatrix de `Apexintelligence-AI`), dos perfiles (131K y
   262K): 7 modelos y 22 perfiles ([changelog](docs/changelog/2026-11-01-apex-35b-v1.0.md)). Calibrados bajo
-  carga, con tool calling y contrato de razonamiento medidos. Copias de los clientes: `*.bak-<timestamp>-apex`.
+  carga, con tool calling y contrato de razonamiento medidos. Copias: `cordis.patch.yml.bak-20261101-064129-apex` (DSH global) y
+  `*.bak-20261101-064209-apex` en WSL (Pi, OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
