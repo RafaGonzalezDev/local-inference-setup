@@ -62,6 +62,8 @@ On 2026-11-01 `apex-35b-v1.0` (Apex Intelligence, built on Qwen3.6-35B-A3B) join
 `Q4_K_S` build. It decides per turn whether and how long to think, so its launchers leave the reasoning
 budget unlimited; its GGUF carries an MTP head that the profiles do not use ([changelog](docs/changelog/2026-11-01-apex-35b-v1.0.md)).
 
+On 2026-11-02 `gemma-4-26b-a4b-uncensored-balanced` (HauhauCS, an uncensored build of Gemma 4 26B A4B from the official QAT weights) joined with its `Q4_K_M` build and BF16 projector, in text and vision profiles at 131K and 262K. Its MTP drafter ships as a separate file that is not installed ([changelog](docs/changelog/2026-11-02-gemma-4-26b-a4b-uncensored-balanced.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 
@@ -74,6 +76,7 @@ manifest pins the exact repository and revision.
 | `nemotron-3.5-lightning-30b-a3b` | `AtomicChat` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `nemotron-3.5-lightning-30b-a3b-131k`, `nemotron-3.5-lightning-30b-a3b-262k` |
 | `flint` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
 | `apex-35b-v1.0` | `Apexintelligence-AI` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `apex-35b-v1.0-131k`, `apex-35b-v1.0-262k` |
+| `gemma-4-26b-a4b-uncensored-balanced` | `HauhauCS` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `gemma-4-26b-a4b-uncensored-balanced-131k`, `gemma-4-26b-a4b-uncensored-balanced-262k`, `gemma-4-26b-a4b-uncensored-balanced-vision-131k`, `gemma-4-26b-a4b-uncensored-balanced-vision-262k` |
 | `lfm3-1.7b` | `LiquidAI` | `agentic-auto-262k-1024` | `lfm3-1.7b-262k` |
 | `lfm3-vl-2b` | `LiquidAI` | `agentic-auto-vision-128k-1024` | `lfm3-vl-2b-vision-128k` |
 | `lfm3-audio-2b` | `LiquidAI` | `agentic-auto-audio-32k-1024` | `lfm3-audio-2b-audio-32k` |

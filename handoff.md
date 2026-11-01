@@ -92,6 +92,12 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   Los clientes listan los 25 alias servidos menos `lfm3-audio-2b-audio-32k`. Copias:
   `cordis.patch.yml.bak-20261101-214738-lfm3-main-catalog` (DSH global) y `*.bak-20261101-215112-lfm3-main-catalog`
   en WSL (Pi, OpenCode y `model.json`). `experimental/` se borró el mismo día.
+- 2026-11-02: alta de `gemma-4-26b-a4b-uncensored-balanced` (`Q4_K_M` de `HauhauCS`, variante sin rechazos de los
+  pesos QAT de Gemma 4 26B A4B), cuatro perfiles (texto y visión a 131K y 262K), sin el borrador MTP aparte: 12
+  modelos y 30 perfiles ([changelog](docs/changelog/2026-11-02-gemma-4-26b-a4b-uncensored-balanced.md)). Calibrados
+  con 56K tokens (VRAM pico 15,5 GB); mismo contrato de razonamiento que Occult Nail. Los clientes listan 29
+  alias. Copias: `cordis.patch.yml.bak-20261102-000750-gemma-uncensored` (DSH global) y
+  `*.bak-20261102-000812-gemma-uncensored` en WSL (Pi, OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
