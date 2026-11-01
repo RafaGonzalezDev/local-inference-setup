@@ -12,3 +12,6 @@ logs/
 
 # Assets de pruebas funcionales
 tests/
+
+# Modelos GGUF de experimental/
+/experimental/models/
