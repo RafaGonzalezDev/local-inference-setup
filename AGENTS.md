@@ -127,11 +127,12 @@ El usuario ha pedido de forma permanente que cada alta, baja o cambio de perfil 
 | Repositorio | Qué se actualiza |
 | --- | --- |
 | `C:\Users\rafat\Desktop\Code\dotfiles-dsh` | `config/profiles/desktop/cordis.patch.yml`; además, la configuración global de DSH (`C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml`, sin git) con copia de seguridad previa y edición aditiva |
-| `C:\Users\rafat\Desktop\Code\dotfiles-opencode` | los cinco `frameworks/*/opencode.json`, `docs/frameworks.md` y `docs/changelog/frameworks.md` |
+| `C:\Users\rafat\Desktop\Code\dotfiles-opencode` | los dos `profiles/{orchestrated,vanilla}/opencode.json` (mismo `provider.llamacpp.models`), `docs/profiles.md` y `docs/changelog/profiles.md` |
 | `C:\Users\rafat\Desktop\Code\dotfiles-pi` | `agent/models.json` y `docs/overview/local-models.md` |
 | `C:\Users\rafat\Desktop\Code\local-inference-setup` | espejo de `AGENTS.md`, `README.md`, `handoff.md`, `config/`, `docs/` y `scripts/` de este directorio |
 
-- Cada catálogo de cliente debe tener exactamente una entrada por alias de perfil servido (el segundo `--alias` de cada lanzador): ni alias ausentes ni IDs canónicos sin sufijo. Compruébalo contra todos los lanzadores, no solo contra el modelo nuevo. Excepción de `experimental/lfm3`: por decisión del usuario (2026-10-29), Pi y OpenCode incluyen además `lfm3-1.7b-262k`, y DSH no.
+- Cada catálogo de cliente debe tener exactamente una entrada por alias de perfil servido (el segundo `--alias` de cada lanzador): ni alias ausentes ni IDs canónicos sin sufijo. Compruébalo contra todos los lanzadores, no solo contra el modelo nuevo. Excepción de `experimental/lfm3`: Pi incluye además `lfm3-1.7b-262k` (decisión del usuario, 2026-10-29); OpenCode lo quitó el 2026-10-31 y DSH nunca lo tuvo.
+- Pi y OpenCode comparten el `name` visible de cada alias: `<Familia>[-V]-<ctx>` (p. ej. `Tiel-Coder-131K`, `Tiel-Coder-V-262K`; `-V` en visión). DSH sigue su propia política (`dotfiles-dsh/skills/dsh-model-catalog/SKILL.md`).
 - En el espejo, incluye solo los cambios de la tarea; si `D:\LLM` tiene cambios ajenos sin espejar, infórmalo en vez de arrastrarlos.
 - Un commit con `/conventional-commit` y push a `origin main` por repositorio. Al terminar el turno, indica el hash y la URL del remoto de cada repositorio modificado.
 - Copia también el catálogo local a los clientes activos de WSL (Pi y OpenCode), siguiendo «Clientes activos en WSL» más abajo.
@@ -143,7 +144,7 @@ Se actualizan después de los repositorios (`dotfiles-pi` y `dotfiles-opencode` 
 | Archivo en WSL | Qué se hace |
 | --- | --- |
 | `~/.pi/agent/models.json` | Se sustituye entero por `dotfiles-pi/agent/models.json` (`providers.llama-cpp.models`) |
-| `~/.config/opencode/opencode.json` | Se sustituye solo `provider.llamacpp.models` por el de `dotfiles-opencode/frameworks/vanilla/opencode.json`; no se toca nada más (otros proveedores, `mcp`, `agent`) |
+| `~/.config/opencode/opencode.json` | Se sustituye solo `provider.llamacpp.models` por el de `dotfiles-opencode/profiles/vanilla/opencode.json`; no se toca nada más (otros proveedores, `mcp`, `agent`) |
 | `~/.local/state/opencode/model.json` | Solo al retirar alias: se quitan de `recent` y `favorite` las entradas con `providerID: llamacpp` y ese `modelID`, y de `variant` la clave `llamacpp/<alias>` |
 
 1. Antes de escribir, copia de seguridad de cada archivo que vayas a tocar, junto al original: `<archivo>.bak-<yyyyMMdd-HHmmss>-<etiqueta>`. Si el archivo vivo de Pi no coincide con el `HEAD` del repositorio, informa de la diferencia antes de sobrescribirlo.
@@ -158,7 +159,7 @@ cp dotfiles-pi/agent/models.json ~/.pi/agent/models.json
 python3 - <<EOF
 import json
 p = "/home/rafa/.config/opencode/opencode.json"
-live = json.load(open(p)); repo = json.load(open("dotfiles-opencode/frameworks/vanilla/opencode.json"))
+live = json.load(open(p)); repo = json.load(open("dotfiles-opencode/profiles/vanilla/opencode.json"))
 live["provider"]["llamacpp"]["models"] = repo["provider"]["llamacpp"]["models"]
 json.dump(live, open(p, "w"), indent=2, ensure_ascii=False); open(p, "a").write("\n")
 EOF'

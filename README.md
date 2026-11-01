@@ -45,7 +45,7 @@ Tiel Coder and Cyber Tiel dropped the `-mtp` suffix from their IDs
 
 Since 2026-10-29 `lfm3-1.7b` lives in [experimental/lfm3](experimental/lfm3/README.md) with its own
 official runtime `b11981-cuda13.4`, outside this catalog, and its profile `lfm3-1.7b-262k` is registered
-in Pi and OpenCode ([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)). The VL, Audio and Omni
+in Pi ([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)); OpenCode dropped it on 2026-10-31. The VL, Audio and Omni
 models installed with it were removed the same day
 ([changelog](docs/changelog/2026-10-29-lfm3-multimodal-retirement.md)).
 
@@ -56,6 +56,10 @@ only model not on `UD-Q4_K_XL` ([changelog](docs/changelog/2026-10-29-nemotron-3
 On 2026-10-30 `flint`, retired on 2026-10-26, came back with the same `UD-Q4_K_XL` revision on the
 official runtime `b11981-cuda13.4`, because `b11551` cannot load its architecture. Its reasoning cannot
 be turned off per request, only capped with a positive budget ([changelog](docs/changelog/2026-10-30-flint.md)).
+
+On 2026-11-01 `apex-35b-v1.0` (Apex Intelligence, built on Qwen3.6-35B-A3B) joined with its imatrix
+`Q4_K_S` build. It decides per turn whether and how long to think, so its launchers leave the reasoning
+budget unlimited; its GGUF carries an MTP head that the profiles do not use ([changelog](docs/changelog/2026-11-01-apex-35b-v1.0.md)).
 
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
@@ -68,6 +72,7 @@ manifest pins the exact repository and revision.
 | `cyber-tiel-coder-35b-a3b` | `peculiar-ragdoll` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `cyber-tiel-coder-35b-a3b-131k`, `cyber-tiel-coder-35b-a3b-262k`, `cyber-tiel-coder-35b-a3b-vision-131k`, `cyber-tiel-coder-35b-a3b-vision-262k` |
 | `nemotron-3.5-lightning-30b-a3b` | `AtomicChat` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `nemotron-3.5-lightning-30b-a3b-131k`, `nemotron-3.5-lightning-30b-a3b-262k` |
 | `flint` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
+| `apex-35b-v1.0` | `Apexintelligence-AI` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `apex-35b-v1.0-131k`, `apex-35b-v1.0-262k` |
 
 ## Repository Structure
 
@@ -120,6 +125,7 @@ scripts\models\occult-nail-1.0-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\cyber-tiel-coder-35b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\nemotron-3.5-lightning-30b-a3b\start-agentic-auto-131k-1024.cmd
 scripts\models\flint\start-agentic-auto-131k-1024.cmd
+scripts\models\apex-35b-v1.0\start-agentic-auto-131k-1024.cmd
 ```
 
 Each `.cmd` contains the runtime path, model path, and all effective parameters for its profile. The launchers materialize `--gpu-layers auto`, `--fit on` and `--fit-target 1024` —`2048` in the vision profiles, because `--fit` does not account for the projector— and declare the context explicitly, since `--fit` only adjusts unset arguments. They omit `--n-cpu-moe`: `--fit` places the weights with a per-layer `-ot` override instead of that lever. To customize context, port, sampling, or other values, edit the corresponding launcher directly. The scripts do not accept hidden additional arguments.

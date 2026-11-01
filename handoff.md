@@ -39,8 +39,8 @@ pasos, en este orden, sin pedirlos de nuevo:
 | --- | --- | --- |
 | `C:\Users\rafat\Desktop\Code\dotfiles-dsh` | `config/profiles/desktop/cordis.patch.yml` (ruta `llm-pi-ai` → `providers.llama-cpp.models`) | Entrada YAML con `id`, `name` (`<Familia> Local · <ctx>`), `contextWindow`, `maxTokens`, `input`, `reasoningEfforts`; reglas en `skills/dsh-model-catalog/SKILL.md` |
 | DSH global (sin git) | `C:\Users\rafat\.dsh\profiles\desktop\cordis.patch.yml` | Misma entrada que `dotfiles-dsh`; conservar las filas que difieran por ajustes de la GUI |
-| `C:\Users\rafat\Desktop\Code\dotfiles-opencode` | `frameworks/{conductor,learning,orchestrated,streamlined,vanilla}/opencode.json` (`provider.llamacpp.models`), `docs/frameworks.md`, `docs/changelog/frameworks.md` | Clave = alias de perfil, `name` `<Familia> <Quant> Local (<ctx>)`, `limit`, `reasoning`, `variants` off/low/medium/high |
-| `C:\Users\rafat\Desktop\Code\dotfiles-pi` | `agent/models.json` (`providers.llama-cpp.models`), `docs/overview/local-models.md` | Objeto con `compat` `chat-template` + `enable_thinking` desde `thinking.enabled` |
+| `C:\Users\rafat\Desktop\Code\dotfiles-opencode` | `profiles/{orchestrated,vanilla}/opencode.json` (`provider.llamacpp.models`, idéntico en ambos), `docs/profiles.md`, `docs/changelog/profiles.md` | Clave = alias de perfil, `name` `<Familia>[-V]-<ctx>` (p. ej. `Tiel-Coder-V-262K`), `limit`, `reasoning`, `variants` off/low/medium/high |
+| `C:\Users\rafat\Desktop\Code\dotfiles-pi` | `agent/models.json` (`providers.llama-cpp.models`), `docs/overview/local-models.md` | Objeto con `compat` `chat-template` + `enable_thinking` desde `thinking.enabled`; mismo `name` que en OpenCode |
 | `C:\Users\rafat\Desktop\Code\local-inference-setup` | Copia de `AGENTS.md`, `README.md`, `handoff.md`, `config/`, `docs/`, `scripts/` de `D:\LLM` | `.gitignore` excluye `models/`, `runtimes/`, `packages/`, `logs/`, `tests/` |
 
 Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en cada repositorio.
@@ -67,9 +67,9 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 - 2026-10-29: `lfm3-1.7b` (`Q8_0`) en `experimental/lfm3` con su runtime oficial `b11981-cuda13.4`, fuera
   del catálogo principal ([changelog](docs/changelog/2026-10-29-lfm3-b11981.md)); VL, Audio y Omni se
   instalaron y retiraron el mismo día ([changelog](docs/changelog/2026-10-29-lfm3-multimodal-retirement.md)).
-  Pi y OpenCode (repositorios y WSL, copias `*.bak-<timestamp>-{lfm3-b11981,lfm3-multimodal-retirement}`)
-  listan además `lfm3-1.7b-262k`; DSH no, por decisión del usuario. En la comprobación de paridad, añade
-  ese alias a `served.txt`.
+  Pi (repositorio y WSL, copias `*.bak-<timestamp>-{lfm3-b11981,lfm3-multimodal-retirement}`) lista además
+  `lfm3-1.7b-262k`; OpenCode lo quitó el 2026-10-31 y DSH no lo tuvo nunca, por decisión del usuario. En la
+  comprobación de paridad, ese alias solo debe aparecer en Pi.
 - 2026-10-29: vuelve `nemotron-3.5-lightning-30b-a3b` con `AD-IQ4_NL` de `AtomicChat` y dos perfiles (131K y
   262K): el catálogo pasa a 5 modelos y 18 perfiles ([changelog](docs/changelog/2026-10-29-nemotron-3.5-lightning-30b-a3b.md)).
   Copias de los clientes: `*.bak-<timestamp>-nemotron-lightning`.
@@ -80,6 +80,9 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   deben enviar presupuesto 0 a Flint (sus entradas no ofrecen `off`). Los tres dotfiles, DSH global y WSL
   listan los 20 alias (Pi y OpenCode, además `lfm3-1.7b-262k`); copias `cordis.patch.yml.bak-20261030-101331-flint`
   y `*.bak-20261030-101503-flint` en WSL.
+- 2026-11-01: alta de `apex-35b-v1.0` (`Q4_K_S` con imatrix de `Apexintelligence-AI`), dos perfiles (131K y
+  262K): 7 modelos y 22 perfiles ([changelog](docs/changelog/2026-11-01-apex-35b-v1.0.md)). Calibrados bajo
+  carga, con tool calling y contrato de razonamiento medidos. Copias de los clientes: `*.bak-<timestamp>-apex`.
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
@@ -109,7 +112,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 - [AGENTS.md](AGENTS.md) y [docs/overview/adding-a-model.md](docs/overview/adding-a-model.md): alta en D:\LLM.
 - [docs/changelog/2026-10-26-nail-qwen3.6-35b-a3b.md](docs/changelog/2026-10-26-nail-qwen3.6-35b-a3b.md).
 - `dotfiles-dsh/skills/dsh-model-catalog/SKILL.md`: política de nombres y contrato de razonamiento de DSH.
-- `dotfiles-opencode/docs/frameworks.md` y `dotfiles-pi/docs/overview/local-models.md`: tablas de
+- `dotfiles-opencode/docs/profiles.md` y `dotfiles-pi/docs/overview/local-models.md`: tablas de
   variantes/niveles de razonamiento y límites de salida.
 
 ## Suggested skills
@@ -139,7 +142,7 @@ foreach ($d in 'AGENTS.md','README.md','handoff.md','config','docs','scripts') {
 ```bash
 # Clientes: JSON válido e IDs únicos
 cd /c/Users/rafat/Desktop/Code
-node -e "for(const f of ['conductor','learning','orchestrated','streamlined','vanilla']){const m=require('./dotfiles-opencode/frameworks/'+f+'/opencode.json').provider.llamacpp.models;console.log(f,Object.keys(m).length)}"
+node -e "for(const f of ['orchestrated','vanilla']){const m=require('./dotfiles-opencode/profiles/'+f+'/opencode.json').provider.llamacpp.models;console.log(f,Object.keys(m).length)}"
 node -e "const m=require('./dotfiles-pi/agent/models.json').providers['llama-cpp'].models;console.log(m.length,new Set(m.map(x=>x.id)).size)"
 node -e "const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');const d=Y.parse(require('fs').readFileSync('dotfiles-dsh/config/profiles/desktop/cordis.patch.yml','utf8').replace(/!!js/g,''));const m=d.find(e=>e.id==='llm-pi-ai').config.providers['llama-cpp'].models;console.log(m.length,new Set(m.map(x=>x.id)).size)"
 
@@ -149,14 +152,14 @@ diff /c/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml dotfiles-dsh/config/p
 
 # Paridad: cada catálogo contiene exactamente los alias de perfil de todos los lanzadores
 grep -ho -- '--alias [^ "]*' /d/LLM/scripts/models/*/*.cmd | sed 's/--alias [^,]*,//' | sort > served.txt
-# Pi y OpenCode también listan este perfil de experimental/lfm3; en DSH aparece como "missing", y es lo esperado
+# Solo Pi lista también este perfil de experimental/lfm3; en DSH y OpenCode aparece como "missing", y es lo esperado
 printf '%s\n' lfm3-1.7b-262k >> served.txt
 node -e "
 const fs=require('fs');const srv=fs.readFileSync('served.txt','utf8').trim().split('\n');
 const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');
 const dsh=f=>Y.parse(fs.readFileSync(f,'utf8').replace(/!!js/g,'')).find(e=>e.id==='llm-pi-ai').config.providers['llama-cpp'].models.map(m=>m.id);
 const lists={dsh:dsh('dotfiles-dsh/config/profiles/desktop/cordis.patch.yml'),dshGlobal:dsh('C:/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml'),pi:require('./dotfiles-pi/agent/models.json').providers['llama-cpp'].models.map(m=>m.id)};
-for(const f of ['conductor','learning','orchestrated','streamlined','vanilla'])lists['oc-'+f]=Object.keys(require('./dotfiles-opencode/frameworks/'+f+'/opencode.json').provider.llamacpp.models);
+for(const f of ['orchestrated','vanilla'])lists['oc-'+f]=Object.keys(require('./dotfiles-opencode/profiles/'+f+'/opencode.json').provider.llamacpp.models);
 for(const[k,v] of Object.entries(lists))console.log(k,v.length,'missing:',srv.filter(x=>!v.includes(x)).join(' ')||'-','extra:',v.filter(x=>!srv.includes(x)).join(' ')||'-')"
 rm served.txt
 ```
