@@ -58,6 +58,13 @@ Muestreo y razonamiento:
 - La plantilla embebida termina en `<|im_start|>assistant\n<think>` y la tarjeta pide no sustituirla.
   Lee `enable_thinking` y `preserve_thinking`, pero no `reasoning_effort`: no hay niveles de esfuerzo,
   solo activar/desactivar y acotar por presupuesto.
+- Clientes: solo `off` y dinámico (activado sin tope), decisión del usuario del 2026-11-01, porque un
+  presupuesto no ajusta el esfuerzo de Apex, solo lo corta. OpenCode declara `off` y `dynamic` (sin
+  `thinking_budget_tokens`); Pi, `off` y `high` sin campo de presupuesto; DSH, `off` y `high` enviando
+  el presupuesto como `thinking_token_budget`, que `llama-server` ignora (atajo: el `compat` de la ruta
+  no permite quitar el campo a un solo modelo). Verificado con servidor de captura (OpenCode, Pi) y con
+  el servidor: `thinking_budget_tokens: 64` cortó el razonamiento en 46 palabras y
+  `thinking_token_budget: 64` lo dejó en 587.
 - `--reasoning-preserve` (activo por defecto en el runtime) conserva el razonamiento de turnos
   anteriores, como recomienda la tarjeta para multiturno y tool calling.
 
