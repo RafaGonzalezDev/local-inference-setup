@@ -10,7 +10,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # Must match the NETWORK_ARGS of the launcher.
-$launcherPath = Join-Path $PSScriptRoot 'scripts\models\lfm3-1.7b-uncensored\start-agentic-cpu-262k-1024.cmd'
+$launcherPath = Join-Path $PSScriptRoot 'scripts\models\lfm3-1.7b-uncensored\start-agentic-cpu-32k-1024.cmd'
 $port = 8081
 $baseUrl = "http://127.0.0.1:$port"
 $modelAlias = 'lfm3-1.7b-uncensored'

@@ -30,10 +30,14 @@ Requiere PowerShell 7. Para otra tarea, añade un `.md` en `instructions\`.
 - Base: `LiquidAI/LFM3-1.7B` con la dirección de rechazo eliminada (LoRA de rango 1 integrada). Licencia
   LFM Open License v1.0. Arquitectura `lfm3`, contexto nativo 262.144, solo texto.
 
-### Perfil `agentic-cpu-262k-1024`
+### Perfil `agentic-cpu-32k-1024`
 
-Alias `lfm3-1.7b-uncensored,lfm3-1.7b-uncensored-cpu-262k`. Parte del lanzador de `lfm3-1.7b` con estos
+Alias `lfm3-1.7b-uncensored,lfm3-1.7b-uncensored-cpu-32k`. Parte del lanzador de `lfm3-1.7b` con estos
 cambios:
+
+- Contexto 32.768 en vez del nativo 262.144: cada petición del asistente es independiente y necesita
+  unos 10K tokens (instrucciones, prompt, hasta 8192 de razonamiento y la respuesta), así que el resto
+  solo reservaría caché KV en RAM sin usarla.
 
 - Solo CPU, a petición del usuario: `--device none --gpu-layers 0 --fit off` (sin `--fit-target` ni
   `--split-mode`). 8 hilos, uno por núcleo físico: los 6 del catálogo se midieron con la GPU haciendo el

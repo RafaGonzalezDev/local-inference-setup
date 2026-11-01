@@ -2,7 +2,7 @@
 
 **Qué**: vuelve `experimental/` como raíz aparte con `lfm3-1.7b-uncensored`
 (`AtomicChat/LFM3-1.7B-Uncensored-GGUF`, `AD-Q6_K`, revisión `3ad712542eb9de349dbd28f2739b69c925cdec7d`),
-un perfil solo CPU (`agentic-cpu-262k-1024`, `127.0.0.1:8081`) y `Start-Assistant.ps1`, que arranca el
+un perfil solo CPU de 32K (`agentic-cpu-32k-1024`, `127.0.0.1:8081`) y `Start-Assistant.ps1`, que arranca el
 modelo al abrirse, responde cada prompt con un fichero de instrucciones, copia la respuesta al
 portapapeles y detiene el modelo al salir. Incluye `instructions/qwen-image-2.1.md` para escribir prompts
 de Qwen Image 2.1.
@@ -20,6 +20,8 @@ debe ejecutarse entero en CPU.
 - `instructions/qwen-image-2.1.md` resume la skill de prompts de Qwen Image 2.1 de WSL (`~/SKILL.md`) para
   un modelo de 1,7B: solo texto a imagen, reglas numeradas y cortas, 200–300 palabras en vez de 400–500 y
   salida en un único párrafo sin JSON ni `wh_ratio`, para copiarlo directamente.
+- Contexto 32K y no el nativo 262K: una petición del asistente ocupa unos 10K tokens y el resto solo
+  reservaría caché KV. El primer perfil de este mismo día usaba 262K.
 - Detalle del perfil y del asistente en [experimental/README.md](../../experimental/README.md).
 
 ## Validación
