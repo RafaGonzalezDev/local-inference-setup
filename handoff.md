@@ -84,7 +84,8 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   262K): 7 modelos y 22 perfiles ([changelog](docs/changelog/2026-11-01-apex-35b-v1.0.md)). Calibrados bajo
   carga, con tool calling y contrato de razonamiento medidos. En los clientes solo ofrece `off` y razonamiento
   dinámico sin tope (DSH lo consigue enviando `thinking_token_budget`, que el servidor ignora). Copias: `cordis.patch.yml.bak-20261101-064129-apex` (DSH global) y
-  `*.bak-20261101-064209-apex` en WSL (Pi, OpenCode y `model.json`).
+  `*.bak-20261101-064209-apex` en WSL (Pi, OpenCode y `model.json`); después, `opencode.json.bak-20261101-072940-apex-output`,
+  `cordis.patch.yml.bak-20261101-074004-apex-dynamic` y `*.bak-20261101-074250-apex-dynamic` en WSL.
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
