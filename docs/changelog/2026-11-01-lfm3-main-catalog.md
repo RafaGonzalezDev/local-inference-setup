@@ -38,7 +38,7 @@ audio de `experimental/lfm3` se copiaron a `logs/validation/experimental-lfm3/`.
 - Sin probar: vídeo, `/v1/realtime` con los proyectores nuevos, prompts largos y sesiones reales de los
   clientes.
 
-## Pendiente
+## Limpieza
 
-- Borrar `experimental/` (duplicado del runtime y los paquetes ya verificado). El aislamiento de la
-  sesión no permitió el borrado; tiene que hacerlo el usuario.
+- `experimental/` (runtime y paquetes idénticos a los principales, logs ya copiados) se borró el mismo
+  día a petición del usuario.

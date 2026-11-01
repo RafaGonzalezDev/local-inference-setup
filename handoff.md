@@ -91,7 +91,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   proyector nuevo). Son 11 modelos y 26 perfiles ([changelog](docs/changelog/2026-11-01-lfm3-main-catalog.md)).
   Los clientes listan los 25 alias servidos menos `lfm3-audio-2b-audio-32k`. Copias:
   `cordis.patch.yml.bak-20261101-214738-lfm3-main-catalog` (DSH global) y `*.bak-20261101-215112-lfm3-main-catalog`
-  en WSL (Pi, OpenCode y `model.json`). Pendiente: que el usuario borre `experimental/` (duplicado ya verificado).
+  en WSL (Pi, OpenCode y `model.json`). `experimental/` se borró el mismo día.
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
