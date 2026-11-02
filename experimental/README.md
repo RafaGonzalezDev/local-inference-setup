@@ -7,11 +7,11 @@ con `-RootDirectory`, y reutiliza el runtime principal `..\runtimes\llama.cpp\b1
 ## Asistente de terminal
 
 Doble clic en `Start-Assistant.cmd` (o ejecutarlo desde una terminal). Abre la interfaz en esa misma
-ventana; si falla, la deja abierta para leer el error. Acepta el nombre de las instrucciones como
-argumento (`Start-Assistant.cmd qwen-image-2.1`).
+ventana; si falla, la deja abierta para leer el error.
 
-1. Lee `instructions\<nombre>.md` (la extensión es opcional) como prompt de sistema. Solo acepta
-   archivos de esa carpeta. Sin argumento usa el único `.md` que haya, o muestra un menú si hay varios.
+1. El fichero de instrucciones es el prompt de sistema y es obligatorio: `Start-Assistant.cmd` pasa
+   `qwen-image-2.1` y `Start-Assistant.ps1 -Instructions <nombre>` lee `instructions\<nombre>.md` (la
+   extensión es opcional). Solo acepta archivos de esa carpeta.
 2. Comprueba que el puerto 8081 está libre, arranca el lanzador del modelo en segundo plano (log en
    `logs\server-<fecha>.log`) y espera a `/health`.
 3. Cada línea escrita es una petición independiente (sin historial): instrucciones + prompt. Muestra la
@@ -19,7 +19,7 @@ argumento (`Start-Assistant.cmd qwen-image-2.1`).
 4. `/exit` o `Ctrl+C` detienen el servidor y todo su árbol de procesos. Si se cierra la ventana, el
    servidor comparte la consola y termina con ella.
 
-Requiere PowerShell 7 (`pwsh`). Para otra tarea, añade un `.md` en `instructions\`. Usa `/exit` para
+Requiere PowerShell 7 (`pwsh`). Para otra tarea, añade un `.md` en `instructions\` y un `.cmd` que lo pase. Usa `/exit` para
 salir: con `Ctrl+C`, `cmd` pregunta además si terminar el proceso por lotes.
 
 `qwen-image-2.1.md` convierte una idea breve, en cualquier idioma, en un prompt en inglés siguiendo las
