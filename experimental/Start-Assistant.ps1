@@ -15,7 +15,7 @@ $port = 8081
 $baseUrl = "http://127.0.0.1:$port"
 $modelAlias = 'occult-nail-1.0-35b-a3b'
 $startupTimeoutSeconds = 300
-$maxTokens = 1024
+$maxTokens = 1536
 
 $instructionsDirectory = Join-Path $PSScriptRoot 'instructions'
 # Names may contain dots (qwen-image-2.1), so only a trailing .md counts as an extension.
@@ -71,7 +71,7 @@ try {
         if (-not $prompt.Trim()) { continue }
 
         # Text only: no tools are sent, so the model cannot call any. The cap stops runaway output;
-        # the expected answer is one paragraph of about 400 tokens.
+        # the expected answer is 400-500 words, about 700 tokens.
         $body = @{
             model = $modelAlias
             stream = $false

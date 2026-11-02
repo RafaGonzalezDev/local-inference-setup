@@ -50,3 +50,15 @@ debe ejecutarse entero en CPU.
   revisión y el SHA-256 fijados arriba).
 - Validación: integridad 1/1 y estática con `-RequireInstalledFiles` 1/1. Sin lanzar el modelo: RAM
   (~23–24 GB estimados), velocidad y calidad pendientes.
+
+## Instrucciones detalladas, NSFW y medición
+
+- `qwen-image-2.1.md` pasa a la especificación completa de la skill de WSL (8 pasos y reglas estrictas,
+  400–500 palabras), con coherencia física, contenido adulto explícito permitido (también anime) y un
+  límite fijo: menores, rasgos infantiles o personas reales responden `Request not allowed.`
+  Termina con una sección de precedencia frente al mensaje de concisión de Nail que añade la plantilla.
+- El asistente sube el límite de salida a 1.536 tokens.
+- Medido con el modelo de imagen cargado en la GPU: carga en 11 s, 22,6 GB de RAM, 16,8 t/s de generación,
+  21–26 s por respuesta con el prefijo en caché (43 s la primera). Detalle en
+  [experimental/README.md](../../experimental/README.md#validación-2026-11-02). `DeferredInference` pasa a
+  `$false`.

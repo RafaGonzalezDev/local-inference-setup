@@ -4,7 +4,7 @@
     DisplayName = 'Occult Nail 1.0 35B A3B'
     # Shares the GGUF installed for the main catalog instead of keeping a second copy.
     RelativeDirectory = '..\models\occult-nail-1.0-35b-a3b'
-    DeferredInference = $true
+    DeferredInference = $false
     Artifacts = @(
         @{
             File = 'Occult-Nail-1.0-35B-A3B-UD-Q4_K_XL.gguf'
