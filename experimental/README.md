@@ -39,17 +39,25 @@ El mismo GGUF del catálogo principal
 (`..\models\gemma-4-26b-a4b-uncensored-balanced\Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-Q4_K_M.gguf`,
 16.796.015.520 bytes, revisión `f9093662a2e7ae0503f637088bc96f77a1a70c83`); su ficha es
 [gemma-4-26b-a4b-uncensored-balanced.md](../docs/overview/models/gemma-4-26b-a4b-uncensored-balanced.md).
-El manifiesto de esta raíz declara solo ese archivo (sin proyector) con `RelativeDirectory = '..\models\...'`.
-Es la variante sin rechazos de HauhauCS de Gemma 4 26B A4B (MoE, ~4B parámetros activos).
+El manifiesto de esta raíz declara ese archivo y su proyector de visión
+(`mmproj-Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-BF16.gguf`, 1.194.827.776 bytes, misma revisión)
+con `RelativeDirectory = '..\models\...'`. Es la variante sin rechazos de HauhauCS de Gemma 4 26B A4B (MoE,
+~4B parámetros activos).
 
-### Perfil `agentic-cpu-8k-1024`
+### Perfil `agentic-cpu-vision-16k-2048`
 
-Alias `gemma-4-26b-a4b-uncensored-balanced,gemma-4-26b-a4b-uncensored-balanced-cpu-8k`.
+Alias `gemma-4-26b-a4b-uncensored-balanced,gemma-4-26b-a4b-uncensored-balanced-cpu-vision-16k`. Lo usa el
+nodo *Prompt writer* de ComfyUI (`D:\AI`), que le envía las imágenes del flujo, y `Start-Assistant`.
 
 - Solo CPU, para convivir con el modelo de imagen en la GPU: `--device none --gpu-layers 0 --fit off`
   (sin `--fit-target` ni `--split-mode`). 8 hilos, uno por núcleo físico; sin medir frente a 6.
-- Contexto 8.192: cada petición es independiente y ocupa unos 2.900–4.100 tokens (instrucciones ~2.500 con
-  la plantilla, la idea y hasta 1.536 de respuesta). Menos caché KV reservada en RAM.
+- Visión en CPU: `--mmproj ... --no-mmproj-offload`. Sin ese flag el proyector va a la GPU aunque el
+  modelo use `--device none`.
+- Detalle máximo: `--image-min-tokens 1120 --image-max-tokens 1120`, el presupuesto máximo del modelo por
+  imagen. Necesita un micro-lote de al menos 1.120; con 1024 el runtime lo recorta a 1.024 y lo avisa en el
+  log. Por eso batch/ubatch son 2048.
+- Contexto 16.384: instrucciones (unos 4.000 tokens con la plantilla), hasta cinco imágenes de 1.120 tokens
+  y 1.536 de respuesta.
 - `--reasoning off`, sin presupuesto: reescribir un prompt no necesita razonar, y con razonamiento LFM3
   generó ~4.800 tokens para un párrafo de ~400.
 - `127.0.0.1:8081`: solo lo usa el asistente local y puede convivir con un perfil del catálogo en 8080.
@@ -66,6 +74,8 @@ Alias `gemma-4-26b-a4b-uncensored-balanced,gemma-4-26b-a4b-uncensored-balanced-c
   (`logs/validation/functional-occult-nail-cpu-8k-20261102-012604.json`).
 - Gemma 4 26B A4B lo sustituye a elección del usuario, que la prefiere redactando. Detalle en el
   [changelog](../docs/changelog/2026-11-02-experimental-lfm3-1.7b-uncensored.md).
+- El perfil `agentic-cpu-8k-1024` (solo texto) pasa a `agentic-cpu-vision-16k-2048` para que el redactor de
+  ComfyUI vea las imágenes ([changelog](../docs/changelog/2026-11-02-experimental-gemma-vision.md)).
 
 ## Validación (2026-11-02)
 
@@ -79,6 +89,9 @@ Alias `gemma-4-26b-a4b-uncensored-balanced,gemma-4-26b-a4b-uncensored-balanced-c
     Con el prefijo en caché, las siguientes deberían rondar 23–25 s (estimación).
   - Idea "un hipopótamo jugando al baloncesto": 305 palabras, coherente (piel gris rosada sin pelo, una
     sola acción, posiciones únicas, luz y sombras consistentes).
-- Sin probar con el lanzador ni el asistente reales: varias peticiones, contenido adulto, anime, el caso
-  `Request not allowed.`, longitud de 400–500 palabras (305 en la prueba) y generación simultánea con el
-  modelo de imagen.
+- Perfil con visión, en CPU, con `panels-1080p.png`: 947 tokens de prompt con el presupuesto por defecto
+  (31 s), 1.059 forzando 1.120 con ubatch 1024 (recortado a 1.024). Sin uso de GPU; unos 19,9 GB de RAM.
+- Desde ComfyUI, edición con dos imágenes: 6.395 tokens de prompt a 43 t/s (208 s la primera vez; 96 s
+  repitiendo con otra referencia). El modelo identificó el color de la franja central de `<image2>`.
+- Sin probar: contenido adulto, anime, el caso `Request not allowed.` y longitud de 400–500 palabras (305
+  en la prueba de texto).

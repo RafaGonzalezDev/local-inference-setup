@@ -10,7 +10,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # Must match the NETWORK_ARGS of the launcher.
-$launcherPath = Join-Path $PSScriptRoot 'scripts\models\gemma-4-26b-a4b-uncensored-balanced\start-agentic-cpu-8k-1024.cmd'
+$launcherPath = Join-Path $PSScriptRoot 'scripts\models\gemma-4-26b-a4b-uncensored-balanced\start-agentic-cpu-vision-16k-2048.cmd'
 $port = 8081
 $baseUrl = "http://127.0.0.1:$port"
 $modelAlias = 'gemma-4-26b-a4b-uncensored-balanced'

@@ -14,5 +14,13 @@
             Repository = 'HauhauCS/Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-MTP'
             Revision = 'f9093662a2e7ae0503f637088bc96f77a1a70c83'
         }
+        @{
+            File = 'mmproj-Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-BF16.gguf'
+            RemoteFile = 'mmproj-Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-BF16.gguf'
+            Size = 1194827776
+            Sha256 = 'b5346e5bfd906f5e16878c2d0b8243e948ca7410fa28ea35be9b0c54a0ac10b7'
+            Repository = 'HauhauCS/Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-MTP'
+            Revision = 'f9093662a2e7ae0503f637088bc96f77a1a70c83'
+        }
     )
 }
