@@ -37,3 +37,16 @@ debe ejecutarse entero en CPU.
 - La primera petición real generó unos 4.800 tokens (5.663 en total, ~33 t/s en CPU) para un párrafo de
   ~400. El perfil pasa a `--reasoning off` sin presupuesto y el asistente limita la salida a 1.024 tokens
   y avisa si se corta. Solo texto: el asistente no declara herramientas.
+
+## Sustitución por Occult Nail (mismo día)
+
+- Los prompts de LFM3 1.7B eran incoherentes: un hipopótamo con pelaje, de pie y sentado en el aro a la
+  vez, materiales forzados y la regla de edad de personas aplicada a un animal.
+- Se sustituye por `occult-nail-1.0-35b-a3b` con un perfil solo CPU de 8K (`agentic-cpu-8k-1024`, alias
+  `occult-nail-1.0-35b-a3b-cpu-8k`) que reutiliza el GGUF del catálogo principal: el manifiesto de
+  `experimental` usa `RelativeDirectory = '..\models\occult-nail-1.0-35b-a3b'` y solo declara el modelo.
+  Muestreo de los perfiles principales y `--reasoning off`.
+- Se borran de `experimental` el manifiesto, el lanzador y los pesos de LFM3 (1,6 GB; reinstalables con la
+  revisión y el SHA-256 fijados arriba).
+- Validación: integridad 1/1 y estática con `-RequireInstalledFiles` 1/1. Sin lanzar el modelo: RAM
+  (~23–24 GB estimados), velocidad y calidad pendientes.

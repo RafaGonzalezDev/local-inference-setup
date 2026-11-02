@@ -64,7 +64,7 @@ budget unlimited; its GGUF carries an MTP head that the profiles do not use ([ch
 
 On 2026-11-02 `gemma-4-26b-a4b-uncensored-balanced` (HauhauCS, an uncensored build of Gemma 4 26B A4B from the official QAT weights) joined with its `Q4_K_M` build and BF16 projector, in text and vision profiles at 131K and 262K. Its MTP drafter ships as a separate file that is not installed ([changelog](docs/changelog/2026-11-02-gemma-4-26b-a4b-uncensored-balanced.md)).
 
-On 2026-11-02 `experimental/` came back as a separate root, outside this catalog, with `lfm3-1.7b-uncensored` (`AtomicChat`, `AD-Q6_K`) in a CPU-only profile on loopback port 8081 and `Start-Assistant.cmd`, a terminal utility that starts the model, answers prompts with an instructions file and stops the model on exit. It is not registered in any client ([changelog](docs/changelog/2026-11-02-experimental-lfm3-1.7b-uncensored.md)).
+On 2026-11-02 `experimental/` came back as a separate root, outside this catalog, with a CPU-only 8K profile of `occult-nail-1.0-35b-a3b` (sharing this catalog's GGUF) on loopback port 8081 and `Start-Assistant.cmd`, a terminal utility that starts the model, answers prompts with an instructions file and stops the model on exit. `lfm3-1.7b-uncensored` was tried first the same day and removed for poor prompt quality. It is not registered in any client ([changelog](docs/changelog/2026-11-02-experimental-lfm3-1.7b-uncensored.md)).
 
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.

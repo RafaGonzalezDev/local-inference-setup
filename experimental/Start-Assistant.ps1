@@ -10,10 +10,10 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # Must match the NETWORK_ARGS of the launcher.
-$launcherPath = Join-Path $PSScriptRoot 'scripts\models\lfm3-1.7b-uncensored\start-agentic-cpu-32k-1024.cmd'
+$launcherPath = Join-Path $PSScriptRoot 'scripts\models\occult-nail-1.0-35b-a3b\start-agentic-cpu-8k-1024.cmd'
 $port = 8081
 $baseUrl = "http://127.0.0.1:$port"
-$modelAlias = 'lfm3-1.7b-uncensored'
+$modelAlias = 'occult-nail-1.0-35b-a3b'
 $startupTimeoutSeconds = 300
 $maxTokens = 1024
 

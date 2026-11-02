@@ -1,8 +1,9 @@
 # experimental
 
 Raíz aparte de `D:\LLM`, fuera del catálogo principal y sin registrar en Pi, OpenCode ni DSH. Sigue la
-misma estructura (`config/`, `models/`, `scripts/models/`) para que los scripts del catálogo funcionen
-con `-RootDirectory`, y reutiliza el runtime principal `..\runtimes\llama.cpp\b11981-cuda13.4` sin copiarlo.
+misma estructura (`config/`, `scripts/models/`) para que los scripts del catálogo funcionen
+con `-RootDirectory`, y reutiliza el runtime y los pesos del catálogo principal (`..\runtimes\`,
+`..\models\`) sin copiarlos.
 
 ## Asistente de terminal
 
@@ -28,38 +29,43 @@ salir: con `Ctrl+C`, `cmd` pregunta además si terminar el proceso por lotes.
 pautas de Qwen Image 2.1: describe la imagen región por región, con luz y composición, sin
 potenciadores de calidad ni relación de aspecto. Trata todo mensaje como una idea de imagen.
 
-## Modelo: `lfm3-1.7b-uncensored`
+## Modelo: `occult-nail-1.0-35b-a3b`
 
-- Repositorio: `AtomicChat/LFM3-1.7B-Uncensored-GGUF`, revisión `3ad712542eb9de349dbd28f2739b69c925cdec7d`.
-- Archivo: `LFM3-1.7B-Uncensored-AD-Q6_K.gguf`, 1.587.969.920 bytes, SHA-256
-  `4a7d91c094b9a0f8ed094093f3a0eb3cfeeb46b9bd491e33115689fc5d658b22` (LFS de la API). Es la mayor de las
-  dos cuantizaciones publicadas (`AD-Q6_K`, `AD-Q4_K_M`).
-- Base: `LiquidAI/LFM3-1.7B` con la dirección de rechazo eliminada (LoRA de rango 1 integrada). Licencia
-  LFM Open License v1.0. Arquitectura `lfm3`, contexto nativo 262.144, solo texto.
+El mismo GGUF del catálogo principal (`..\models\occult-nail-1.0-35b-a3b\Occult-Nail-1.0-35B-A3B-UD-Q4_K_XL.gguf`,
+22.360.465.312 bytes, revisión `3fdd9b72fc54083a6c8959b259011366a0b1571b`); su ficha es
+[occult-nail-1.0-35b-a3b.md](../docs/overview/models/occult-nail-1.0-35b-a3b.md). El manifiesto de esta
+raíz declara solo ese archivo (sin proyector) con `RelativeDirectory = '..\models\...'`. Es una variante
+de Qwen3.6-35B-A3B (MoE, ~3B parámetros activos) sin rechazos.
 
-### Perfil `agentic-cpu-32k-1024`
+### Perfil `agentic-cpu-8k-1024`
 
-Alias `lfm3-1.7b-uncensored,lfm3-1.7b-uncensored-cpu-32k`. Parte del lanzador de `lfm3-1.7b` con estos
-cambios:
+Alias `occult-nail-1.0-35b-a3b,occult-nail-1.0-35b-a3b-cpu-8k`.
 
-- Contexto 32.768 en vez del nativo 262.144: cada petición del asistente es independiente y necesita
-  menos de 2K tokens (instrucciones, prompt y respuesta), así que el resto solo reservaría caché KV en
-  RAM sin usarla.
-- `--reasoning off`, sin presupuesto: reescribir un prompt de imagen no necesita razonar. Con el
-  razonamiento activo, la primera petición real generó unos 4.800 tokens (5.663 en total, ~33 t/s,
-  unos dos minutos) para un párrafo de ~400.
-
-- Solo CPU, a petición del usuario: `--device none --gpu-layers 0 --fit off` (sin `--fit-target` ni
-  `--split-mode`). 8 hilos, uno por núcleo físico: los 6 del catálogo se midieron con la GPU haciendo el
-  cómputo; aquí es una estimación sin medir.
+- Solo CPU, para convivir con el modelo de imagen en la GPU: `--device none --gpu-layers 0 --fit off`
+  (sin `--fit-target` ni `--split-mode`). 8 hilos, uno por núcleo físico; sin medir frente a 6.
+- Contexto 8.192: cada petición es independiente y ocupa menos de 2K tokens (instrucciones ~800, la idea
+  y hasta 1.024 de respuesta). Menos caché KV reservada en RAM.
+- `--reasoning off`, sin presupuesto: reescribir un prompt no necesita razonar, y con razonamiento LFM3
+  generó ~4.800 tokens para un párrafo de ~400.
 - `127.0.0.1:8081`: solo lo usa el asistente local y puede convivir con un perfil del catálogo en 8080.
-- Muestreo heredado de la tarjeta de LFM3 1.7B (`--temp 0.1 --top-k 50 --repeat-penalty 1.1`): la tarjeta
-  de AtomicChat no publica ninguno.
+- Muestreo de los perfiles principales de Occult Nail (`--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0`, sin
+  penalizaciones; valores de Qwen3.6, la tarjeta no publica ninguno).
+
+Estimación sin medir: ~23–24 GB de RAM (con 37,4 GB libres el 2026-11-02 y el modelo de imagen cargado),
+15–25 t/s de generación (ancho de banda de memoria: LFM3 1.7B Q6 midió 33 t/s en esta CPU) y prefill
+lento la primera vez; el prefijo de instrucciones se reutiliza en las siguientes peticiones.
+
+## Historial
+
+- 2026-11-02: primero se usó `lfm3-1.7b-uncensored` (`AtomicChat/LFM3-1.7B-Uncensored-GGUF`, `AD-Q6_K`).
+  Generaba prompts incoherentes (un hipopótamo con pelaje, sentado en el aro mientras jugaba) y se
+  sustituyó el mismo día por Occult Nail; sus pesos se borraron. Ver el
+  [changelog](../docs/changelog/2026-11-02-experimental-lfm3-1.7b-uncensored.md).
 
 ## Validación (2026-11-02)
 
-- Descarga verificada por tamaño y SHA-256; `Test-ModelIntegrity.ps1 -RootDirectory` 1/1.
-- `Test-Llm.ps1 -ConfigurationOnly -RequireInstalledFiles -RootDirectory` 1/1.
-- `Start-Assistant.ps1`: sin errores de sintaxis y rechazo de instrucciones inexistentes o fuera de su carpeta.
-- Sin probar, por indicación del usuario: arranque del servidor en CPU, velocidad, uso de RAM, flujo
-  completo del asistente y calidad de los prompts generados. `DeferredInference = $true` en el manifiesto.
+- `Test-ModelIntegrity.ps1 -RootDirectory` 1/1 y `Test-Llm.ps1 -ConfigurationOnly -RequireInstalledFiles
+  -RootDirectory` 1/1.
+- `Start-Assistant.ps1`: sin errores de sintaxis; resolución de instrucciones probada sin arrancar el modelo.
+- Sin probar con Occult Nail: arranque en CPU, RAM, velocidad, que la plantilla respete el prompt de
+  sistema propio y calidad. `DeferredInference = $true` en el manifiesto.
