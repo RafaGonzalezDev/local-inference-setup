@@ -1,8 +1,8 @@
 #Requires -Version 7
 [CmdletBinding()]
 param(
-    # File name inside experimental\instructions; the .md extension is optional.
-    [Parameter(Mandatory = $true, Position = 0)]
+    # File name inside experimental\instructions; the .md extension is optional. Asked for when omitted.
+    [Parameter(Position = 0)]
     [string]$Instructions
 )
 
@@ -17,6 +17,22 @@ $modelAlias = 'lfm3-1.7b-uncensored'
 $startupTimeoutSeconds = 300
 
 $instructionsDirectory = Join-Path $PSScriptRoot 'instructions'
+if (-not $Instructions) {
+    $files = @(Get-ChildItem -LiteralPath $instructionsDirectory -File -Filter '*.md' | Sort-Object Name)
+    if ($files.Count -eq 0) {
+        throw "No instructions files (*.md) were found in $instructionsDirectory"
+    }
+    if ($files.Count -eq 1) {
+        $Instructions = $files[0].Name
+    } else {
+        for ($i = 0; $i -lt $files.Count; $i++) {
+            Write-Host ("  {0}. {1}" -f ($i + 1), $files[$i].BaseName)
+        }
+        $choice = 0
+        while (-not ([int]::TryParse((Read-Host 'Instructions number'), [ref]$choice) -and $choice -ge 1 -and $choice -le $files.Count)) {}
+        $Instructions = $files[$choice - 1].Name
+    }
+}
 $fileName = if ([IO.Path]::GetExtension($Instructions)) { $Instructions } else { "$Instructions.md" }
 $instructionsPath = [IO.Path]::GetFullPath((Join-Path $instructionsDirectory $fileName))
 # Only files directly inside the instructions folder are accepted.

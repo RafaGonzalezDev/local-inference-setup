@@ -2,7 +2,8 @@
 
 **Qué**: vuelve `experimental/` como raíz aparte con `lfm3-1.7b-uncensored`
 (`AtomicChat/LFM3-1.7B-Uncensored-GGUF`, `AD-Q6_K`, revisión `3ad712542eb9de349dbd28f2739b69c925cdec7d`),
-un perfil solo CPU de 32K (`agentic-cpu-32k-1024`, `127.0.0.1:8081`) y `Start-Assistant.ps1`, que arranca el
+un perfil solo CPU de 32K (`agentic-cpu-32k-1024`, `127.0.0.1:8081`) y `Start-Assistant.cmd` (con su
+`Start-Assistant.ps1`), que arranca el
 modelo al abrirse, responde cada prompt con un fichero de instrucciones, copia la respuesta al
 portapapeles y detiene el modelo al salir. Incluye `instructions/qwen-image-2.1.md` para escribir prompts
 de Qwen Image 2.1.
