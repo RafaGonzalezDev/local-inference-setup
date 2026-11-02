@@ -10,10 +10,10 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # Must match the NETWORK_ARGS of the launcher.
-$launcherPath = Join-Path $PSScriptRoot 'scripts\models\occult-nail-1.0-35b-a3b\start-agentic-cpu-8k-1024.cmd'
+$launcherPath = Join-Path $PSScriptRoot 'scripts\models\gemma-4-26b-a4b-uncensored-balanced\start-agentic-cpu-8k-1024.cmd'
 $port = 8081
 $baseUrl = "http://127.0.0.1:$port"
-$modelAlias = 'occult-nail-1.0-35b-a3b'
+$modelAlias = 'gemma-4-26b-a4b-uncensored-balanced'
 $startupTimeoutSeconds = 300
 $maxTokens = 1536
 

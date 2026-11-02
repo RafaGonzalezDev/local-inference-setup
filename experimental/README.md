@@ -33,37 +33,38 @@ física. Trata todo mensaje como una idea de imagen. Admite desnudos y contenido
 adultos, también en estilo anime; con menores, rasgos infantiles o personas reales responde solo
 `Request not allowed.`
 
-## Modelo: `occult-nail-1.0-35b-a3b`
+## Modelo: `gemma-4-26b-a4b-uncensored-balanced`
 
-El mismo GGUF del catálogo principal (`..\models\occult-nail-1.0-35b-a3b\Occult-Nail-1.0-35B-A3B-UD-Q4_K_XL.gguf`,
-22.360.465.312 bytes, revisión `3fdd9b72fc54083a6c8959b259011366a0b1571b`); su ficha es
-[occult-nail-1.0-35b-a3b.md](../docs/overview/models/occult-nail-1.0-35b-a3b.md). El manifiesto de esta
-raíz declara solo ese archivo (sin proyector) con `RelativeDirectory = '..\models\...'`. Es una variante
-de Qwen3.6-35B-A3B (MoE, ~3B parámetros activos) sin rechazos.
+El mismo GGUF del catálogo principal
+(`..\models\gemma-4-26b-a4b-uncensored-balanced\Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-Q4_K_M.gguf`,
+16.796.015.520 bytes, revisión `f9093662a2e7ae0503f637088bc96f77a1a70c83`); su ficha es
+[gemma-4-26b-a4b-uncensored-balanced.md](../docs/overview/models/gemma-4-26b-a4b-uncensored-balanced.md).
+El manifiesto de esta raíz declara solo ese archivo (sin proyector) con `RelativeDirectory = '..\models\...'`.
+Es la variante sin rechazos de HauhauCS de Gemma 4 26B A4B (MoE, ~4B parámetros activos).
 
 ### Perfil `agentic-cpu-8k-1024`
 
-Alias `occult-nail-1.0-35b-a3b,occult-nail-1.0-35b-a3b-cpu-8k`.
+Alias `gemma-4-26b-a4b-uncensored-balanced,gemma-4-26b-a4b-uncensored-balanced-cpu-8k`.
 
 - Solo CPU, para convivir con el modelo de imagen en la GPU: `--device none --gpu-layers 0 --fit off`
   (sin `--fit-target` ni `--split-mode`). 8 hilos, uno por núcleo físico; sin medir frente a 6.
-- Contexto 8.192: cada petición es independiente y ocupa unos 3.100–4.300 tokens (instrucciones 2.709 con
+- Contexto 8.192: cada petición es independiente y ocupa unos 2.900–4.100 tokens (instrucciones ~2.500 con
   la plantilla, la idea y hasta 1.536 de respuesta). Menos caché KV reservada en RAM.
 - `--reasoning off`, sin presupuesto: reescribir un prompt no necesita razonar, y con razonamiento LFM3
   generó ~4.800 tokens para un párrafo de ~400.
 - `127.0.0.1:8081`: solo lo usa el asistente local y puede convivir con un perfil del catálogo en 8080.
-- Muestreo de los perfiles principales de Occult Nail (`--temp 0.6 --top-p 0.95 --top-k 20 --min-p 0`, sin
-  penalizaciones; valores de Qwen3.6, la tarjeta no publica ninguno).
+- Muestreo de los perfiles principales de este modelo (`--temp 0.6 --top-p 0.9 --top-k 64 --min-p 0.05
+  --repeat-penalty 1.1`, de la tarjeta).
+- La plantilla no añade ningún mensaje de sistema propio: el fichero de instrucciones llega tal cual.
 
-La plantilla añade, tras el prompt de sistema propio, el mensaje de concisión de Nail (respuestas breves y
-preguntar ante ambigüedad). Las instrucciones terminan con una sección de precedencia que lo anula para
-esta tarea; aun así las respuestas quedan en 275–361 palabras, por debajo de las 400–500 pedidas.
+## Historial (2026-11-02)
 
-## Historial
-
-- 2026-11-02: primero se usó `lfm3-1.7b-uncensored` (`AtomicChat/LFM3-1.7B-Uncensored-GGUF`, `AD-Q6_K`).
-  Generaba prompts incoherentes (un hipopótamo con pelaje, sentado en el aro mientras jugaba) y se
-  sustituyó el mismo día por Occult Nail; sus pesos se borraron. Ver el
+- Primero `lfm3-1.7b-uncensored` (`AtomicChat/LFM3-1.7B-Uncensored-GGUF`, `AD-Q6_K`): prompts incoherentes
+  (un hipopótamo con pelaje, sentado en el aro mientras jugaba); se borraron sus pesos.
+- Después `occult-nail-1.0-35b-a3b` en CPU a 8K: coherente, 16,8 t/s y 22,6 GB de RAM, pero su plantilla
+  añade el mensaje de concisión de Nail tras el prompt de sistema
+  (`logs/validation/functional-occult-nail-cpu-8k-20261102-012604.json`).
+- Gemma 4 26B A4B lo sustituye a elección del usuario, que la prefiere redactando. Detalle en el
   [changelog](../docs/changelog/2026-11-02-experimental-lfm3-1.7b-uncensored.md).
 
 ## Validación (2026-11-02)
@@ -71,15 +72,13 @@ esta tarea; aun así las respuestas quedan en 275–361 palabras, por debajo de 
 - `Test-ModelIntegrity.ps1 -RootDirectory` 1/1 y `Test-Llm.ps1 -ConfigurationOnly -RequireInstalledFiles
   -RootDirectory` 1/1.
 - `Start-Assistant.ps1`: sin errores de sintaxis; resolución de instrucciones probada sin arrancar el modelo.
-- Medición funcional con el modelo de imagen cargado en la GPU y sin generar
-  (`logs/validation/functional-occult-nail-cpu-8k-20261102-012604.json`):
-  - Carga en 11 s; RAM del proceso 22,6 GB (privada) y mínimo de 17,9 GB libres de 61,6; la VRAM no cambia.
-  - Primera petición: 2.731 tokens de prompt a 118 t/s y 43 s en total. Las siguientes reutilizan el
-    prefijo de 2.709 tokens: 25–42 tokens nuevos y 21–26 s por respuesta.
-  - Generación: 16,7–16,9 t/s, de 336 a 431 tokens, sin razonamiento y siempre con `finish_reason: stop`.
-  - Seis ideas (hipopótamo jugando al baloncesto, póster con texto, retrato, interior, desnudo artístico
-    adulto y anime NSFW adulto): todas con la estructura pedida, sin rechazos, texto del póster literal y
-    anatomía correcta (hipopótamo sin pelo). Defectos menores: póster en formato "wide", un
-    "high-fidelity" y una frase de composición duplicada en el retrato.
-  - Al cerrar el servidor el puerto quedó libre y se recuperó la RAM.
-- Sin probar: el caso `Request not allowed.`, generación simultánea con el modelo de imagen y sesiones largas.
+- Una petición con los mismos argumentos que el perfil, antes de crear el lanzador, con el modelo de imagen
+  cargado en la GPU (`logs/validation/functional-gemma-4-26b-cpu-8k-20261102-013223.json`):
+  - Carga en 11,6 s; RAM del proceso 18,0 GB (privada); el puerto quedó libre al cerrar.
+  - 2.538 tokens de prompt a 86,8 t/s; 363 tokens generados a 15,7 t/s, sin razonamiento; 52 s en total.
+    Con el prefijo en caché, las siguientes deberían rondar 23–25 s (estimación).
+  - Idea "un hipopótamo jugando al baloncesto": 305 palabras, coherente (piel gris rosada sin pelo, una
+    sola acción, posiciones únicas, luz y sombras consistentes).
+- Sin probar con el lanzador ni el asistente reales: varias peticiones, contenido adulto, anime, el caso
+  `Request not allowed.`, longitud de 400–500 palabras (305 en la prueba) y generación simultánea con el
+  modelo de imagen.

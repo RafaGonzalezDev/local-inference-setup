@@ -62,3 +62,14 @@ debe ejecutarse entero en CPU.
   21–26 s por respuesta con el prefijo en caché (43 s la primera). Detalle en
   [experimental/README.md](../../experimental/README.md#validación-2026-11-02). `DeferredInference` pasa a
   `$false`.
+
+## Sustitución por Gemma 4 26B A4B (mismo día)
+
+- Prueba de una petición en CPU a 8K: 15,7 t/s frente a 16,8 de Occult Nail, 18,0 GB de RAM frente a 22,6
+  y un prompt coherente de 305 palabras. El usuario la elige por redactar mejor.
+- `experimental` pasa a `gemma-4-26b-a4b-uncensored-balanced` (perfil `agentic-cpu-8k-1024`, alias
+  `gemma-4-26b-a4b-uncensored-balanced-cpu-8k`), con el GGUF del catálogo principal y el muestreo de sus
+  perfiles. Se quitan el manifiesto y el lanzador de Occult Nail (sus pesos siguen en el catálogo).
+- Se elimina de las instrucciones la sección de precedencia: la plantilla de Gemma no añade mensaje propio.
+- Validación: integridad 1/1 y estática 1/1. El lanzador nuevo no se ha arrancado; la medición se hizo con
+  los mismos argumentos invocando el servidor directamente.
