@@ -2,7 +2,7 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem CPU-only text profile at 32,768 tokens; one request needs about 10K (instructions, prompt, 8192 reasoning, answer); reuses the main D:\LLM runtime.
+rem CPU-only text profile at 32,768 tokens; one request needs under 2K (instructions, prompt, answer); reuses the main D:\LLM runtime.
 set "SERVER=%LLM_ROOT%\..\runtimes\llama.cpp\b11981-cuda13.4\llama-server.exe"
 
 rem Model
@@ -14,14 +14,14 @@ set "PERFORMANCE_ARGS=--device none --gpu-layers 0 --fit off --ctx-size 32768 --
 rem Network and API identity: loopback and port 8081 so it can run next to a main-catalog profile.
 set "NETWORK_ARGS=--host 127.0.0.1 --port 8081 --alias lfm3-1.7b-uncensored,lfm3-1.7b-uncensored-cpu-32k"
 
-rem Reasoning: thinking is on by default in the template and can be turned off per request
-set "REASONING_ARGS=--reasoning auto"
+rem Reasoning off: rewriting an image prompt does not need it, and it spent thousands of tokens per request
+set "REASONING_ARGS=--reasoning off"
 
 rem Sampling: inherited from the LFM3 1.7B GGUF card; the uncensored card publishes none
 set "SAMPLING_ARGS=--temp 0.1 --top-p 1 --top-k 50 --min-p 0 --presence-penalty 0 --repeat-penalty 1.1"
 
-rem Runtime, cache, logging, and reasoning budget
-set "RUNTIME_ARGS=--log-verbosity 3 --no-log-timestamps --no-log-prefix --load-mode none --cache-type-k q8_0 --cache-type-v q8_0 --reasoning-budget 8192"
+rem Runtime, cache, and logging
+set "RUNTIME_ARGS=--log-verbosity 3 --no-log-timestamps --no-log-prefix --load-mode none --cache-type-k q8_0 --cache-type-v q8_0"
 
 rem Vision and audio projector
 set "VISION_ARGS="

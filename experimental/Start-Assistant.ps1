@@ -15,6 +15,7 @@ $port = 8081
 $baseUrl = "http://127.0.0.1:$port"
 $modelAlias = 'lfm3-1.7b-uncensored'
 $startupTimeoutSeconds = 300
+$maxTokens = 1024
 
 $instructionsDirectory = Join-Path $PSScriptRoot 'instructions'
 # Names may contain dots (qwen-image-2.1), so only a trailing .md counts as an extension.
@@ -69,9 +70,12 @@ try {
         if ($prompt.Trim() -eq '/exit') { break }
         if (-not $prompt.Trim()) { continue }
 
+        # Text only: no tools are sent, so the model cannot call any. The cap stops runaway output;
+        # the expected answer is one paragraph of about 400 tokens.
         $body = @{
             model = $modelAlias
             stream = $false
+            max_tokens = $maxTokens
             messages = @(
                 @{ role = 'system'; content = $systemPrompt }
                 @{ role = 'user'; content = $prompt }
@@ -89,6 +93,9 @@ try {
         Write-Output $answer
         Set-Clipboard -Value $answer
         Write-Host "`n[Copied to clipboard]" -ForegroundColor DarkGray
+        if ($response.choices[0].finish_reason -eq 'length') {
+            Write-Warning "Answer cut at $maxTokens tokens; it may be incomplete."
+        }
     }
 } finally {
     if ($server -and -not $server.HasExited) {

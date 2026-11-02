@@ -15,7 +15,9 @@ ventana; si falla, la deja abierta para leer el error.
 2. Comprueba que el puerto 8081 está libre, arranca el lanzador del modelo en segundo plano (log en
    `logs\server-<fecha>.log`) y espera a `/health`.
 3. Cada línea escrita es una petición independiente (sin historial): instrucciones + prompt. Muestra la
-   respuesta, sin el razonamiento, y la copia al portapapeles.
+   respuesta y la copia al portapapeles. Solo texto: la petición no declara herramientas, así que el
+   modelo no puede llamar a ninguna. Límite de 1.024 tokens de salida (el párrafo esperado ronda 400);
+   avisa si la respuesta se corta.
 4. `/exit` o `Ctrl+C` detienen el servidor y todo su árbol de procesos. Si se cierra la ventana, el
    servidor comparte la consola y termina con ella.
 
@@ -41,15 +43,18 @@ Alias `lfm3-1.7b-uncensored,lfm3-1.7b-uncensored-cpu-32k`. Parte del lanzador de
 cambios:
 
 - Contexto 32.768 en vez del nativo 262.144: cada petición del asistente es independiente y necesita
-  unos 10K tokens (instrucciones, prompt, hasta 8192 de razonamiento y la respuesta), así que el resto
-  solo reservaría caché KV en RAM sin usarla.
+  menos de 2K tokens (instrucciones, prompt y respuesta), así que el resto solo reservaría caché KV en
+  RAM sin usarla.
+- `--reasoning off`, sin presupuesto: reescribir un prompt de imagen no necesita razonar. Con el
+  razonamiento activo, la primera petición real generó unos 4.800 tokens (5.663 en total, ~33 t/s,
+  unos dos minutos) para un párrafo de ~400.
 
 - Solo CPU, a petición del usuario: `--device none --gpu-layers 0 --fit off` (sin `--fit-target` ni
   `--split-mode`). 8 hilos, uno por núcleo físico: los 6 del catálogo se midieron con la GPU haciendo el
   cómputo; aquí es una estimación sin medir.
 - `127.0.0.1:8081`: solo lo usa el asistente local y puede convivir con un perfil del catálogo en 8080.
 - Muestreo heredado de la tarjeta de LFM3 1.7B (`--temp 0.1 --top-k 50 --repeat-penalty 1.1`): la tarjeta
-  de AtomicChat no publica ninguno. Razonamiento `auto` con presupuesto 8192, como el original.
+  de AtomicChat no publica ninguno.
 
 ## Validación (2026-11-02)
 

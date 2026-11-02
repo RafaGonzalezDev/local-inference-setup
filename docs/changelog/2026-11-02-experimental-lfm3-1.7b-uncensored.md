@@ -31,3 +31,9 @@ debe ejecutarse entero en CPU.
   `experimental`; estática sin filtros del catálogo principal sin cambios.
 - No se lanzó el modelo, por indicación del usuario: ni smoke, ni RAM, ni velocidad, ni el flujo completo
   del asistente.
+
+## Ajustes tras el primer uso
+
+- La primera petición real generó unos 4.800 tokens (5.663 en total, ~33 t/s en CPU) para un párrafo de
+  ~400. El perfil pasa a `--reasoning off` sin presupuesto y el asistente limita la salida a 1.024 tokens
+  y avisa si se corta. Solo texto: el asistente no declara herramientas.
