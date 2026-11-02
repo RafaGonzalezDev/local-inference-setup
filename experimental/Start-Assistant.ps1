@@ -17,7 +17,8 @@ $modelAlias = 'lfm3-1.7b-uncensored'
 $startupTimeoutSeconds = 300
 
 $instructionsDirectory = Join-Path $PSScriptRoot 'instructions'
-$fileName = if ([IO.Path]::GetExtension($Instructions)) { $Instructions } else { "$Instructions.md" }
+# Names may contain dots (qwen-image-2.1), so only a trailing .md counts as an extension.
+$fileName = if ($Instructions -like '*.md') { $Instructions } else { "$Instructions.md" }
 $instructionsPath = [IO.Path]::GetFullPath((Join-Path $instructionsDirectory $fileName))
 # Only files directly inside the instructions folder are accepted.
 if ((Split-Path -Parent $instructionsPath) -ne $instructionsDirectory -or -not (Test-Path -LiteralPath $instructionsPath -PathType Leaf)) {
