@@ -98,6 +98,12 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   con 56K tokens (VRAM pico 15,5 GB); mismo contrato de razonamiento que Occult Nail. Los clientes listan 29
   alias. Copias: `cordis.patch.yml.bak-20261102-000750-gemma-uncensored` (DSH global) y
   `*.bak-20261102-000812-gemma-uncensored` en WSL (Pi, OpenCode y `model.json`).
+- 2026-11-11: vuelve `qwen3.6-35b-a3b` con el `UD-Q4_K_XL` oficial de Unsloth (GGUF con capa MTP sin usar) y el
+  proyector de Nail, cuatro perfiles (texto y visión a 131K y 262K): 13 modelos y 34 perfiles
+  ([changelog](docs/changelog/2026-11-11-qwen3.6-35b-a3b.md)). Prueba funcional sin calibración bajo carga
+  (mismos pesos que Nail). Strata se evaluó y se borró el mismo día. Los clientes listan 33 alias. Copias:
+  `cordis.patch.yml.bak-20261111-013749-qwen3.6` (DSH global) y `*.bak-20261111-013927-qwen3.6` en WSL (Pi,
+  OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

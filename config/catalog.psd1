@@ -13,5 +13,6 @@
         'lfm3-vl-2b'
         'lfm3-audio-2b'
         'lfm3-omni-2b'
+        'qwen3.6-35b-a3b'
     )
 }

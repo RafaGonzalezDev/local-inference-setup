@@ -66,6 +66,8 @@ On 2026-11-02 `gemma-4-26b-a4b-uncensored-balanced` (HauhauCS, an uncensored bui
 
 On 2026-11-02 `experimental/` came back as a separate root, outside this catalog, with a CPU-only 8K profile of `gemma-4-26b-a4b-uncensored-balanced` (sharing this catalog's GGUF) on loopback port 8081 and `Start-Assistant.cmd`, a terminal utility that starts the model, answers prompts with an instructions file and stops the model on exit. `lfm3-1.7b-uncensored` (poor prompt quality) and `occult-nail-1.0-35b-a3b` were tried first the same day. It is not registered in any client ([changelog](docs/changelog/2026-11-02-experimental-lfm3-1.7b-uncensored.md)).
 
+On 2026-11-11 `qwen3.6-35b-a3b`, retired on 2026-10-28, came back as the official Unsloth `UD-Q4_K_XL` build (the GGUF with the MTP layer, kept from a Strata comparison; the profiles do not use the layer) with the projector shared with Nail, in text and vision profiles at 131K and 262K. Strata was evaluated and removed the same day ([changelog](docs/changelog/2026-11-11-qwen3.6-35b-a3b.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 
@@ -83,6 +85,7 @@ manifest pins the exact repository and revision.
 | `lfm3-vl-2b` | `LiquidAI` | `agentic-auto-vision-128k-1024` | `lfm3-vl-2b-vision-128k` |
 | `lfm3-audio-2b` | `LiquidAI` | `agentic-auto-audio-32k-1024` | `lfm3-audio-2b-audio-32k` |
 | `lfm3-omni-2b` | `LiquidAI` | `agentic-auto-omni-32k-1024` | `lfm3-omni-2b-omni-32k` |
+| `qwen3.6-35b-a3b` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `qwen3.6-35b-a3b-131k`, `qwen3.6-35b-a3b-262k`, `qwen3.6-35b-a3b-vision-131k`, `qwen3.6-35b-a3b-vision-262k` |
 
 ## Repository Structure
 
