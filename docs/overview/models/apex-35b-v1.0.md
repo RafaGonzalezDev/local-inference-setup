@@ -43,7 +43,7 @@ tamaño y SHA-256. La publicación no ofrece una variante sin cabezal MTP.
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | no | `apex-35b-v1.0-262k` |
 
 Copian la base del catálogo (Flint/Nail) salvo modelo, alias, muestreo y presupuesto de razonamiento:
-`b11981-cuda13.4`, `--gpu-layers auto --fit on --fit-target 1024`, contexto explícito, 6 hilos,
+`b12359-cuda13.5` (`b11981-cuda13.4` hasta el 2026-11-15), `--gpu-layers auto --fit on --fit-target 1024`, contexto explícito, 6 hilos,
 `--cache-ram 8192`, caché KV `q8_0`, Flash Attention, `--parallel 1`, `--split-mode none`, Jinja,
 `--load-mode none` y logs compactos. `MTP_ARGS` vacío por la política del catálogo (decisión del
 usuario, 2026-10-28). Batch/ubatch no son óptimos medidos.

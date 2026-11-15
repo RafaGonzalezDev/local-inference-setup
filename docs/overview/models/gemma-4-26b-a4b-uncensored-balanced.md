@@ -46,7 +46,7 @@ SHA-256 LFS de la API de Hugging Face en la revisión fijada; la descarga se ver
 | `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | sí | `gemma-4-26b-a4b-uncensored-balanced-vision-131k` |
 | `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1024/1024 | sí | `gemma-4-26b-a4b-uncensored-balanced-vision-262k` |
 
-Copian la base del catálogo (Occult Nail) salvo modelo, alias, proyector y muestreo: `b11981-cuda13.4`,
+Copian la base del catálogo (Occult Nail) salvo modelo, alias, proyector y muestreo: `b12359-cuda13.5` (`b11981-cuda13.4` hasta el 2026-11-15),
 `--gpu-layers auto --fit on`, `--fit-target 1024` (texto) / `2048` (visión), 6 hilos, `--cache-ram 8192`,
 caché KV `q8_0`, Flash Attention, `--parallel 1`, `--split-mode none`, Jinja, `--load-mode none`, logs
 compactos y `--reasoning-budget 8192`. `MTP_ARGS` vacío. La visión no fija `--image-min-tokens`: la tarjeta

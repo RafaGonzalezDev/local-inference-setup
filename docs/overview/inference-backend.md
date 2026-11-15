@@ -26,26 +26,47 @@ stays materialized. The hand-tuned profiles that pinned `--gpu-layers 999` with
 ## Installed Runtimes
 
 One official `llama.cpp` runtime is installed, and every launcher pins it since
-2026-10-30: `b11981`. `b11551`, the runtime of record until then, was deleted the
-same day; `b11669` (the build behind the stable release v0.7.0) was installed on
-2026-10-27 and deleted on 2026-10-28; `b11269` was uninstalled on 2026-10-22 and
-`b11827`, which `flint` used until its retirement, on 2026-10-26.
-`Install-LlamaRuntime.ps1` installs any of the five with `-Version`; the default
-is `b11981`.
+2026-11-15: `b12359`, the build behind the stable release v1.0.0. `b11981`, the
+runtime of record from 2026-10-30, was deleted the same day; `b11551` on 2026-10-30;
+`b11669` (v0.7.0) was installed on 2026-10-27 and deleted on 2026-10-28; `b11269`
+was uninstalled on 2026-10-22 and `b11827`, which `flint` used until its retirement,
+on 2026-10-26. `Install-LlamaRuntime.ps1` installs any of the six with `-Version`;
+the default is `b12359`.
 
-`b11981` (nightly after v0.8.0) first ran Flint, which `b11551` cannot load, and on
-2026-10-30 replaced `b11551` in every launcher by the user's decision
-([changelog](../changelog/2026-10-30-llama-runtime-b11981-catalog.md)).
+`b12359` replaced `b11981` in every launcher by the user's decision after an A/B on
+the Qwen3.6-35B-A3B 131K profile
+([changelog](../changelog/2026-11-15-llama-runtime-b12359-v1.0.0.md)).
 
-- Version: `b11981` (nightly)
-- Commit: `da6c30ade`
-- Reported version: `0.8.0-dev (build 11981, commit da6c30ade)`
-- Directory: `runtimes\llama.cpp\b11981-cuda13.4`
-- Package: `llama-b11981-bin-win-cuda-13.4-x64.zip`
-- SHA-256: `b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691`
-- CUDA runtime SHA-256: `738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`
+- Version: `b12359` (nightly behind v1.0.0, `nightly-tag.txt` of the v1.0.0 release)
+- Commit: `b1b770d90`
+- Reported version: `1.0.0-dev (build 12359, commit b1b770d90)`, built with Clang 20.1.8
+- Directory: `runtimes\llama.cpp\b12359-cuda13.5` (CUDA 13 release builds moved to 13.5 in PR #31788)
+- Package: `llama-b12359-bin-win-cuda-13.5-x64.zip`
+- SHA-256: `1de9ca1ff408d6e348ea0007c6880ad2393311a02e7799bcde26dc16daef03dd`
+- CUDA runtime: `cudart-llama-bin-win-cuda-13.5-x64.zip`, SHA-256
+  `c2bf4cc202bfbaaa7a0b75f5082457c3811326947bb216059b72839d844e9cba`
 - Validated GPU: NVIDIA RTX 5080
 - Validated driver: 616.56
+- Flags: the only one removed against `b11981` is `--defrag-thold`, which no launcher
+  used; new ones include `--moe-cache-cpu-share` and `f8_e4m3` as a KV cache type.
+- Own measurements against `b11981` (Qwen3.6-35B-A3B 131K text profile, two server
+  starts per runtime in A-B-B-A order): without MTP decode +7–9 % on short prompts
+  and at 24K, +6 % at 118K; prefill +8 % at 24K and +6 % at 118K. With MTP the decode
+  gain was within the variance of draft acceptance. Synthetic, not measured through
+  Pi; other models and profiles were not re-tested
+  (`logs/validation/runtime-v1-bench-20261115/RESULTS.md`).
+
+`b11981` (nightly after v0.8.0, commit `da6c30ade`, reported version
+`0.8.0-dev (build 11981, commit da6c30ade)`, package
+`llama-b11981-bin-win-cuda-13.4-x64.zip` with SHA-256
+`b160dff6e5d74855eda001261299b5fc1f4db714080f04c35f3a5c8c696c9691`, CUDA runtime SHA-256
+`738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668`, directory
+`runtimes\llama.cpp\b11981-cuda13.4`) first ran Flint, which `b11551` cannot load, and
+was the runtime of record from 2026-10-30 to 2026-11-15
+([changelog](../changelog/2026-10-30-llama-runtime-b11981-catalog.md)). The model
+card tables measured from 2026-10-30 to 2026-11-15 come from it. It can be reinstalled
+with `-Version b11981`.
+
 - Own measurements against `b11551` (131K text profile of each model, two server starts
   per runtime in A-B-B-A order, 112K-token prompt and a short-prompt decode): prefill
   about 4 % faster and decode 1.4–3.2 % faster on the four Qwen3.6-based models; Nemotron
@@ -104,9 +125,10 @@ to the main copy. On 2026-11-01 the family moved into the main catalog and uses 
 like every other model; see the [changelog](../changelog/2026-11-01-lfm3-main-catalog.md).
 
 The installer accepts both the legacy numeric version output and the current
-semantic-version output while still requiring the pinned build and commit. Both
-pin the same `cudart` archive and the 13.4 toolkit, which is why the runtime
-directory is suffixed `cuda13.4`. Each install is verified through
+semantic-version output while still requiring the pinned build and commit. Up to
+`b11981` every release pins the same CUDA 13.4 `cudart` archive; `b12359` pins the
+13.5 packages, and the runtime directory carries the toolkit suffix (`cuda13.4`,
+`cuda13.5`). Each install is verified through
 `llama-server --version`. The `b10502-cuda13.3` runtime was deleted on
 2026-10-01 and the `b11269-cuda13.4` runtime on 2026-10-22.
 

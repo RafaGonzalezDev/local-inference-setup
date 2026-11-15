@@ -104,6 +104,11 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   (mismos pesos que Nail). Strata se evaluó y se borró el mismo día. Los clientes listan 33 alias. Copias:
   `cordis.patch.yml.bak-20261111-013749-qwen3.6` (DSH global) y `*.bak-20261111-013927-qwen3.6` en WSL (Pi,
   OpenCode y `model.json`).
+- 2026-11-15: los 34 lanzadores del catálogo y los 3 de `experimental/` pasan de `b11981-cuda13.4` a
+  `b12359-cuda13.5` (v1.0.0) y se eliminan `runtimes\llama.cpp\b11981-cuda13.4` y `packages\llama.cpp\b11981`
+  ([changelog](docs/changelog/2026-11-15-llama-runtime-b12359-v1.0.0.md)). Medido solo en Qwen3.6 131K; smoke
+  de Apex 131K y 262K, el resto sin prueba funcional por decisión del usuario. Alias sin cambios: los clientes
+  no se tocaron.
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

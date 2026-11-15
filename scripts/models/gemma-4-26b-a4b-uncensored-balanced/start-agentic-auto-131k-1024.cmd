@@ -3,7 +3,7 @@ setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem Automatic device placement profile for high-prefill workloads; --fit resolves the layer split.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11981-cuda13.4\llama-server.exe"
+set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b12359-cuda13.5\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\gemma-4-26b-a4b-uncensored-balanced\Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-Q4_K_M.gguf""

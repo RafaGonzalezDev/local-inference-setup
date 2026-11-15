@@ -3,7 +3,7 @@ setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem Automatic device placement profile for full-context workloads; --fit resolves the layer split.
-set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b11981-cuda13.4\llama-server.exe"
+set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b12359-cuda13.5\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\apex-35b-v1.0\Apex-35B-V1.0-Q4_K_S.gguf""
