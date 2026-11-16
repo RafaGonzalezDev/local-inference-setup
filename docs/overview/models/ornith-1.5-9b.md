@@ -1,6 +1,6 @@
 # Ornith 1.5 9B
 
-- Modelo: `Ornith-1.5-9B-Q4_K_M.gguf` (solo texto)
+- Modelo: `Ornith-1.5-9B-Q4_K_M.gguf` y proyector `mmproj-Ornith-1.5-9B-BF16.gguf`
 - Repositorio: `ornith-ai/Ornith-1.5-9B-GGUF` (publicación oficial del autor)
 - Revisión: `abdd624b12ebf020b767fff532ff44fe552b28c3` (cabeza de `main` el 2026-11-16)
 - Licencia: MIT, sin acceso restringido
@@ -18,10 +18,12 @@ cuantizaciones. Los tipos de tensor reales no se leyeron de la cabecera.
 | Archivo | Tamaño | SHA-256 |
 | --- | ---: | --- |
 | `Ornith-1.5-9B-Q4_K_M.gguf` | 5.780.090.816 bytes | `70c112196e0b7023803c9762752e46d29e612a92c83f995bc3ba1ceb07e8fab6` |
+| `mmproj-Ornith-1.5-9B-BF16.gguf` | 921.704.672 bytes | `626f9f90627402a6bf4a999111d0fbd69b5fcca7aa8ba089d69e5f10e8858e1d` |
 
-SHA-256 LFS de la API de Hugging Face en la revisión fijada; la descarga se verificó por tamaño y SHA-256. El
-repositorio publica también `mmproj-Ornith-1.5-9B-BF16.gguf`; no se instala porque el usuario no pidió
-visión y ningún perfil lo usa.
+SHA-256 LFS de la API de Hugging Face en la revisión fijada; las descargas se verificaron por tamaño y SHA-256.
+El proyector se añadió el 2026-11-16, después del alta, a petición del usuario. Es el único que publica el
+repositorio. La tarjeta no anuncia visión (`pipeline_tag: text-generation`, sin benchmarks de imagen), pero la
+plantilla embebida acepta imágenes y vídeo con los tokens de Qwen3.5.
 
 ## Perfiles
 
@@ -29,6 +31,11 @@ visión y ningún perfil lo usa.
 | --- | ---: | ---: | --- |
 | `start-agentic-auto-131k-1024.cmd` | 131.072 | 1024/1024 | `ornith-1.5-9b-131k` |
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | `ornith-1.5-9b-262k` |
+| `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | `ornith-1.5-9b-vision-131k` |
+| `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1024/1024 | `ornith-1.5-9b-vision-262k` |
+
+Los perfiles de visión son copias de los de texto con `--mmproj` y `--fit-target 2048`, porque `--fit` no
+cuenta el proyector. No fijan `--image-min-tokens`: la tarjeta no lo pide y no se ha probado.
 
 Base común del catálogo, sin cambios: `b12359-cuda13.5`, `--gpu-layers auto --fit on --fit-target 1024`,
 6 hilos, `--cache-ram 8192` (reutiliza el prompt de la conversación), caché KV `q8_0`, Flash Attention,
@@ -59,6 +66,11 @@ Prompt de 55.844 tokens con una respuesta enterrada, sin razonamiento; VRAM tota
 Registros: `logs/validation/calibration-ornith-1.5-9b-*-20261116-*.json`.
 
 ## Pendiente
+
+- **Perfiles de visión sin ejecutar** (la GPU estaba ocupada): no se ha comprobado que `b12359` cargue el
+  proyector ni medido VRAM, contexto efectivo, descripción de la imagen de prueba ni tool calling. Antes de
+  darlos por viables, aplicar la calibración bajo carga con `tests/assets/panels-1080p.png`. El pico estimado
+  a 262K (unos 14–14,5 GB) es una estimación, no una medida.
 
 - Contexto completo (262.144 tokens exactos), sesiones reales en Pi, OpenCode y DSH, y comparación con el
   `AD-IQ4_XS` anterior no evaluados.

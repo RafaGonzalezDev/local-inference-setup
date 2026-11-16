@@ -116,6 +116,10 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   contrato de razonamiento medidos; el MTP acelera la generación 2,2 a 2,7 veces. Los clientes listan 41
   alias. Copias: `cordis.patch.yml.bak-20261116-180400-ornith-gemma12b` (DSH global) y
   `*.bak-20261116-180514-ornith-gemma12b` en WSL (Pi, OpenCode y `model.json`).
+- 2026-11-16: `ornith-1.5-9b` recibe su proyector BF16 y perfiles de visión a 131K y 262K **sin prueba
+  funcional ni calibración** (GPU ocupada, decisión del usuario): 44 perfiles, 43 alias en clientes
+  ([changelog](docs/changelog/2026-11-16-ornith-1.5-9b-vision.md)). Pendiente: smoke con la imagen de prueba y
+  calibración bajo carga. Copias: `cordis.patch.yml.bak-20261116-184457-ornith-vision` y `*.bak-20261116-184522-ornith-vision` en WSL.
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

@@ -13,5 +13,13 @@
             Repository = 'ornith-ai/Ornith-1.5-9B-GGUF'
             Revision = 'abdd624b12ebf020b767fff532ff44fe552b28c3'
         }
+        @{
+            File = 'mmproj-Ornith-1.5-9B-BF16.gguf'
+            RemoteFile = 'mmproj-Ornith-1.5-9B-BF16.gguf'
+            Size = 921704672
+            Sha256 = '626f9f90627402a6bf4a999111d0fbd69b5fcca7aa8ba089d69e5f10e8858e1d'
+            Repository = 'ornith-ai/Ornith-1.5-9B-GGUF'
+            Revision = 'abdd624b12ebf020b767fff532ff44fe552b28c3'
+        }
     )
 }
