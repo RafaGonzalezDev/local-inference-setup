@@ -105,6 +105,7 @@ manifest pins the exact repository and revision.
 │   ├── overview/                 # General documentation and model cards
 │   └── changelog/                # Change history
 ├── experimental/                 # Separate root outside the catalog (see its README)
+├── speech/                       # Speech models on NeMo-Speech.cpp, outside the catalog and its clients (see its README)
 ```
 
 ## Installation
@@ -201,5 +202,6 @@ Functional tests control and close only the process tree they initiate.
 - [Management, download, and testing](docs/overview/model-management.md)
 - [How to add a model](docs/overview/adding-a-model.md)
 - [Model cards](docs/overview/models)
+- [Speech transcription (Nemotron 3.5 Transcribe, port 8090)](speech/README.md)
 - [Self-contained launcher ADR](docs/adr/ADR-0001-self-contained-model-launchers.md)
 - [Architecture change](docs/changelog/2026-08-07-self-contained-launchers.md)
