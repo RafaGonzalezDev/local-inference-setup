@@ -109,6 +109,13 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   ([changelog](docs/changelog/2026-11-15-llama-runtime-b12359-v1.0.0.md)). Medido solo en Qwen3.6 131K; smoke
   de Apex 131K y 262K, el resto sin prueba funcional por decisión del usuario. Alias sin cambios: los clientes
   no se tocaron.
+- 2026-11-16: vuelven `ornith-1.5-9b` (`Q4_K_M` oficial de `ornith-ai`, texto, 131K y 262K) y
+  `gemma-4-12b-it-qat` (`UD-Q4_K_XL` de `unsloth` con proyector BF16 y borrador MTP externo; texto, MTP y
+  visión a 131K y 262K): 15 modelos y 42 perfiles ([changelog](docs/changelog/2026-11-16-ornith-1.5-9b-gemma-4-12b-it-qat.md)).
+  Calibrados bajo carga con 56K tokens (VRAM pico 10,3 a 14,3 GB), con reutilización de caché, tool calling y
+  contrato de razonamiento medidos; el MTP acelera la generación 2,2 a 2,7 veces. Los clientes listan 41
+  alias. Copias: `cordis.patch.yml.bak-20261116-180400-ornith-gemma12b` (DSH global) y
+  `*.bak-<timestamp>-ornith-gemma12b` en WSL (Pi, OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

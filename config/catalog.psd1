@@ -14,5 +14,7 @@
         'lfm3-audio-2b'
         'lfm3-omni-2b'
         'qwen3.6-35b-a3b'
+        'ornith-1.5-9b'
+        'gemma-4-12b-it-qat'
     )
 }
