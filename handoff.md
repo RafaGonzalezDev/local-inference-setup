@@ -115,7 +115,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   Calibrados bajo carga con 56K tokens (VRAM pico 10,3 a 14,3 GB), con reutilización de caché, tool calling y
   contrato de razonamiento medidos; el MTP acelera la generación 2,2 a 2,7 veces. Los clientes listan 41
   alias. Copias: `cordis.patch.yml.bak-20261116-180400-ornith-gemma12b` (DSH global) y
-  `*.bak-<timestamp>-ornith-gemma12b` en WSL (Pi, OpenCode y `model.json`).
+  `*.bak-20261116-180514-ornith-gemma12b` en WSL (Pi, OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
