@@ -127,7 +127,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   con smoke y calibración bajo carga (VRAM pico 6,8 y 8,2 GB). 16 modelos y 46 perfiles; los clientes listan 45
   alias ([changelog](docs/changelog/2026-11-17-gemma-4-26b-a4b-it-qat-gemma-4-e4b-it-qat.md)). El script de
   calibración quedó en `logs/validation/calibration-gemma-4-e4b-it-qat-20261117/` (no se espeja). Copias:
-  `cordis.patch.yml.bak-20261117-192105-gemma26b-e4b` (DSH global) y `*.bak-<timestamp>-gemma26b-e4b` en WSL
+  `cordis.patch.yml.bak-20261117-192105-gemma26b-e4b` (DSH global) y `*.bak-20261117-192321-gemma26b-e4b` en WSL
   (Pi, OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
