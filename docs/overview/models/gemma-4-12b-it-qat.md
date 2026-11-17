@@ -11,8 +11,12 @@
   tarjeta; `/props` anuncia las tres modalidades con el proyector cargado.
 
 Es la versión QAT (Q4_0 entrenado con cuantización): la tarjeta indica que conserva una calidad similar a
-bfloat16. `UD-Q4_K_XL` es la única cuantización que publica el repositorio. Los tipos de tensor reales no se
-leyeron de la cabecera.
+bfloat16. `UD-Q4_K_XL` es la única cuantización que publica el repositorio.
+
+Pese al nombre, el archivo es **Q4_0 puro**, sin K-quants: la cabecera (leída el 2026-11-17) declara
+`general.file_type = 2` (Q4_0) y `general.name` «Gemma-4 12B IT (smart Q4_0, QAT-lossless)». Tipos: Q4_0 en 329
+tensores (todos los pesos, incluido `token_embd`) y F32 en 338 (normas y escalas). Es el formato en el que se
+hizo el QAT, así que «UD-Q4_K_XL» solo identifica la publicación de Unsloth.
 
 ## Artefactos
 

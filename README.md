@@ -73,6 +73,8 @@ On 2026-11-11 `qwen3.6-35b-a3b`, retired on 2026-10-28, came back as the officia
 
 On 2026-11-16 `ornith-1.5-9b` (the official `Q4_K_M` from `ornith-ai`) and `gemma-4-12b-it-qat` (the Unsloth `UD-Q4_K_XL` QAT build with a BF16 projector and the external MTP drafter) came back. Ornith has text profiles at 131K and 262K, and the same day gained its BF16 projector with vision profiles at both contexts that have not been run yet ([changelog](docs/changelog/2026-11-16-ornith-1.5-9b-vision.md)); Gemma has text, MTP and vision profiles at 131K and 262K, and the MTP profiles are the only ones using speculative decoding ([changelog](docs/changelog/2026-11-16-ornith-1.5-9b-gemma-4-12b-it-qat.md)).
 
+On 2026-11-17 `gemma-4-26b-a4b-it-qat` (the Unsloth `UD-Q4_K_XL` QAT build, Q4_0 in its tensors, with a BF16 projector) replaced `gemma-4-26b-a4b-uncensored-balanced` in this catalog, in text and vision profiles at 131K and 262K without MTP; its profiles were not run, at the user's request. The HauhauCS weights stay in `models\` because the unused Gemma launcher and manifest of `experimental/` still reference them. The same day `gemma-4-e4b-it-qat` (Google's official Q4_0 QAT GGUF, with a projector for image and audio) joined with text and vision profiles at its native 131K ([changelog](docs/changelog/2026-11-17-gemma-4-26b-a4b-it-qat-gemma-4-e4b-it-qat.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 
@@ -85,7 +87,7 @@ manifest pins the exact repository and revision.
 | `nemotron-3.5-lightning-30b-a3b` | `AtomicChat` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `nemotron-3.5-lightning-30b-a3b-131k`, `nemotron-3.5-lightning-30b-a3b-262k` |
 | `flint` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `flint-131k`, `flint-262k` |
 | `apex-35b-v1.0` | `Apexintelligence-AI` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024` | `apex-35b-v1.0-131k`, `apex-35b-v1.0-262k` |
-| `gemma-4-26b-a4b-uncensored-balanced` | `HauhauCS` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `gemma-4-26b-a4b-uncensored-balanced-131k`, `gemma-4-26b-a4b-uncensored-balanced-262k`, `gemma-4-26b-a4b-uncensored-balanced-vision-131k`, `gemma-4-26b-a4b-uncensored-balanced-vision-262k` |
+| `gemma-4-26b-a4b-it-qat` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `gemma-4-26b-a4b-it-qat-131k`, `gemma-4-26b-a4b-it-qat-262k`, `gemma-4-26b-a4b-it-qat-vision-131k`, `gemma-4-26b-a4b-it-qat-vision-262k` |
 | `lfm3-1.7b` | `LiquidAI` | `agentic-auto-262k-1024` | `lfm3-1.7b-262k` |
 | `lfm3-vl-2b` | `LiquidAI` | `agentic-auto-vision-128k-1024` | `lfm3-vl-2b-vision-128k` |
 | `lfm3-audio-2b` | `LiquidAI` | `agentic-auto-audio-32k-1024` | `lfm3-audio-2b-audio-32k` |
@@ -93,6 +95,7 @@ manifest pins the exact repository and revision.
 | `qwen3.6-35b-a3b` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `qwen3.6-35b-a3b-131k`, `qwen3.6-35b-a3b-262k`, `qwen3.6-35b-a3b-vision-131k`, `qwen3.6-35b-a3b-vision-262k` |
 | `ornith-1.5-9b` | `ornith-ai` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `ornith-1.5-9b-131k`, `ornith-1.5-9b-262k`, `ornith-1.5-9b-vision-131k`, `ornith-1.5-9b-vision-262k` |
 | `gemma-4-12b-it-qat` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `gemma-4-12b-it-qat-131k`, `gemma-4-12b-it-qat-262k`, `gemma-4-12b-it-qat-mtp-131k`, `gemma-4-12b-it-qat-mtp-262k`, `gemma-4-12b-it-qat-vision-131k`, `gemma-4-12b-it-qat-vision-262k` |
+| `gemma-4-e4b-it-qat` | `google` | `agentic-auto-131k-1024`, `agentic-auto-vision-131k-1024` | `gemma-4-e4b-it-qat-131k`, `gemma-4-e4b-it-qat-vision-131k` |
 
 ## Repository Structure
 

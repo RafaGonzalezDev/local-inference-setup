@@ -120,6 +120,15 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   funcional ni calibración** (GPU ocupada, decisión del usuario): 44 perfiles, 43 alias en clientes
   ([changelog](docs/changelog/2026-11-16-ornith-1.5-9b-vision.md)). Pendiente: smoke con la imagen de prueba y
   calibración bajo carga. Copias: `cordis.patch.yml.bak-20261116-184457-ornith-vision` y `*.bak-20261116-184522-ornith-vision` en WSL.
+- 2026-11-17: `gemma-4-26b-a4b-it-qat` (`UD-Q4_K_XL` de `unsloth`, Q4_0 real, proyector BF16; texto y visión a
+  131K y 262K, sin MTP) sustituye a `gemma-4-26b-a4b-uncensored-balanced`, **sin prueba funcional** por petición
+  del usuario; los pesos de HauhauCS siguen en `models\` (los referencia `experimental/`, sin uso). Entra
+  `gemma-4-e4b-it-qat` (Q4_0 oficial de `google`, proyector de visión y audio; texto y visión a 131K, nativo),
+  con smoke y calibración bajo carga (VRAM pico 6,8 y 8,2 GB). 16 modelos y 46 perfiles; los clientes listan 45
+  alias ([changelog](docs/changelog/2026-11-17-gemma-4-26b-a4b-it-qat-gemma-4-e4b-it-qat.md)). El script de
+  calibración quedó en `logs/validation/calibration-gemma-4-e4b-it-qat-20261117/` (no se espeja). Copias:
+  `cordis.patch.yml.bak-20261117-192105-gemma26b-e4b` (DSH global) y `*.bak-<timestamp>-gemma26b-e4b` en WSL
+  (Pi, OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

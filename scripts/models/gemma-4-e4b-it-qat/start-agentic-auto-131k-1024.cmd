@@ -2,23 +2,23 @@
 setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
-rem Automatic device placement profile for full-context workloads; --fit resolves the layer split.
+rem Automatic device placement profile; --fit resolves the layer split. Sampling: Gemma 4 standard configuration.
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b12359-cuda13.5\llama-server.exe"
 
 rem Model
-set "MODEL_ARGS=--model "%LLM_ROOT%\models\gemma-4-26b-a4b-uncensored-balanced\Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-Q4_K_M.gguf""
+set "MODEL_ARGS=--model "%LLM_ROOT%\models\gemma-4-e4b-it-qat\gemma-4-E4B_q4_0-it.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 262144 --parallel 1 --cache-ram 8192 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 131072 --parallel 1 --cache-ram 8192 --flash-attn on --split-mode none --fit on --fit-target 1024 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"
 
 rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
-set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias gemma-4-26b-a4b-uncensored-balanced,gemma-4-26b-a4b-uncensored-balanced-262k"
+set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias gemma-4-e4b-it-qat,gemma-4-e4b-it-qat-131k"
 
 rem Reasoning
 set "REASONING_ARGS=--reasoning auto"
 
 rem Sampling
-set "SAMPLING_ARGS=--temp 0.6 --top-p 0.9 --top-k 64 --min-p 0.05 --repeat-penalty 1.1"
+set "SAMPLING_ARGS=--temp 1.0 --top-p 0.95 --top-k 64"
 
 rem Runtime, cache, logging, and reasoning budget
 set "RUNTIME_ARGS=--log-verbosity 3 --no-log-timestamps --no-log-prefix --load-mode none --cache-type-k q8_0 --cache-type-v q8_0 --reasoning-budget 8192"

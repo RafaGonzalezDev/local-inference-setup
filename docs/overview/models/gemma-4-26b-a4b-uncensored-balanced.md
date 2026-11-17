@@ -1,5 +1,11 @@
 # Gemma 4 26B A4B Uncensored Balanced
 
+> Retirado del catálogo principal el 2026-11-17: lo sustituye `gemma-4-26b-a4b-it-qat`
+> ([ficha](gemma-4-26b-a4b-it-qat.md)). Sus lanzadores y su manifiesto principal se eliminaron, pero los pesos
+> siguen en `models\gemma-4-26b-a4b-uncensored-balanced`: los referencian el manifiesto y el lanzador CPU de
+> `experimental/`, que ya no usa nada (el Prompt writer de ComfyUI pasó a Occult Nail).
+> Esta ficha queda como registro histórico.
+
 - Modelo: `Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-Q4_K_M.gguf` y proyector
   `mmproj-Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-BF16.gguf`
 - Repositorio: `HauhauCS/Gemma4-26B-A4B-QAT-Uncensored-HauhauCS-Balanced-MTP` (variante sin rechazos de
