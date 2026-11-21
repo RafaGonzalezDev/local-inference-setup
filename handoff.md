@@ -135,7 +135,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   de visión de ambos 12B pasan a `--image-min-tokens 1120 --image-max-tokens 1120` y batch/ubatch 2048
   (`-vision-*-2048`), sin medir. 17 modelos y 52 perfiles; los clientes listan 51 alias
   ([changelog](docs/changelog/2026-11-21-gemma-4-12b-uncensored-balanced.md)). Copias:
-  `cordis.patch.yml.bak-20261121-220705-gemma12b-uncensored` (DSH global) y `*.bak-<timestamp>-gemma12b-uncensored`
+  `cordis.patch.yml.bak-20261121-220705-gemma12b-uncensored` (DSH global) y `*.bak-20261121-220919-gemma12b-uncensored`
   en WSL (Pi, OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
