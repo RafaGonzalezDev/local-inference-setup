@@ -10,9 +10,11 @@ con `-RootDirectory`, y reutiliza el runtime y los pesos del catálogo principal
 Doble clic en `Start-Assistant.cmd` (o ejecutarlo desde una terminal). Abre la interfaz en esa misma
 ventana; si falla, la deja abierta para leer el error.
 
-1. El fichero de instrucciones es el prompt de sistema y es obligatorio: `Start-Assistant.cmd` pasa
-   `qwen-image-2.1` y `Start-Assistant.ps1 -Instructions <nombre>` lee `instructions\<nombre>.md` (la
-   extensión es opcional). Solo acepta archivos de esa carpeta.
+1. El fichero de instrucciones es el prompt de sistema y es obligatorio: `Start-Assistant.ps1
+   -Instructions <nombre>` lee `<nombre>.md` (la extensión es opcional) de `-InstructionsDirectory`, por
+   defecto `instructions\`. Solo acepta archivos que estén directamente en esa carpeta.
+   `Start-Assistant.cmd` pasa `qwen-image-2.1` y `D:\AI\config\prompt-writer`: esas instrucciones viven
+   con la instalación de ComfyUI y no se publican en este repositorio.
 2. Comprueba que el puerto 8081 está libre, arranca el lanzador del modelo en segundo plano (log en
    `logs\server-<fecha>.log`) y espera a `/health`.
 3. Cada línea escrita es una petición independiente (sin historial): instrucciones + prompt. Muestra la
@@ -26,12 +28,8 @@ Requiere PowerShell 7 (`pwsh`). Para otra tarea, añade un `.md` en `instruction
 salir: con `Ctrl+C`, `cmd` pregunta además si terminar el proceso por lotes.
 
 `qwen-image-2.1.md` convierte una idea breve, en cualquier idioma, en un prompt en inglés siguiendo las
-pautas de Qwen Image 2.1: describe la imagen región por región, con luz y composición, sin
-potenciadores de calidad ni relación de aspecto. Sigue los 8 pasos y las reglas de la skill de WSL
-(`~/SKILL.md`), sin las partes de edición ni de parámetros de generación, y añade reglas de coherencia
-física. Trata todo mensaje como una idea de imagen. Admite desnudos y contenido sexual explícito entre
-adultos, también en estilo anime; con menores, rasgos infantiles o personas reales responde solo
-`Request not allowed.`
+pautas de Qwen Image 2.1. Desde el 2026-11-21 solo existe en la instalación de referencia
+(`D:\AI\config\prompt-writer`); en otra máquina, crea tu propio fichero en esa carpeta.
 
 ## Modelo: `gemma-4-26b-a4b-uncensored-balanced`
 

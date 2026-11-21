@@ -1,9 +1,11 @@
 #Requires -Version 7
 [CmdletBinding()]
 param(
-    # System prompt: file name inside experimental\instructions; the .md extension is optional.
+    # System prompt: file name inside the instructions folder; the .md extension is optional.
     [Parameter(Mandatory = $true, Position = 0)]
-    [string]$Instructions
+    [string]$Instructions,
+    # Folder that holds the instructions files; the Qwen Image ones live with the ComfyUI installation.
+    [string]$InstructionsDirectory = (Join-Path $PSScriptRoot 'instructions')
 )
 
 Set-StrictMode -Version Latest
@@ -17,7 +19,7 @@ $modelAlias = 'gemma-4-26b-a4b-uncensored-balanced'
 $startupTimeoutSeconds = 300
 $maxTokens = 1536
 
-$instructionsDirectory = Join-Path $PSScriptRoot 'instructions'
+$instructionsDirectory = [IO.Path]::GetFullPath($InstructionsDirectory).TrimEnd('\')
 # Names may contain dots (qwen-image-2.1), so only a trailing .md counts as an extension.
 $fileName = if ($Instructions -like '*.md') { $Instructions } else { "$Instructions.md" }
 $instructionsPath = [IO.Path]::GetFullPath((Join-Path $instructionsDirectory $fileName))
