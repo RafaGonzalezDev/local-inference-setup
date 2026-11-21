@@ -47,8 +47,8 @@ borrador, así que el margen se confirmó midiendo.
 | `start-agentic-auto-262k-1024.cmd` | 262.144 | 1024/1024 | no | no | `gemma-4-12b-it-qat-262k` |
 | `start-agentic-auto-mtp-131k-1024.cmd` | 131.072 | 1024/1024 | no | sí | `gemma-4-12b-it-qat-mtp-131k` |
 | `start-agentic-auto-mtp-262k-1024.cmd` | 262.144 | 1024/1024 | no | sí | `gemma-4-12b-it-qat-mtp-262k` |
-| `start-agentic-auto-vision-131k-1024.cmd` | 131.072 | 1024/1024 | sí | no | `gemma-4-12b-it-qat-vision-131k` |
-| `start-agentic-auto-vision-262k-1024.cmd` | 262.144 | 1024/1024 | sí | no | `gemma-4-12b-it-qat-vision-262k` |
+| `start-agentic-auto-vision-131k-2048.cmd` | 131.072 | 2048/2048 | sí | no | `gemma-4-12b-it-qat-vision-131k` |
+| `start-agentic-auto-vision-262k-2048.cmd` | 262.144 | 2048/2048 | sí | no | `gemma-4-12b-it-qat-vision-262k` |
 
 Base común del catálogo, sin cambios: `b12359-cuda13.5`, `--gpu-layers auto --fit on`, `--fit-target 1024`
 (texto y MTP) / `2048` (visión), 6 hilos, `--cache-ram 8192`, caché KV `q8_0`, Flash Attention,
@@ -57,10 +57,20 @@ Base común del catálogo, sin cambios: `b12359-cuda13.5`, `--gpu-layers auto --
 - Muestreo: `--temp 1.0 --top-p 0.95 --top-k 64`, la configuración estándar de la tarjeta para todos los usos.
 - `--reasoning auto`: la plantilla lee `enable_thinking` (por defecto falso), pero `/apply-template` con
   `--reasoning auto` inserta `<|think|>` en el turno de sistema, así que razona por defecto.
-- La visión no fija `--image-min-tokens`; la tarjeta ofrece presupuestos de 70 a 1120 tokens por imagen y no
-  pide uno concreto.
+- Resolución de imagen (desde el 2026-11-21, a petición del usuario): `--image-min-tokens 1120
+  --image-max-tokens 1120`, el máximo de Gemma 4 (presupuestos de 70 a 1120). Cada token cubre 48x48 px
+  (parche 16 x agrupación 3), así que una imagen se escala, conservando la proporción, a unos 2,58 MP (p. ej.
+  4096x4096 pasa a 1584x1584); las pequeñas se amplían al mismo presupuesto. El proyector `gemma4uv` exige
+  atención no causal sobre la imagen, que debe caber en un solo ubatch: con el ubatch 1024 anterior el servidor
+  recortaba el máximo a 1024 tokens, por lo que los perfiles de visión pasan a batch/ubatch 2048
+  (`-vision-*-2048`). Leer 4096x4096 sin reducir pediría unos 7225 tokens, por encima de lo que admite Gemma 4;
+  se descartó.
 
 ## Validación (2026-11-16, `b12359-cuda13.5`)
+
+Medida con los perfiles de visión anteriores (`-vision-*-1024`, presupuesto de imagen por defecto). El cambio a
+1120 tokens y batch/ubatch 2048 del 2026-11-21 no se ha probado: el ubatch mayor aumenta el búfer de cómputo y
+la VRAM de esas filas ya no es representativa.
 
 Prompt de 56.941 tokens con una respuesta enterrada, sin razonamiento; VRAM total 16.303 MiB con unos
 2.150 MiB ocupados por el escritorio antes de arrancar. Una repetición por perfil.

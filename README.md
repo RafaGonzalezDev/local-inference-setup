@@ -75,6 +75,8 @@ On 2026-11-16 `ornith-1.5-9b` (the official `Q4_K_M` from `ornith-ai`) and `gemm
 
 On 2026-11-17 `gemma-4-26b-a4b-it-qat` (the Unsloth `UD-Q4_K_XL` QAT build, Q4_0 in its tensors, with a BF16 projector) replaced `gemma-4-26b-a4b-uncensored-balanced` in this catalog, in text and vision profiles at 131K and 262K without MTP; its profiles were not run, at the user's request. The HauhauCS weights stay in `models\` because the unused Gemma launcher and manifest of `experimental/` still reference them. The same day `gemma-4-e4b-it-qat` (Google's official Q4_0 QAT GGUF, with a projector for image and audio) joined with text and vision profiles at its native 131K ([changelog](docs/changelog/2026-11-17-gemma-4-26b-a4b-it-qat-gemma-4-e4b-it-qat.md)).
 
+On 2026-11-21 `gemma-4-12b-uncensored-balanced` (HauhauCS, an uncensored build of Gemma 4 12B from the official QAT weights) joined with its `Q4_K_M` build, BF16 projector and bundled MTP drafter, in the same six profiles as `gemma-4-12b-it-qat` and with the sampling its card recommends; its profiles were not run, at the user's request ([changelog](docs/changelog/2026-11-21-gemma-4-12b-uncensored-balanced.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 
@@ -94,7 +96,8 @@ manifest pins the exact repository and revision.
 | `lfm3-omni-2b` | `LiquidAI` | `agentic-auto-omni-32k-1024` | `lfm3-omni-2b-omni-32k` |
 | `qwen3.6-35b-a3b` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `qwen3.6-35b-a3b-131k`, `qwen3.6-35b-a3b-262k`, `qwen3.6-35b-a3b-vision-131k`, `qwen3.6-35b-a3b-vision-262k` |
 | `ornith-1.5-9b` | `ornith-ai` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `ornith-1.5-9b-131k`, `ornith-1.5-9b-262k`, `ornith-1.5-9b-vision-131k`, `ornith-1.5-9b-vision-262k` |
-| `gemma-4-12b-it-qat` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-vision-131k-1024`, `agentic-auto-vision-262k-1024` | `gemma-4-12b-it-qat-131k`, `gemma-4-12b-it-qat-262k`, `gemma-4-12b-it-qat-mtp-131k`, `gemma-4-12b-it-qat-mtp-262k`, `gemma-4-12b-it-qat-vision-131k`, `gemma-4-12b-it-qat-vision-262k` |
+| `gemma-4-12b-it-qat` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-vision-131k-2048`, `agentic-auto-vision-262k-2048` | `gemma-4-12b-it-qat-131k`, `gemma-4-12b-it-qat-262k`, `gemma-4-12b-it-qat-mtp-131k`, `gemma-4-12b-it-qat-mtp-262k`, `gemma-4-12b-it-qat-vision-131k`, `gemma-4-12b-it-qat-vision-262k` |
+| `gemma-4-12b-uncensored-balanced` | `HauhauCS` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-vision-131k-2048`, `agentic-auto-vision-262k-2048` | `gemma-4-12b-uncensored-balanced-131k`, `gemma-4-12b-uncensored-balanced-262k`, `gemma-4-12b-uncensored-balanced-mtp-131k`, `gemma-4-12b-uncensored-balanced-mtp-262k`, `gemma-4-12b-uncensored-balanced-vision-131k`, `gemma-4-12b-uncensored-balanced-vision-262k` |
 | `gemma-4-e4b-it-qat` | `google` | `agentic-auto-131k-1024`, `agentic-auto-vision-131k-1024` | `gemma-4-e4b-it-qat-131k`, `gemma-4-e4b-it-qat-vision-131k` |
 
 ## Repository Structure

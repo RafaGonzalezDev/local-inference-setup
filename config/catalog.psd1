@@ -16,6 +16,7 @@
         'qwen3.6-35b-a3b'
         'ornith-1.5-9b'
         'gemma-4-12b-it-qat'
+        'gemma-4-12b-uncensored-balanced'
         'gemma-4-e4b-it-qat'
     )
 }

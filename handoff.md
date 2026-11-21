@@ -129,6 +129,14 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   calibración quedó en `logs/validation/calibration-gemma-4-e4b-it-qat-20261117/` (no se espeja). Copias:
   `cordis.patch.yml.bak-20261117-192105-gemma26b-e4b` (DSH global) y `*.bak-20261117-192321-gemma26b-e4b` en WSL
   (Pi, OpenCode y `model.json`).
+- 2026-11-21: alta de `gemma-4-12b-uncensored-balanced` (`Q4_K_M` de `HauhauCS`, variante sin censura de Gemma 4
+  12B QAT, con proyector BF16 y borrador MTP propios; texto, MTP y visión a 131K y 262K, muestreo de la tarjeta),
+  **sin prueba funcional** por decisión del usuario: se asumen los resultados de `gemma-4-12b-it-qat`. Los perfiles
+  de visión de ambos 12B pasan a `--image-min-tokens 1120 --image-max-tokens 1120` y batch/ubatch 2048
+  (`-vision-*-2048`), sin medir. 17 modelos y 52 perfiles; los clientes listan 51 alias
+  ([changelog](docs/changelog/2026-11-21-gemma-4-12b-uncensored-balanced.md)). Copias:
+  `cordis.patch.yml.bak-20261121-220705-gemma12b-uncensored` (DSH global) y `*.bak-<timestamp>-gemma12b-uncensored`
+  en WSL (Pi, OpenCode y `model.json`).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

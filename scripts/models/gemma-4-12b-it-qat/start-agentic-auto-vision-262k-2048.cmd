@@ -3,13 +3,14 @@ setlocal
 for %%I in ("%~dp0..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem Automatic device placement vision profile; --fit does not account for the projector, so the margin is wider.
+rem Every image uses the 1120-token Gemma 4 maximum; it must fit in one ubatch (non-causal image attention), hence 2048.
 set "SERVER=%LLM_ROOT%\runtimes\llama.cpp\b12359-cuda13.5\llama-server.exe"
 
 rem Model
 set "MODEL_ARGS=--model "%LLM_ROOT%\models\gemma-4-12b-it-qat\gemma-4-12B-it-qat-UD-Q4_K_XL.gguf""
 
 rem Context and performance
-set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 262144 --parallel 1 --cache-ram 8192 --flash-attn on --split-mode none --fit on --fit-target 2048 --threads 6 --threads-batch 6 --batch-size 1024 --ubatch-size 1024 --jinja"
+set "PERFORMANCE_ARGS=--gpu-layers auto --ctx-size 262144 --parallel 1 --cache-ram 8192 --flash-attn on --split-mode none --fit on --fit-target 2048 --threads 6 --threads-batch 6 --batch-size 2048 --ubatch-size 2048 --jinja"
 
 rem Network and API identity; the second alias is the profile ID this launcher serves to clients.
 set "NETWORK_ARGS=--host 0.0.0.0 --port 8080 --alias gemma-4-12b-it-qat,gemma-4-12b-it-qat-vision-262k"
@@ -24,7 +25,7 @@ rem Runtime, cache, logging, and reasoning budget
 set "RUNTIME_ARGS=--log-verbosity 3 --no-log-timestamps --no-log-prefix --load-mode none --cache-type-k q8_0 --cache-type-v q8_0 --reasoning-budget 8192"
 
 rem Vision
-set "VISION_ARGS=--mmproj "%LLM_ROOT%\models\gemma-4-12b-it-qat\mmproj-BF16.gguf""
+set "VISION_ARGS=--mmproj "%LLM_ROOT%\models\gemma-4-12b-it-qat\mmproj-BF16.gguf" --image-min-tokens 1120 --image-max-tokens 1120"
 
 rem MTP speculative decoding
 set "MTP_ARGS="
