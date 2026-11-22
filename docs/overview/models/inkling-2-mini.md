@@ -1,5 +1,9 @@
 # inkling-2-mini (maya-ik2)
 
+> **Retirado el 2026-11-22** a petición del usuario: se borraron los pesos, el runtime `runtimes/maya-ik2/`, el
+> subárbol `maya/` y los alias de Pi, OpenCode y DSH. Ver el
+> [changelog](../../changelog/2026-11-22-inkling-2-mini-removal.md). El resto de la ficha es histórico.
+
 Inkling 2 Mini de Thinking Machines (26B MoE en bucle: 24 capas de pesos, las 6 a 17 recorridas 3 veces, 48 visitas
 por token; 128 expertos, 8 activos; 40 visitas con ventana deslizante de 1.024 y 8 con atención completa; contexto
 nativo 1.048.576). Servido por `maya-ik2`, no por llama.cpp. Solo texto. Instalación y uso en
