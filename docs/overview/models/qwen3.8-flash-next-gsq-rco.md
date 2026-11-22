@@ -12,7 +12,7 @@ cuantización GSQ-RCO IQ3_XXS de ISTA-DASLab. Servido por Strata, no por llama.c
 | Shard 1 | `IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf`, 47.039.860.096 bytes, SHA-256 `219ea929900dfa9ef091f3aa473fdba6874b65fcb36526d7d851ac9e95856d15` |
 | Shard 2 (tabla n-gram) | `IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00002-of-00002.gguf`, 28.800.138.432 bytes, SHA-256 `316b46f3a2dbd68c900f43136ab9449f9dcc3725dfd8c794847c204bc161e113` |
 | Licencia | La tarjeta declara Apache 2.0 y dice que los pesos heredan la del modelo base (Qwen3.8 Flash Next) |
-| Motor | Strata 0.2.18 (Terminal y motor 0.1.64, `windows-x86_64-cuda-cuda13`), feed firmado (secuencia 130) |
+| Motor | Strata 0.2.19 (Terminal y motor 0.1.65, `windows-x86_64-cuda-cuda13`), feed firmado (secuencia 131), desde el 2026-11-22; antes 0.2.18 (0.1.64, secuencia 130), que se conserva en `runtimes/strata/0.2.18/` |
 
 SHA-256 del LFS de Hugging Face, comprobados por `Download-Model.ps1` y por `Test-ModelIntegrity.ps1`.
 
@@ -60,6 +60,18 @@ servidor; en Pi, `reasoning_effort` `none`, `low`, `medium` o `high`, sin presup
   configuración; revisar si el despliegue cambia de unidad.
 - La primera comparación con Strata (2026-11-11, Qwen3.6 35B-A3B) lo descartó; aquella ruta de Qwen3.6 no es la de
   este modelo.
+
+## Strata 0.2.19 (2026-11-22)
+
+Los dos lanzadores pasaron a `runtimes/strata/0.2.19/`. El instalador de 0.2.19 escribió para este equipo los
+mismos argumentos que 0.2.18; solo cambian las rutas del Terminal y del perfil de expertos, que es idéntico (mismo
+SHA-256), como `tools/iq_pack.py` y el vocabulario de borrador. Se reutilizan el paquete y el borrador DFlash2 sin
+cambios. `serve --plan` da el mismo plan (DFlash2, `--spec 6`, `--draft-conf 0.7`, reserva de 1.536 MiB).
+
+Según las notas de la versión, el motor 0.1.65 activa por defecto en Blackwell (`sm_120`) kernels FP4 e INT8
+sobre Tensor Cores y un cabezal LM en dos etapas. Las mejoras publicadas son de una RTX 5090, sobre todo con
+`IQ3_S`, `UD-Q4_K_XL` y `NVFP4`; para `IQ3_XXS` no hay cifras. Los argumentos y la reserva de VRAM no cambian, así
+que no se espera más memoria, pero no se ha medido. Sin arrancar: el usuario lo prueba desde Pi.
 
 ## Velocidad observada (log del servidor)
 
