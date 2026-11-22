@@ -171,6 +171,10 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   copia `cordis.patch.yml.bak-20261122-173858-inkling-removal`), el espejo y WSL (`*.bak-*-inkling-removal`). Los
   clientes listan 53 alias: 51 de llama.cpp y 2 de `strata/`
   ([changelog](docs/changelog/2026-11-22-inkling-2-mini-removal.md)).
+- 2026-11-22: a petición del usuario, los clientes solo registran Cyber Tiel Coder, Occult Nail, Qwen3.6 35B-A3B y
+  Qwen3.8 Flash Next (14 alias); los otros 13 modelos conservan pesos y lanzadores, sin alias en ningún cliente. Copias:
+  `cordis.patch.yml.bak-20261122-174815-catalog-prune` (DSH global) y `*.bak-*-catalog-prune` en WSL
+  ([changelog](docs/changelog/2026-11-22-client-catalog-trim.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
@@ -245,6 +249,8 @@ grep -ho '"model_name": "[^"]*"' /d/LLM/strata/scripts/models/*/*.json | sed 's/
 sort -o served.txt served.txt
 # LFM3 Audio no se registra en ningún cliente (ninguno envía audio)
 sed -i '/^lfm3-audio-2b-audio-32k$/d' served.txt
+# Desde el 2026-11-22 los clientes solo registran estos cuatro modelos (decisión del usuario; ver AGENTS.md)
+grep -E '^(cyber-tiel-coder-35b-a3b|occult-nail-1\.0-35b-a3b|qwen3\.6-35b-a3b|qwen3\.8-flash-next-gsq-rco)-' served.txt > served.keep && mv served.keep served.txt
 node -e "
 const fs=require('fs');const srv=fs.readFileSync('served.txt','utf8').trim().split('\n');
 const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');
