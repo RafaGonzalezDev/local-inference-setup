@@ -24,7 +24,9 @@
     "--kv",
     "int8",
     "--kv-resident",
-    "32768"
+    "32768",
+    "--vram-reserve-mib",
+    "1536"
   ],
   "cwd": "D:\\LLM\\runtimes\\strata\\0.2.18\\appdata\\Local\\Strata\\terminal\\0.1.64",
   "tokenizer": "D:\\LLM\\models\\qwen3.8-flash-next-gsq-rco\\strata-data\\packs\\iq3_xxs\\tokenizer",

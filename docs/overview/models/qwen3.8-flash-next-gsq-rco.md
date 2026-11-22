@@ -34,7 +34,8 @@ El perfil de 262K se retiró el 2026-11-22, a petición del usuario: a 131K el m
 
 Argumentos del motor: los que escribe el instalador de Strata para este equipo (`--expert-cache auto`,
 `--prefill auto`, `--kv int8`, `--kv-resident 32768` con KV en RAM, perfil de expertos incluido), sin visión ni
-`--parallel`. `serve --plan` muestra que el servidor añade `--draft dflash2 --spec 6 --draft-conf 0.7` y el
+`--parallel`, más `--vram-reserve-mib 1536` (desde el 2026-11-22, ver «Velocidad observada»). Está solo en `args`,
+no en `args_written`: Strata trata las diferencias entre ambos como opciones propias y no las pisa al reinstalar. `serve --plan` muestra que el servidor añade `--draft dflash2 --spec 6 --draft-conf 0.7` y el
 vocabulario de borrador `latin` (por el idioma del equipo). Muestreo y razonamiento: los predeterminados del
 servidor; en Pi, `reasoning_effort` `none`, `low`, `medium` o `high`, sin presupuesto.
 
@@ -46,7 +47,7 @@ servidor; en Pi, `reasoning_effort` `none`, `low`, `medium` o `high`, sin presup
 - Memoria a 131K (log del primer arranque): los 43 GB de expertos en RAM fija, 1,55 GiB de KV y 1,28 GiB de caché de
   conversaciones; quedaron unos 7 GiB de RAM disponibles y 0,4 GiB de memoria comprometida libre. La caché de
   expertos (5.200 ranuras, 8,43 GiB) toma toda la VRAM libre: 83–343 MiB libres, y Strata sugiere
-  `--vram-reserve-mib` de 1.059 a 1.664. Aciertos de la caché en generación: 83–88 %.
+  `--vram-reserve-mib` de 1.059 a 1.664 (aplicado 1.536 después). Aciertos de la caché en generación: 83–88 %.
 - El instalador avisó de que el archivo de paginación es de 3,9 GB y crece a demanda, y recomienda uno fijo de
   64 GB si el modelo no arranca o usa menos VRAM (Strata issue #60). No se cambió.
 - PCIe 4.0 x16 (la placa no admite 5.0).
@@ -75,4 +76,14 @@ Cifras del propio motor (generación por petición); no es un benchmark controla
   así en una conversación nueva de 16–22K. El contexto no lo explica. El log registró 0 MiB de VRAM libre al
   empezar una petición y Strata avisa de que, por debajo de 1 GiB, Windows puede pasar memoria de la GPU a la RAM;
   es la hipótesis más probable, sin confirmar (no se registraron relojes ni temperatura durante la sesión; después,
-  41 °C y sin límites activos). `--vram-reserve-mib 1536` es la mitigación que sugiere Strata; no aplicada.
+  41 °C y sin límites activos).
+
+### Reserva de VRAM (2026-11-22)
+
+Se añadió `--vram-reserve-mib 1536` (el motor deja 1.536 MiB libres en vez de 700), el valor que sugiere Strata en el
+log. Estimación, sin medir: unas 550 ranuras menos en la caché de expertos (−11 % sobre ~5.200) y un 3–4 % menos de
+generación en los picos, por analogía con la cifra que Strata documenta para el lector de imágenes en la GPU (~850
+ranuras, "about 5% of decode"). A cambio, debería evitar el escalón si la causa era la VRAM agotada. No cambia la
+caída gradual con el contexto (KV leído de RAM). Pendiente: comparar el log de la próxima sesión larga (velocidad
+por contexto y VRAM libre al empezar cada petición) con las dos anteriores; si el escalón se repite, la causa es
+otra.

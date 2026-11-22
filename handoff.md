@@ -155,7 +155,8 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   y se retiró el mismo día por dar peores resultados; el usuario adoptó el IQ3_XXS y se propagó a los tres dotfiles,
   a DSH global (`cordis.patch.yml.bak-20261122-092142-qwen3.8-flash-next`), al espejo (con `strata/`) y a WSL
   (`*.bak-20261122-092321-qwen3.8-flash-next` en Pi, OpenCode y `model.json`). Los clientes listan 54 alias: 51 de
-  llama.cpp, 2 de `maya/` y 1 de `strata/`.
+  llama.cpp, 2 de `maya/` y 1 de `strata/`. Después se añadió `--vram-reserve-mib 1536` a su JSON (pendiente de
+  confirmar con el log de la próxima sesión larga si evita el escalón de velocidad; ver su ficha).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
