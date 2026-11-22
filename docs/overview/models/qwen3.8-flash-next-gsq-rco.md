@@ -29,8 +29,13 @@ SHA-256 del LFS de Hugging Face, comprobados por `Download-Model.ps1` y por `Tes
 | Lanzador | Contexto | Modelo en la API (`model_name`) | Puerto |
 | --- | ---: | --- | --- |
 | `start-text-131k.cmd` | 131.072 | `qwen3.8-flash-next-gsq-rco-131k` | `0.0.0.0:8080` |
+| `start-text-200k.cmd` | 204.800 | `qwen3.8-flash-next-gsq-rco-200k` | `0.0.0.0:8080` |
 
-El perfil de 262K se retiró el 2026-11-22, a petición del usuario: a 131K el modelo ya llena la RAM y la VRAM.
+El perfil de 262K se retiró el 2026-11-22, a petición del usuario: a 131K el modelo ya llena la RAM y la VRAM. El
+mismo día se añadió el de 200K (204.800 tokens, el paso de 200K del menú de Strata), con los mismos argumentos que el
+de 131K salvo `--max-context`. Estimación, sin medir: unos 2,4 GiB de KV en RAM fija (+0,9 GiB sobre 131K) y la
+misma VRAM (misma ventana de 32.768 tokens y misma reserva). Strata recomienda 128K como máximo con 64 GB; el perfil
+no se ha arrancado.
 
 Argumentos del motor: los que escribe el instalador de Strata para este equipo (`--expert-cache auto`,
 `--prefill auto`, `--kv int8`, `--kv-resident 32768` con KV en RAM, perfil de expertos incluido), sin visión ni
@@ -84,6 +89,11 @@ Se añadió `--vram-reserve-mib 1536` (el motor deja 1.536 MiB libres en vez de 
 log. Estimación, sin medir: unas 550 ranuras menos en la caché de expertos (−11 % sobre ~5.200) y un 3–4 % menos de
 generación en los picos, por analogía con la cifra que Strata documenta para el lector de imágenes en la GPU (~850
 ranuras, "about 5% of decode"). A cambio, debería evitar el escalón si la causa era la VRAM agotada. No cambia la
-caída gradual con el contexto (KV leído de RAM). Pendiente: comparar el log de la próxima sesión larga (velocidad
-por contexto y VRAM libre al empezar cada petición) con las dos anteriores; si el escalón se repite, la causa es
-otra.
+caída gradual con el contexto (KV leído de RAM).
+
+Resultado, tercera sesión (09:30, 67 peticiones hasta 103K): caché de 4.690 ranuras (7,61 GiB), VRAM libre de
+862–1.052 MiB al empezar cada petición (antes, hasta 0) y aciertos de expertos del 77–81 %. Medianas de generación
+por contexto: 106 tok/s a 0–20K, 104 a 20–40K, 123 a 40–60K, 119 a 60–80K, 129 a 80–100K y 115 a 100–103K
+(mínimo 92, máximo 143). El escalón no apareció, lo que confirma en la práctica la hipótesis de la VRAM agotada. La
+pérdida en los picos no se puede aislar: la aceptación de borradores fue mayor (71–86 %) que en las sesiones
+anteriores.

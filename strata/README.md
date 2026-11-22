@@ -10,8 +10,8 @@ llama.cpp. Su alias (el `model_name` de cada JSON) se registra en Pi, OpenCode y
 | Pesos (GGUF) | `models/qwen3.8-flash-next-gsq-rco/IQ3_XXS/` |
 | Datos preparados por Strata | `models/qwen3.8-flash-next-gsq-rco/strata-data/` (paquete `packs/iq3_xxs`, borrador `dflash2/`) |
 | Runtime | `runtimes/strata/0.2.18/` (Terminal 0.1.64, motor 0.1.64 CUDA 13, `strata.cmd`) |
-| Lanzador | `strata/scripts/models/qwen3.8-flash-next-gsq-rco/start-text-131k.cmd` |
-| Configuración del motor | `strata/scripts/models/qwen3.8-flash-next-gsq-rco/text-131k.json` |
+| Lanzadores | `strata/scripts/models/qwen3.8-flash-next-gsq-rco/start-text-{131k,200k}.cmd` |
+| Configuración del motor | `strata/scripts/models/qwen3.8-flash-next-gsq-rco/text-{131k,200k}.json` |
 | Ficha | [qwen3.8-flash-next-gsq-rco](../docs/overview/models/qwen3.8-flash-next-gsq-rco.md) |
 
 El Coder de ISTA-DASLab se probó y se retiró el mismo día (ver su
@@ -42,7 +42,8 @@ $feed = 'https://github.com/Niko1221/Strata/releases/download/v0.2.18'
 & "$root\strata.cmd" drafting fetch --config "$root\appdata\Local\Strata\install\strata-iq3_xxs.json"
 ```
 
-El JSON del lanzador es una copia de `strata-iq3_xxs.json` con `model_name` y `log` cambiados.
+Los JSON de los lanzadores son copias de `strata-iq3_xxs.json` con `model_name` y `log` cambiados, más
+`--vram-reserve-mib 1536` en `args` y, en el de 200K, `--max-context 204800`.
 
 ## Uso
 
