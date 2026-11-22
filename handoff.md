@@ -137,6 +137,14 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   ([changelog](docs/changelog/2026-11-21-gemma-4-12b-uncensored-balanced.md)). Copias:
   `cordis.patch.yml.bak-20261121-220705-gemma12b-uncensored` (DSH global) y `*.bak-20261121-220919-gemma12b-uncensored`
   en WSL (Pi, OpenCode y `model.json`).
+- 2026-11-22: prueba experimental de `inkling-2-mini` con `maya-ik2` en el subárbol `maya/` (perfiles
+  `start-text-131k.cmd` y `start-text-262k.cmd`, fuera de `Test-Llm.ps1`;
+  [changelog](docs/changelog/2026-11-22-inkling-2-mini-maya-ik2.md)). Primero se registró solo en el Pi vivo de WSL
+  (copias `models.json.bak-20261122-052722-inkling-maya-temp` y `models.json.bak-20261122-055343-inkling-thinking-map`);
+  el mismo día el usuario lo adoptó y se propagó a los tres dotfiles, a DSH global
+  (`cordis.patch.yml.bak-20261122-064029-inkling-2-mini`), al espejo (con `maya/`) y a los clientes de WSL
+  (`*.bak-<timestamp>-inkling-2-mini`). Los clientes listan 53 alias: los 51 de llama.cpp más los 2 de `maya/`.
+  El upstream de `maya-ik2` se revisa periódicamente (ver la ficha).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
@@ -205,7 +213,10 @@ node -e "const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modul
 diff /c/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml dotfiles-dsh/config/profiles/desktop/cordis.patch.yml
 
 # Paridad: cada catálogo contiene exactamente los alias de perfil de todos los lanzadores
-grep -ho -- '--alias [^ "]*' /d/LLM/scripts/models/*/*.cmd | sed 's/--alias [^,]*,//' | sort > served.txt
+grep -ho -- '--alias [^ "]*' /d/LLM/scripts/models/*/*.cmd | sed 's/--alias [^,]*,//' > served.txt
+# maya-ik2 profiles: the alias is the model_name of each engine config
+grep -ho '"model_name": "[^"]*"' /d/LLM/maya/scripts/models/*/*.json | sed 's/.*: "//;s/"$//' >> served.txt
+sort -o served.txt served.txt
 # LFM3 Audio no se registra en ningún cliente (ninguno envía audio)
 sed -i '/^lfm3-audio-2b-audio-32k$/d' served.txt
 node -e "

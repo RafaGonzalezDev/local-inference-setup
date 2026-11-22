@@ -1,0 +1,26 @@
+{
+ "exe": "runtimes/maya-ik2/e819852-cuda13.4/build/maya-ik2.exe",
+ "args": [
+  "--model",
+  "models/inkling-2-mini/Inkling-2-Mini-UD-Q4_K_XL.gguf",
+  "--max-context",
+  "262144",
+  "--threads",
+  "6"
+ ],
+ "env": {
+  "IK2_KV": "fp8",
+  "IK2_DENSE": "q8",
+  "IK2_ROOM_MIB": "1024",
+  "IK2_GATE_TILE": "64",
+  "IK2_GATE_BF16": "1",
+  "IK2_Q8_UNROLL": "1",
+  "IK2_BATCH_PREFILL": "1"
+ },
+ "tokenizer": "runtimes/maya-ik2/e819852-cuda13.4/ik2/tokenizer",
+ "model_name": "inkling-2-mini-262k",
+ "thinking_budget": 8192,
+ "fit_max_tokens": true,
+ "host": "0.0.0.0",
+ "log": "logs/maya/inkling-2-mini-text-262k.log"
+}
