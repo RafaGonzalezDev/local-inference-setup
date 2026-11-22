@@ -143,7 +143,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   (copias `models.json.bak-20261122-052722-inkling-maya-temp` y `models.json.bak-20261122-055343-inkling-thinking-map`);
   el mismo día el usuario lo adoptó y se propagó a los tres dotfiles, a DSH global
   (`cordis.patch.yml.bak-20261122-064029-inkling-2-mini`), al espejo (con `maya/`) y a los clientes de WSL
-  (`*.bak-<timestamp>-inkling-2-mini`). Los clientes listan 53 alias: los 51 de llama.cpp más los 2 de `maya/`.
+  (`*.bak-20261122-064414-inkling-2-mini` en Pi, OpenCode y `model.json`). Los clientes listan 53 alias: los 51 de llama.cpp más los 2 de `maya/`.
   El upstream de `maya-ik2` se revisa periódicamente (ver la ficha).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
