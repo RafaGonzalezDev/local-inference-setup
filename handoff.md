@@ -145,6 +145,17 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   (`cordis.patch.yml.bak-20261122-064029-inkling-2-mini`), al espejo (con `maya/`) y a los clientes de WSL
   (`*.bak-20261122-064414-inkling-2-mini` en Pi, OpenCode y `model.json`). Los clientes listan 53 alias: los 51 de llama.cpp más los 2 de `maya/`.
   El upstream de `maya-ik2` se revisa periódicamente (ver la ficha).
+- 2026-11-22: alta de `qwen3.8-flash-next-gsq-rco` (IQ3_XXS) con Strata 0.2.18 en el subárbol `strata/` (perfil
+  `start-text-131k.cmd`, runtime en `runtimes/strata/0.2.18/`, fuera de `Test-Llm.ps1`;
+  [changelog](docs/changelog/2026-11-22-qwen3.8-flash-next-gsq-rco-strata.md)). Registrado solo en Pi: `dotfiles-pi`
+  (`ee1778d`) y el Pi vivo de WSL (copia `models.json.bak-20261122-075135-qwen3.8-flash-next`); Pi lista 55 alias.
+  El usuario arrancó el de 131K desde Pi (95–140 tok/s, RAM y VRAM llenas); el de 262K se retiró (`dotfiles-pi`
+  `4f8273e`, copia `models.json.bak-20261122-080532-flash-next-262k-removal`). El Coder
+  (`qwen3.8-flash-next-gsq-rco-coder`) se añadió (`c96e961`, copia `models.json.bak-20261122-082604-flash-next-coder`)
+  y se retiró el mismo día por dar peores resultados; el usuario adoptó el IQ3_XXS y se propagó a los tres dotfiles,
+  a DSH global (`cordis.patch.yml.bak-20261122-092142-qwen3.8-flash-next`), al espejo (con `strata/`) y a WSL
+  (`*.bak-20261122-092321-qwen3.8-flash-next` en Pi, OpenCode y `model.json`). Los clientes listan 54 alias: 51 de
+  llama.cpp, 2 de `maya/` y 1 de `strata/`.
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
@@ -198,7 +209,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 # Espejo: solo deben diferir archivos ignorados (.gitignore, LICENSE, logs, packages, tests)
 git -C C:\Users\rafat\Desktop\Code\local-inference-setup status -sb
-foreach ($d in 'AGENTS.md','README.md','handoff.md','config','docs','scripts') { git diff --no-index --stat "D:\LLM\$d" "C:\Users\rafat\Desktop\Code\local-inference-setup\$d" }
+foreach ($d in 'AGENTS.md','README.md','handoff.md','config','docs','scripts','maya','strata') { git diff --no-index --stat "D:\LLM\$d" "C:\Users\rafat\Desktop\Code\local-inference-setup\$d" }
 ```
 
 ```bash
@@ -214,8 +225,8 @@ diff /c/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml dotfiles-dsh/config/p
 
 # Paridad: cada catálogo contiene exactamente los alias de perfil de todos los lanzadores
 grep -ho -- '--alias [^ "]*' /d/LLM/scripts/models/*/*.cmd | sed 's/--alias [^,]*,//' > served.txt
-# maya-ik2 profiles: the alias is the model_name of each engine config
-grep -ho '"model_name": "[^"]*"' /d/LLM/maya/scripts/models/*/*.json | sed 's/.*: "//;s/"$//' >> served.txt
+# maya-ik2 and Strata profiles: the alias is the model_name of each engine config
+grep -ho '"model_name": "[^"]*"' /d/LLM/maya/scripts/models/*/*.json /d/LLM/strata/scripts/models/*/*.json | sed 's/.*: "//;s/"$//' >> served.txt
 sort -o served.txt served.txt
 # LFM3 Audio no se registra en ningún cliente (ninguno envía audio)
 sed -i '/^lfm3-audio-2b-audio-32k$/d' served.txt

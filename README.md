@@ -116,6 +116,7 @@ manifest pins the exact repository and revision.
 │   └── changelog/                # Change history
 ├── experimental/                 # Separate root outside the catalog (see its README)
 ├── maya/                         # Inkling 2 Mini on maya-ik2, outside the llama.cpp catalog but registered in the clients (see its README)
+├── strata/                       # Qwen3.8 Flash Next on Strata, outside the llama.cpp catalog but registered in the clients (see its README)
 ├── speech/                       # Speech models on NeMo-Speech.cpp, outside the catalog and its clients (see its README)
 ```
 
@@ -215,5 +216,6 @@ Functional tests control and close only the process tree they initiate.
 - [Model cards](docs/overview/models)
 - [Speech transcription (Nemotron 3.5 Transcribe, port 8090)](speech/README.md)
 - [Inkling 2 Mini on maya-ik2 (port 8080)](maya/README.md)
+- [Qwen3.8 Flash Next on Strata (port 8080)](strata/README.md)
 - [Self-contained launcher ADR](docs/adr/ADR-0001-self-contained-model-launchers.md)
 - [Architecture change](docs/changelog/2026-08-07-self-contained-launchers.md)
