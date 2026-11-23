@@ -186,6 +186,9 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   Copias: `cordis.patch.yml.bak-20261123-143129-qwen3.8-flash-next-262k` (DSH global) y
   `*.bak-20261123-143309-qwen3.8-flash-next-262k` en WSL (Pi, OpenCode y `model.json`)
   ([changelog](docs/changelog/2026-11-23-qwen3.8-flash-next-gsq-rco-262k.md)).
+- 2026-11-23: DSH (repositorio `dotfiles-dsh` y global) apunta a `http://192.168.1.100:8080/v1` en vez de
+  `127.0.0.1`, como Pi y OpenCode, para usar los modelos de este equipo desde el del trabajo. Copia:
+  `cordis.patch.yml.bak-20261123-144152-llama-cpp-lan-url`.
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
