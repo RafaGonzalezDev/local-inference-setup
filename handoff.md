@@ -194,7 +194,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `inkling-2-mini-ud-q4_k_xl` (GGUF `UD-Q4_K_XL` de Unsloth con borrador DSpark, sobre `strata-inkling`; texto a
   131K, 262K y 1M, sin razonamiento), **sin arrancar**: el usuario lo prueba desde Pi. Los clientes listan 36 alias.
   Copias: `cordis.patch.yml.bak-20261123-221219-inkling-ud-q4-strata-0.2.20` (DSH global) y
-  `*.bak-<timestamp>-inkling-ud-q4` en WSL (Pi, OpenCode y `model.json`)
+  `*.bak-20261123-221829-inkling-ud-q4` en WSL (Pi, OpenCode y `model.json`)
   ([changelog](docs/changelog/2026-11-23-strata-0.2.20-inkling-ud-q4_k_xl.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
