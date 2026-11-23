@@ -1,5 +1,9 @@
 # inkling-2-mini-ud-q4_k_xl (Strata)
 
+> **Retirado el 2026-11-23**, el mismo día de su alta, a petición del usuario: pesos, manifiesto, lanzadores, el
+> componente `strata-inkling` y los alias de todos los clientes se borraron. Ver «Prueba del usuario» al final y el
+> [changelog](../../changelog/2026-11-23-inkling-2-mini-ud-q4_k_xl-removal.md).
+
 Inkling 2 Mini de Thinking Machines (transformer en bucle de 24 capas, las 12 centrales recorridas tres veces;
 MoE de 128 expertos, 8 activos por token; 26,2B parámetros, 3,4B activos y unos 5,4B efectivos por token; contexto
 nativo de 1M) en el GGUF dinámico `UD-Q4_K_XL` de Unsloth, con el borrador DSpark. Servido por el motor
@@ -85,3 +89,20 @@ con `exit code 3`.
 - `strata serve --plan` con los tres JSON: alias, contexto, reparto, host y puerto correctos.
 - Sin arranque, inferencia ni calibración: las pruebas las hace el usuario desde Pi (decisión del usuario,
   2026-11-23). Pendiente: memoria real a 262K y 1M, velocidad y tool calling.
+
+## Prueba del usuario (2026-11-23)
+
+1. **Los tres perfiles se cerraban al arrancar** con `strata-inkling: missing tensor
+   'dspark.layers.0.self_attn.o_proj.weight'`, después de cargar el modelo. Fallo de Strata 0.2.20 (también en
+   `main` ese día): `ink_gguf_loader.h` traduce los tensores del borrador GGUF a `layers.<n>.…`, sin el prefijo
+   `dspark.`, y el backend CUDA (`cuda/ink_runner.cuh` y `cuda/ink_manifest.hpp`) copia los nombres tal cual y los
+   busca con el prefijo, sin alternativa (`InkManifest::get` termina el proceso). El archivo estaba bien (54
+   tensores, 3 capas). Los `.strata` guardan el prefijo, por eso el SQ-15 sí cargaba DSpark. El motor encuentra
+   cualquier `dspark-*.gguf` junto al modelo, así que quitar `--dspark` no bastaba.
+2. **Con `"drafting": "off"`** (el servidor pasa `--draft off`, que impide inicializar DSpark) el perfil de 262K
+   arrancó. El usuario midió menos de 20 tok/s de generación desde Pi y lo dio por inutilizable; el log solo
+   registra la carga, no las peticiones.
+3. **Causas probables, según el log de carga:** 1.025 de 3.072 expertos (6,17 GiB) en RAM paginable, por encima
+   del tope de 4,21–4,74 GiB que calculó el instalador; todo el KV global en RAM (0 tokens en VRAM, con 1,46 GiB
+   libres); el bucle recorre tres veces las 12 capas centrales por token; y sin borrador. A 1M, el motor recortó el
+   contexto a 454.528 tokens por la RAM disponible.

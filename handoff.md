@@ -196,6 +196,11 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   Copias: `cordis.patch.yml.bak-20261123-221219-inkling-ud-q4-strata-0.2.20` (DSH global) y
   `*.bak-20261123-221829-inkling-ud-q4` en WSL (Pi, OpenCode y `model.json`)
   ([changelog](docs/changelog/2026-11-23-strata-0.2.20-inkling-ud-q4_k_xl.md)).
+- 2026-11-23: retirada de `inkling-2-mini-ud-q4_k_xl` (DSpark no carga desde GGUF en el CUDA de Strata 0.2.20 y, sin
+  él, menos de 20 tok/s) y desinstalación de Strata 0.2.18 y 0.2.19: 0.2.20 es el único runtime de Strata. Alias
+  quitados de Pi, OpenCode, DSH (repositorio y global, copia `cordis.patch.yml.bak-20261123-231646-inkling-ud-q4-removal`),
+  el espejo y WSL (`*.bak-20261123-231727-inkling-ud-q4-removal`). Los clientes listan 33 alias
+  ([changelog](docs/changelog/2026-11-23-inkling-2-mini-ud-q4_k_xl-removal.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
@@ -270,8 +275,8 @@ grep -ho '"model_name": "[^"]*"' /d/LLM/strata/scripts/models/*/*.json | sed 's/
 sort -o served.txt served.txt
 # LFM3 Audio no se registra en ningún cliente (ninguno envía audio)
 sed -i '/^lfm3-audio-2b-audio-32k$/d' served.txt
-# Desde el 2026-11-22 los clientes solo registran estos nueve modelos (decisión del usuario; ver AGENTS.md)
-grep -E '^(cyber-tiel-coder-35b-a3b|occult-nail-1\.0-35b-a3b|qwen3\.6-35b-a3b|qwen3\.8-flash-next-gsq-rco|gemma-4-26b-a4b-it-qat|gemma-4-12b-it-qat|gemma-4-12b-uncensored-balanced|gemma-4-e4b-it-qat|inkling-2-mini-ud-q4_k_xl)-' served.txt > served.keep && mv served.keep served.txt
+# Desde el 2026-11-22 los clientes solo registran estos ocho modelos (decisión del usuario; ver AGENTS.md)
+grep -E '^(cyber-tiel-coder-35b-a3b|occult-nail-1\.0-35b-a3b|qwen3\.6-35b-a3b|qwen3\.8-flash-next-gsq-rco|gemma-4-26b-a4b-it-qat|gemma-4-12b-it-qat|gemma-4-12b-uncensored-balanced|gemma-4-e4b-it-qat)-' served.txt > served.keep && mv served.keep served.txt
 node -e "
 const fs=require('fs');const srv=fs.readFileSync('served.txt','utf8').trim().split('\n');
 const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');

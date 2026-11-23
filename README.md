@@ -77,7 +77,7 @@ On 2026-11-17 `gemma-4-26b-a4b-it-qat` (the Unsloth `UD-Q4_K_XL` QAT build, Q4_0
 
 On 2026-11-21 `gemma-4-12b-uncensored-balanced` (HauhauCS, an uncensored build of Gemma 4 12B from the official QAT weights) joined with its `Q4_K_M` build, BF16 projector and bundled MTP drafter, in the same six profiles as `gemma-4-12b-it-qat` and with the sampling its card recommends; its profiles were not run, at the user's request ([changelog](docs/changelog/2026-11-21-gemma-4-12b-uncensored-balanced.md)).
 
-On 2026-11-23 Strata moved to 0.2.20, and `inkling-2-mini-ud-q4_k_xl` (the Unsloth `UD-Q4_K_XL` GGUF of Inkling 2 Mini with its DSpark drafter) joined the `strata/` sub-root in text profiles at 131K, 262K and its native 1M, served without reasoning ([changelog](docs/changelog/2026-11-23-strata-0.2.20-inkling-ud-q4_k_xl.md)).
+On 2026-11-23 Strata moved to 0.2.20, and `inkling-2-mini-ud-q4_k_xl` (the Unsloth `UD-Q4_K_XL` GGUF of Inkling 2 Mini with its DSpark drafter) joined the `strata/` sub-root in text profiles at 131K, 262K and its native 1M, served without reasoning ([changelog](docs/changelog/2026-11-23-strata-0.2.20-inkling-ud-q4_k_xl.md)). It was removed the same day, together with Strata 0.2.18 and 0.2.19: its DSpark drafter does not load from a GGUF on Strata's CUDA backend, and without it the model generated under 20 tok/s ([changelog](docs/changelog/2026-11-23-inkling-2-mini-ud-q4_k_xl-removal.md)).
 
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
@@ -117,7 +117,7 @@ manifest pins the exact repository and revision.
 │   ├── overview/                 # General documentation and model cards
 │   └── changelog/                # Change history
 ├── experimental/                 # Separate root outside the catalog (see its README)
-├── strata/                       # Qwen3.8 Flash Next and Inkling 2 Mini on Strata, outside the llama.cpp catalog but registered in the clients (see its README)
+├── strata/                       # Qwen3.8 Flash Next on Strata, outside the llama.cpp catalog but registered in the clients (see its README)
 ├── speech/                       # Speech models on NeMo-Speech.cpp, outside the catalog and its clients (see its README)
 ```
 
@@ -216,6 +216,6 @@ Functional tests control and close only the process tree they initiate.
 - [How to add a model](docs/overview/adding-a-model.md)
 - [Model cards](docs/overview/models)
 - [Speech transcription (Nemotron 3.5 Transcribe, port 8090)](speech/README.md)
-- [Qwen3.8 Flash Next and Inkling 2 Mini on Strata (port 8080)](strata/README.md)
+- [Qwen3.8 Flash Next on Strata (port 8080)](strata/README.md)
 - [Self-contained launcher ADR](docs/adr/ADR-0001-self-contained-model-launchers.md)
 - [Architecture change](docs/changelog/2026-08-07-self-contained-launchers.md)

@@ -12,7 +12,7 @@ cuantización GSQ-RCO IQ3_XXS de ISTA-DASLab. Servido por Strata, no por llama.c
 | Shard 1 | `IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf`, 47.039.860.096 bytes, SHA-256 `219ea929900dfa9ef091f3aa473fdba6874b65fcb36526d7d851ac9e95856d15` |
 | Shard 2 (tabla n-gram) | `IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00002-of-00002.gguf`, 28.800.138.432 bytes, SHA-256 `316b46f3a2dbd68c900f43136ab9449f9dcc3725dfd8c794847c204bc161e113` |
 | Licencia | La tarjeta declara Apache 2.0 y dice que los pesos heredan la del modelo base (Qwen3.8 Flash Next) |
-| Motor | Strata 0.2.20 (Terminal y motor 0.1.66, `windows-x86_64-cuda-cuda13`), feed firmado (secuencia 132), desde el 2026-11-23; antes 0.2.19 (0.1.65, secuencia 131), que se conserva en `runtimes/strata/0.2.19/`, y 0.2.18 (0.1.64) |
+| Motor | Strata 0.2.20 (Terminal y motor 0.1.66, `windows-x86_64-cuda-cuda13`), feed firmado (secuencia 132), desde el 2026-11-23; antes 0.2.19 (0.1.65, secuencia 131) y 0.2.18 (0.1.64), desinstalados el 2026-11-23 |
 
 SHA-256 del LFS de Hugging Face, comprobados por `Download-Model.ps1` y por `Test-ModelIntegrity.ps1`.
 
@@ -149,4 +149,15 @@ Según las notas de la versión: corrige una regresión de 0.2.15 a 0.2.19 en Wi
 `IQ3_XXS` (citan una RTX 4070 Ti SUPER), corrige salidas `NaN` con prompts de 24K a 45K y unifica el planificador
 de expertos GPU, RAM, CPU y SSD. La regresión coincide con este equipo y abarca 0.2.18, así que podría estar
 relacionada con el escalón de la sesión 2 (ver «Velocidad observada»), que desapareció con `--vram-reserve-mib`; es
-una hipótesis. La reserva se mantiene. Sin arrancar: el usuario lo prueba desde Pi.
+una hipótesis. La reserva se mantiene.
+
+Primera sesión, a 262K (22:35–23:00, 93 peticiones hasta 167.816 tokens de prompt, ~107.000 tokens generados),
+**con el usuario usando el equipo a la vez**: medianas de generación de 113 tok/s a 0–40K, 112 a 40–80K, 109 a
+80–120K, 111 a 120–140K, 104 a 140–160K y 105 a 160–200K; 98 % de las lecturas de KV desde VRAM y 81–84 % de
+borradores aceptados. Frente a la sesión de 200K de esa mañana (0.2.19, equipo dedicado), un 8 % menos a 80–170K
+(107 frente a 116 tok/s), con una caché de expertos de 4.077 ranuras en vez de 4.454 (el motor la redujo al
+arrancar por falta de VRAM) y aciertos del 74 % frente al 77 %. No separa el efecto de la versión del del perfil de
+262K y del uso del equipo (la CPU calcula los expertos que no están en la VRAM). Margen de memoria comprometida de
+Windows: 1,2 GiB. Pendiente: una sesión a 200K con el equipo dedicado para comparar versiones.
+
+El 2026-11-23 se desinstalaron 0.2.18 y 0.2.19 (decisión del usuario): 0.2.20 es el único runtime de Strata.
