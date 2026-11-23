@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Despliegue de modelos locales · local-inference-setup</title>
+<meta name="description" content="Índice del repositorio local-inference-setup: hardware, catálogo de modelos, perfiles de arranque, subárboles de Strata y voz, y documentación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest" defer></script>
+<style>
+  :root {
+    --paper: #f5f7fa;
+    --panel: #ffffff;
+    --ink: #1f2340;
+    --ink-soft: #5d6382;
+    --ink-faint: #8b91ad;
+    --rule: #dfe3ee;
+    --rule-strong: #c7ccdd;
+
+    --sky: #dbe8f8;      --sky-ink: #2b4a72;
+    --lilac: #e5dcf8;    --lilac-ink: #473a78;
+    --mint: #d7ebe1;     --mint-ink: #2a5a45;
+    --butter: #f4e9c7;   --butter-ink: #6a5220;
+    --pale: #e9ebf2;     --pale-ink: #59607a;
+
+    --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+    --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --col: 1180px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.05rem;
+    line-height: 1.68;
+    font-variant-numeric: tabular-nums;
+  }
+
+  a { color: var(--sky-ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:hover { color: var(--lilac-ink); }
+  a:focus-visible, code:focus-visible {
+    outline: 2px solid var(--lilac-ink);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--panel); padding: .6rem 1rem; z-index: 5;
+  }
+  .skip:focus { left: 1rem; top: 1rem; }
+
+  .shell {
+    max-width: var(--col);
+    margin: 0 auto;
+    padding: 0 clamp(1.1rem, 4vw, 2.5rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.2rem, 5vw, 3.4rem);
+  }
+  @media (min-width: 1020px) {
+    .shell { grid-template-columns: 178px minmax(0, 1fr); align-items: start; }
+    .rail { position: sticky; top: 2.2rem; }
+  }
+
+  /* ---------- índice lateral ---------- */
+  .rail { padding-top: .4rem; }
+  .rail-title {
+    font-family: var(--mono); font-size: .74rem; letter-spacing: .02em;
+    color: var(--ink-faint); margin: 0 0 .7rem;
+  }
+  .rail ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--rule); }
+  .rail li a {
+    display: block; padding: .34rem 0 .34rem .85rem; margin-left: -1px;
+    border-left: 1px solid transparent;
+    font-family: var(--mono); font-size: .79rem; color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .rail li a:hover, .rail li a:focus-visible {
+    color: var(--ink); border-left-color: var(--lilac-ink); background: var(--panel);
+  }
+  .rail li a.is-active { color: var(--ink); border-left-color: var(--sky-ink); background: var(--panel); }
+
+  main { min-width: 0; }
+
+  /* ---------- cabecera ---------- */
+  .masthead { padding-top: clamp(2rem, 5vw, 3.2rem); }
+  .source-line {
+    font-family: var(--mono); font-size: .8rem; color: var(--ink-soft);
+    margin: 0 0 1.1rem;
+  }
+  .source-line a { color: var(--ink); }
+  h1 {
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(2.35rem, 6.4vw, 4.35rem);
+    line-height: 1.02; letter-spacing: -0.035em;
+    margin: 0 0 1rem; max-width: 22ch;
+  }
+  h1 .thin { font-weight: 400; color: var(--ink-soft); letter-spacing: -0.025em; }
+  .lede {
+    font-size: clamp(1.05rem, 1.5vw, 1.22rem); line-height: 1.6;
+    color: var(--ink-soft); max-width: 68ch; margin: 0 0 1.9rem;
+  }
+
+  .figures {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    border: 1px solid var(--rule); border-radius: 10px;
+    background: var(--panel); margin: 0 0 2.1rem;
+  }
+  .figures div {
+    padding: .95rem 1.1rem; border-left: 1px solid var(--rule);
+  }
+  .figures div:first-child { border-left: 0; }
+  .figures b {
+    display: block; font-family: var(--display); font-weight: 700;
+    font-size: 1.72rem; line-height: 1.1; letter-spacing: -0.02em;
+  }
+  .figures span {
+    font-family: var(--mono); font-size: .74rem; color: var(--ink-soft);
+    display: block; margin-top: .25rem;
+  }
+
+  /* ---------- banda de perfiles servidos ---------- */
+  .served {
+    border: 1px solid var(--rule); border-left: 3px solid var(--lilac);
+    border-radius: 10px; background: var(--panel);
+    padding: 1.3rem 1.4rem 1.5rem;
+  }
+  .served h2 { margin: 0 0 .15rem; }
+  .served p.note {
+    font-family: var(--mono); font-size: .76rem; color: var(--ink-soft); margin: 0 0 1.2rem;
+  }
+  .served-group { display: grid; grid-template-columns: 1fr; gap: .45rem 1rem; }
+  .served-group { margin-bottom: 1.05rem; }
+  .served-group:last-child { margin-bottom: 0; }
+  @media (min-width: 720px) {
+    .served-group { grid-template-columns: 210px 1fr; align-items: baseline; }
+  }
+  .served-group h3 {
+    font-family: var(--display); font-weight: 600; font-size: 1.02rem;
+    letter-spacing: -0.01em; margin: 0;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: .38rem; }
+  .chip {
+    font-family: var(--mono); font-size: .76rem; font-weight: 500;
+    padding: .26rem .6rem; border-radius: 999px; white-space: nowrap;
+  }
+  .chip.sky   { background: var(--sky);   color: var(--sky-ink); }
+  .chip.lilac { background: var(--lilac); color: var(--lilac-ink); }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; margin-top: 1.3rem;
+    padding-top: 1rem; border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: .74rem; color: var(--ink-soft);
+  }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: .4rem; vertical-align: baseline; }
+
+  /* ---------- secciones ---------- */
+  section {
+    padding-top: clamp(2.2rem, 4vw, 3.1rem);
+    border-top: 1px solid var(--rule);
+    scroll-margin-top: 1.2rem;
+  }
+  section:focus { outline: none; }
+  section:first-of-type { border-top: 0; }
+  h2 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(1.5rem, 2.9vw, 2.15rem);
+    line-height: 1.14; letter-spacing: -0.025em; margin: 0 0 .8rem;
+    display: flex; align-items: center; gap: .55rem;
+  }
+  /* Lucide: el icono acompaña al título sin alterar su línea base. */
+  i[data-lucide], svg.lucide {
+    flex: 0 0 auto; width: .84em; height: .84em; stroke-width: 1.75;
+    color: var(--ink-soft);
+  }
+  i[data-lucide]:empty { display: none; }
+  h3 {
+    font-family: var(--display); font-weight: 600; font-size: 1.24rem;
+    letter-spacing: -0.015em; margin: 1.7rem 0 .5rem;
+  }
+  p { max-width: 74ch; margin: 0 0 .95rem; }
+  p.tight { margin-bottom: 0; }
+
+  .table-wrap { overflow-x: auto; margin: 1.1rem 0 1.2rem; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; background: var(--panel); }
+  caption {
+    text-align: left; font-family: var(--mono); font-size: .76rem;
+    color: var(--ink-faint); padding-bottom: .5rem;
+  }
+  th, td {
+    text-align: left; padding: .62rem .8rem;
+    border-bottom: 1px solid var(--rule); vertical-align: top;
+    font-size: .94rem;
+  }
+  thead th {
+    border-bottom: 1px solid var(--rule-strong);
+    font-family: var(--mono); font-size: .74rem; font-weight: 500;
+    color: var(--ink-soft); white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: #fbfcfe; }
+  td.id, td.pub, td.quant { font-family: var(--mono); font-size: .85rem; }
+  td.pub, td.quant { color: var(--ink-soft); }
+  td.profiles { font-family: var(--mono); font-size: .8rem; color: var(--ink-soft); }
+  .tag { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: .45rem; }
+  .tag.on { background: var(--sky-ink); }
+  .tag.off { background: transparent; box-shadow: inset 0 0 0 1px var(--rule-strong); }
+  tr.group th {
+    background: var(--pale); color: var(--pale-ink);
+    font-family: var(--mono); font-size: .76rem; font-weight: 500;
+    padding: .45rem .8rem;
+  }
+
+  /* ---------- barras de velocidad ---------- */
+  .bars { display: grid; gap: .5rem; margin: 1.1rem 0 1.15rem; }
+  .bar-row {
+    display: grid; align-items: center; gap: .55rem .85rem;
+    grid-template-areas: "name val" "track track";
+    grid-template-columns: minmax(0, 1fr) 72px;
+  }
+  @media (min-width: 780px) {
+    .bar-row {
+      grid-template-areas: "name track val";
+      grid-template-columns: minmax(210px, 268px) minmax(0, 1fr) 72px;
+    }
+  }
+  .bar-name { grid-area: name; font-family: var(--mono); font-size: .82rem; }
+  .bar-name span { color: var(--ink-faint); }
+  .bar-val {
+    grid-area: val; font-family: var(--mono); font-size: .84rem; font-weight: 500;
+    text-align: right; color: var(--ink);
+  }
+  .bar-track { grid-area: track; display: block; height: 11px; background: var(--pale); border-radius: 6px; }
+  .bar-fill { display: block; height: 100%; width: var(--w); min-width: 3px; border-radius: 6px; background: var(--sky); }
+  .bar-fill.lilac { background: var(--lilac); }
+
+  /* ---------- subárboles ---------- */
+  .sub { border-radius: 10px; padding: 1.15rem 1.3rem; margin: 1rem 0; background: var(--panel); }
+  .sub.llama  { border: 1px solid var(--rule); border-top: 3px solid var(--sky); }
+  .sub.strata { border: 1px solid var(--rule); border-top: 3px solid var(--lilac); }
+  .sub.speech { border: 1px solid var(--rule); border-top: 3px solid var(--mint); }
+  .sub.exp    { border: 1px solid var(--rule); border-top: 3px solid var(--butter); }
+  .sub h3 { margin-top: 0; }
+  .sub dl { margin: .6rem 0 0; display: grid; grid-template-columns: 1fr; gap: .1rem 1rem; }
+  @media (min-width: 760px) { .sub dl { grid-template-columns: 168px 1fr; } }
+  .sub dt { font-family: var(--mono); font-size: .78rem; color: var(--ink-faint); }
+  .sub dd { margin: 0 0 .4rem; font-family: var(--mono); font-size: .84rem; }
+
+  /* ---------- código y comandos ---------- */
+  .cmd {
+    background: var(--panel); border: 1px solid var(--rule); border-radius: 8px;
+    padding: 1rem 1.15rem; margin: 1rem 0 1.3rem; overflow-x: auto;
+  }
+  .cmd p {
+    font-family: var(--mono); font-size: .82rem; line-height: 1.5;
+    margin: 0 0 .55rem; color: var(--ink); word-break: break-word;
+  }
+  .cmd p:last-child { margin-bottom: 0; }
+  .cmd p span { color: var(--ink-faint); }
+  code {
+    font-family: var(--mono); font-size: .87em;
+    background: var(--pale); color: var(--ink);
+    padding: .1rem .34rem; border-radius: 4px;
+  }
+
+  /* ---------- linaje de runtimes ---------- */
+  ol.lineage { list-style: none; margin: 1.2rem 0 1rem; padding: 0; }
+  ol.lineage li {
+    display: grid; grid-template-columns: 1fr; gap: .1rem 1.2rem;
+    padding: .6rem 0 .6rem 1rem; border-left: 1px solid var(--rule-strong);
+  }
+  ol.lineage li:last-child { border-left-color: var(--sky-ink); border-left-width: 2px; }
+  @media (min-width: 760px) { ol.lineage li { grid-template-columns: 158px 1fr; } }
+  ol.lineage b { font-family: var(--mono); font-size: .92rem; font-weight: 500; }
+  ol.lineage em { font-style: normal; font-family: var(--mono); font-size: .76rem; color: var(--ink-faint); }
+  ol.lineage p { margin: .15rem 0 0; font-size: .94rem; color: var(--ink-soft); }
+
+  /* ---------- documentación ---------- */
+  .docs { display: grid; gap: 1.35rem; margin-top: 1.1rem; }
+  @media (min-width: 820px) { .docs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .docs h3 { margin-top: 0; }
+  .docs ul { margin: 0; padding: 0; list-style: none; }
+  .docs li {
+    padding: .42rem 0; border-bottom: 1px solid var(--rule);
+    font-family: var(--mono); font-size: .82rem; color: var(--ink-soft);
+  }
+  .docs li:last-child { border-bottom: 0; }
+  .docs li a { color: var(--ink); }
+
+  footer {
+    border-top: 1px solid var(--rule); margin-top: clamp(2.2rem, 4vw, 3rem);
+    padding: 1.2rem 0 clamp(2.5rem, 5vw, 3.5rem);
+    font-family: var(--mono); font-size: .78rem; color: var(--ink-soft);
+  }
+  footer p { max-width: 78ch; margin: 0 0 .5rem; }
+
+  /* ---------- movimiento: un único momento, en la carga ---------- */
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .masthead h1, .masthead .lede, .masthead .figures { animation: rise .5s ease-out both; }
+  .masthead .lede { animation-delay: .1s; }
+  .masthead .figures { animation-delay: .18s; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+  @media (prefers-contrast: more) {
+    :root { --ink: #12152c; --ink-soft: #333850; --ink-faint: #454b66; --rule: #b9c0d3; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Ir al contenido</a>
+
+<div class="shell">
+  <nav class="rail" aria-label="Secciones del índice">
+    <p class="rail-title">Índice</p>
+    <ol>
+      <li><a href="#servidos">Perfiles servidos</a></li>
+      <li><a href="#hardware">Hardware</a></li>
+      <li><a href="#catalogo">Catálogo</a></li>
+      <li><a href="#velocidad">Velocidad medida</a></li>
+      <li><a href="#subarbola">Subárboles</a></li>
+      <li><a href="#lanzadores">Lanzadores</a></li>
+      <li><a href="#instalacion">Instalación</a></li>
+      <li><a href="#red">Red y API</a></li>
+      <li><a href="#linaje">Linaje de runtimes</a></li>
+      <li><a href="#docs">Documentación</a></li>
+    </ol>
+  </nav>
+
+  <main id="contenido">
+    <header class="masthead">
+      <p class="source-line">
+        <a href="local-inference-setup/README.md">local-inference-setup</a> · espejo en GitHub · rama <code>main</code> · última entrega 22 nov 2026
+      </p>
+      <h1>El puerto 8080 sirve 32 perfiles <span class="thin">de modelos locales</span></h1>
+      <p class="lede">
+        Configuración declarativa de lanzadores autocontenidos para inferencia local: manifiestos de descarga,
+        scripts de validación y un <code>.cmd</code> por perfil con todos los parámetros de inferencia escritos a
+        la vista. El repositorio no incluye pesos ni runtimes: se obtienen con sus scripts de instalación.
+      </p>
+
+      <div class="figures">
+        <div><b>17</b><span>modelos en el catálogo</span></div>
+        <div><b>52</b><span>perfiles de arranque</span></div>
+        <div><b>32</b><span>alias en los clientes</span></div>
+        <div><b>23</b><span>fichas de modelo</span></div>
+        <div><b>83</b><span>entradas de changelog</span></div>
+      </div>
+    </header>
+
+    <section id="servidos">
+      <div class="served">
+        <h2><i data-lucide="radio-tower" aria-hidden="true"></i>Lo que está registrado en los clientes</h2>
+        <p class="note">Desde el 22 nov 2026 · 30 alias de llama.cpp y 2 de Strata · un perfil puede ocupar el 8080 a la vez</p>
+
+        <div class="served-group">
+          <h3>Cyber Tiel Coder 35B A3B</h3>
+          <div class="chips">
+            <span class="chip sky">131k</span><span class="chip sky">262k</span>
+            <span class="chip sky">visión 131k</span><span class="chip sky">visión 262k</span>
+          </div>
+        </div>
+        <div class="served-group">
+          <h3>Occult Nail 1.0 35B A3B</h3>
+          <div class="chips">
+            <span class="chip sky">131k</span><span class="chip sky">262k</span>
+            <span class="chip sky">visión 131k</span><span class="chip sky">visión 262k</span>
+          </div>
+        </div>
+        <div class="served-group">
+          <h3>Qwen3.6 35B A3B</h3>
+          <div class="chips">
+            <span class="chip sky">131k</span><span class="chip sky">262k</span>
+            <span class="chip sky">visión 131k</span><span class="chip sky">visión 262k</span>
+          </div>
+        </div>
+        <div class="served-group">
+          <h3>Los cuatro Gemma 4</h3>
+          <div class="chips">
+            <span class="chip sky">26B A4B QAT · 131k, 262k, visión 131k, visión 262k</span>
+            <span class="chip sky">12B QAT · 131k, 262k, MTP 131k, MTP 262k, visión 131k, visión 262k</span>
+            <span class="chip sky">12B Uncensored Balanced · las seis mismas</span>
+            <span class="chip sky">E4B QAT · 131k, visión 131k</span>
+          </div>
+        </div>
+        <div class="served-group">
+          <h3>Qwen3.8 Flash Next GSQ-RCO</h3>
+          <div class="chips">
+            <span class="chip lilac">131k</span><span class="chip lilac">200k</span>
+            <span class="chip lilac">servido por Strata</span>
+          </div>
+        </div>
+
+        <p class="tight">Los otros 10 modelos del catálogo conservan pesos y lanzadores en <code>D:\LLM</code>, sin alias en ningún cliente.</p>
+
+        <div class="legend">
+          <span><span class="swatch" style="background:var(--sky)"></span>llama.cpp</span>
+          <span><span class="swatch" style="background:var(--lilac)"></span>Strata</span>
+          <span><span class="swatch" style="background:var(--mint)"></span>NeMo-Speech.cpp</span>
+          <span><span class="swatch" style="background:var(--butter)"></span>experimental</span>
+          <span>El color indica el motor que sirve cada modelo en todo el documento.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="hardware">
+      <h2><i data-lucide="cpu" aria-hidden="true"></i>Hardware de referencia</h2>
+      <p>Todo el catálogo está dimensionado sobre esta máquina. Memoria total no equivale a memoria disponible.</p>
+      <div class="table-wrap">
+        <table>
+          <caption>Componentes relevantes para inferencia</caption>
+          <thead><tr><th scope="col">Componente</th><th scope="col">Especificación</th></tr></thead>
+          <tbody>
+            <tr><td>CPU</td><td>AMD Ryzen 7 9800X3D</td></tr>
+            <tr><td>GPU</td><td>RTX 5080 16 GB GDDR7 · PCIe 4.0 x16</td></tr>
+            <tr><td>RAM</td><td>64 GB DDR5-6000 (2 × 32 GB)</td></tr>
+            <tr><td>Almacenamiento</td><td>2 TB NVMe principal + 2 TB NVMe PCIe 4.0 secundario</td></tr>
+            <tr><td>Raíz del despliegue</td><td><code>D:\LLM</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="catalogo">
+      <h2><i data-lucide="boxes" aria-hidden="true"></i>Catálogo de modelos</h2>
+      <p>
+        Los perfiles son automáticos: cada lanzador declara <code>--gpu-layers auto --fit on</code> y deja que el
+        runtime resuelva la colocación. El contexto se declara de forma explícita, porque <code>--fit</code> solo
+        ajusta argumentos no fijados. Etiquetas locales: <code>32k</code>, <code>65k</code>, <code>96k</code>,
+        <code>131k</code>, <code>262k</code> y <code>200k</code> (204.800, el paso de 200K del menú de Strata).
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <caption>config/catalog.psd1 · 17 modelos · el manifiesto fija repositorio y revisión exactos</caption>
+          <thead>
+            <tr>
+              <th scope="col">Identificador</th><th scope="col">Editor</th>
+              <th scope="col">Cuantización</th><th scope="col">Perfiles</th>
+              <th scope="col">En clientes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group"><th colspan="5" scope="col">peculiar-ragdoll · modelos agentic de 35B A3B</th></tr>
+            <tr><td class="id">cyber-tiel-coder-35b-a3b</td><td class="pub">peculiar-ragdoll</td><td class="quant">UD-Q4_K_XL</td><td class="profiles">2 texto · 2 visión</td><td><span class="tag on"></span>4 alias</td></tr>
+            <tr><td class="id">occult-nail-1.0-35b-a3b</td><td class="pub">peculiar-ragdoll</td><td class="quant">UD-Q4_K_XL</td><td class="profiles">2 texto · 2 visión</td><td><span class="tag on"></span>4 alias</td></tr>
+            <tr><td class="id">tiel-coder-35b-a3b</td><td class="pub">peculiar-ragdoll</td><td class="quant">UD-Q4_K_XL</td><td class="profiles">2 texto · 2 visión</td><td><span class="tag off"></span>—</td></tr>
+            <tr><td class="id">nail-qwen3.6-35b-a3b</td><td class="pub">peculiar-ragdoll</td><td class="quant">UD-Q4_K_XL</td><td class="profiles">2 texto · 2 visión</td><td><span class="tag off"></span>—</td></tr>
+
+            <tr class="group"><th colspan="5" scope="col">unsloth, google, ornith-ai, AtomicChat, Apexintelligence · base y variantes</th></tr>
+            <tr><td class="id">qwen3.6-35b-a3b</td><td class="pub">unsloth</td><td class="quant">UD-Q4_K_XL</td><td class="profiles">2 texto · 2 visión</td><td><span class="tag on"></span>4 alias</td></tr>
+            <tr><td class="id">flint</td><td class="pub">unsloth</td><td class="quant">UD-Q4_K_XL</td><td class="profiles">2 texto</td><td><span class="tag off"></span>—</td></tr>
+            <tr><td class="id">gemma-4-26b-a4b-it-qat</td><td class="pub">unsloth</td><td class="quant">UD-Q4_K_XL</td><td class="profiles">2 texto · 2 visión</td><td><span class="tag on"></span>4 alias</td></tr>
+            <tr><td class="id">gemma-4-12b-it-qat</td><td class="pub">unsloth</td><td class="quant">UD-Q4_K_XL + borrador MTP</td><td class="profiles">2 texto · 2 MTP · 2 visión</td><td><span class="tag on"></span>6 alias</td></tr>
+            <tr><td class="id">gemma-4-12b-uncensored-balanced</td><td class="pub">HauhauCS</td><td class="quant">Q4_K_M + borrador MTP</td><td class="profiles">2 texto · 2 MTP · 2 visión</td><td><span class="tag on"></span>6 alias</td></tr>
+            <tr><td class="id">gemma-4-e4b-it-qat</td><td class="pub">google</td><td class="quant">q4_0 QAT</td><td class="profiles">1 texto · 1 visión</td><td><span class="tag on"></span>2 alias</td></tr>
+            <tr><td class="id">ornith-1.5-9b</td><td class="pub">ornith-ai</td><td class="quant">Q4_K_M</td><td class="profiles">2 texto · 2 visión</td><td><span class="tag off"></span>—</td></tr>
+            <tr><td class="id">nemotron-3.5-lightning-30b-a3b</td><td class="pub">AtomicChat</td><td class="quant">AD-IQ4_NL</td><td class="profiles">2 texto</td><td><span class="tag off"></span>—</td></tr>
+            <tr><td class="id">apex-35b-v1.0</td><td class="pub">Apexintelligence-AI</td><td class="quant">Q4_K_S</td><td class="profiles">2 texto</td><td><span class="tag off"></span>—</td></tr>
+
+            <tr class="group"><th colspan="5" scope="col">LiquidAI · familia LFM3, contexto nativo corto</th></tr>
+            <tr><td class="id">lfm3-1.7b</td><td class="pub">LiquidAI</td><td class="quant">Q8_0</td><td class="profiles">1 texto 262k</td><td><span class="tag off"></span>—</td></tr>
+            <tr><td class="id">lfm3-vl-2b</td><td class="pub">LiquidAI</td><td class="quant">Q8_0</td><td class="profiles">1 visión 128k</td><td><span class="tag off"></span>—</td></tr>
+            <tr><td class="id">lfm3-audio-2b</td><td class="pub">LiquidAI</td><td class="quant">Q8_0</td><td class="profiles">1 audio 32k</td><td><span class="tag off"></span>excluido por decisión</td></tr>
+            <tr><td class="id">lfm3-omni-2b</td><td class="pub">LiquidAI</td><td class="quant">Q8_0</td><td class="profiles">1 omni 32k</td><td><span class="tag off"></span>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tight">
+        <span class="tag on"></span>registrado en Pi, OpenCode y DSH · <span class="tag off"></span>instalado sin alias
+        en clientes. <code>lfm3-audio-2b-audio-32k</code> no se registra en ninguno porque ningún cliente envía ni
+        reproduce audio. Nemotron 3.5 Lightning es el único modelo fuera de <code>UD-Q4_K_XL</code> en su familia: los
+        K-quants no encajan en sus formas de tensor.
+      </p>
+    </section>
+
+    <section id="velocidad">
+      <h2><i data-lucide="gauge" aria-hidden="true"></i>Velocidad medida</h2>
+      <p>
+        Once modelos tienen medición propia en sus fichas. No es un benchmark controlado: cada cifra viene de la
+        calibración de una o dos ejecuciones, en fechas y con prompts distintos, y se midió con la GPU ya ocupada
+        por 1,1–1,9 GB de escritorio. Cada bloque compara solo lo comparable.
+      </p>
+
+      <h3>Generación con contexto corto · perfil de 131K</h3>
+      <p class="tight">
+        Token/s de decodificación con prompt breve. La serie <code>UD-Q4_K_XL</code> (26–30 oct 2026) usa 1.024
+        tokens de salida con <code>enable_thinking: false</code> y <code>temperature 0</code>; las fichas de
+        noviembre (1–22 nov) miden una muestra de código. Escala común: 246,4 tok/s.
+      </p>
+      <div class="bars">
+        <div class="bar-row">
+          <span class="bar-name">Gemma 4 12B QAT · MTP 131K <span>16 nov</span></span>
+          <span class="bar-val">246,4</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:100%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Gemma 4 E4B QAT · 131K <span>17 nov</span></span>
+          <span class="bar-val">158,1</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:64%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Qwen3.8 Flash Next · Strata 131K <span>22 nov</span></span>
+          <span class="bar-val">104–129</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill lilac" style="--w:52%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Ornith 1.5 9B · 131K <span>16 nov</span></span>
+          <span class="bar-val">117</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:47%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Nemotron 3.5 Lightning · 131K <span>28 oct</span></span>
+          <span class="bar-val">91,6</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:37%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Gemma 4 12B QAT · sin MTP <span>16 nov</span></span>
+          <span class="bar-val">84,0</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:34%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Cyber Tiel Coder · 131K <span>28 oct</span></span>
+          <span class="bar-val">82,4</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:33%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Tiel Coder · 131K <span>28 oct</span></span>
+          <span class="bar-val">76,3</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:31%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Nail Qwen3.6 · 131K <span>28 oct</span></span>
+          <span class="bar-val">75,9</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:31%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Occult Nail · 131K <span>28 oct</span></span>
+          <span class="bar-val">74,9</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:30%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Qwen3.6 35B · 131K <span>11 nov</span></span>
+          <span class="bar-val">68–73</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:30%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Gemma 4 26B A4B sin censura · 131K <span>2 nov · retirado</span></span>
+          <span class="bar-val">66–72</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:29%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Flint · 131K <span>30 oct</span></span>
+          <span class="bar-val">71,0</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:29%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Apex 35B · 131K <span>1 nov</span></span>
+          <span class="bar-val">70,8</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:29%"></span></span>
+        </div>
+      </div>
+
+      <h3>Prefill con prompt largo</h3>
+      <p class="tight">
+        Token/s de procesamiento del prompt, que es lo que se nota al arrastrar una conversación larga. Escala
+        común: 11.839 tok/s. El número entre paréntesis son los tokens del prompt empleado.
+      </p>
+      <div class="bars">
+        <div class="bar-row">
+          <span class="bar-name">Gemma 4 E4B QAT · 131K <span>54.442 tokens</span></span>
+          <span class="bar-val">11.839</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:100%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Ornith 1.5 9B · 131K <span>55.844</span></span>
+          <span class="bar-val">5.487</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:46%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Gemma 4 12B QAT · 131K <span>56.941</span></span>
+          <span class="bar-val">3.147</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:27%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Nemotron 3.5 Lightning · 131K <span>98.727</span></span>
+          <span class="bar-val">2.737</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:23%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Occult Nail · 131K <span>99.547</span></span>
+          <span class="bar-val">2.579</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:22%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Apex 35B · 131K <span>31.202</span></span>
+          <span class="bar-val">2.487</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:21%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Qwen3.6 35B · 131K <span>24.494</span></span>
+          <span class="bar-val">2.311</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:20%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Cyber Tiel Coder · 131K <span>99.140</span></span>
+          <span class="bar-val">1.978</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:17%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Nail Qwen3.6 · 131K <span>99.143</span></span>
+          <span class="bar-val">1.955</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:17%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Tiel Coder · 131K <span>99.139</span></span>
+          <span class="bar-val">1.900</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:16%"></span></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-name">Flint · 131K <span>112.342</span></span>
+          <span class="bar-val">1.410</span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill" style="--w:12%"></span></span>
+        </div>
+      </div>
+      <p class="tight">
+        Flash Next no tiene prefill medido: su ficha solo registra la generación que informa el propio motor de
+        Strata. Flint es el caso opuesto a los Gemma 4: 750 tokens/s de prefill menos que Cyber Tiel con un prompt
+        parejo.
+      </p>
+
+      <h3>Cómo cae la generación al crecer el contexto</h3>
+      <p>
+        Es la diferencia que más pesa en el uso diario. Mismo modelo, mismo lanzador: decodificación con prompt
+        breve, tras un prompt de ~100K, y tras uno de ~225K en el perfil de 262K. Los Gemma 4 de noviembre midieron
+        54–57K en lugar de 100K.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption>Decodificación en tok/s según la profundidad del contexto</caption>
+          <thead>
+            <tr>
+              <th scope="col">Modelo</th><th scope="col">Prompt corto</th><th scope="col">Tras ~55–100K</th>
+              <th scope="col">Tras ~113–225K</th><th scope="col">Caída</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Flint</td><td class="quant">71,0</td><td class="quant">45,2</td><td class="quant">32,3</td><td>−54 %</td></tr>
+            <tr><td>Nail Qwen3.6 35B A3B</td><td class="quant">75,9</td><td class="quant">58,8</td><td class="quant">39,5</td><td>−48 %</td></tr>
+            <tr><td>Gemma 4 E4B QAT</td><td class="quant">158,1</td><td class="quant">81,5</td><td class="quant">—</td><td>−48 %</td></tr>
+            <tr><td>Occult Nail 1.0 35B A3B</td><td class="quant">74,9</td><td class="quant">53,0</td><td class="quant">40,5</td><td>−46 %</td></tr>
+            <tr><td>Cyber Tiel Coder 35B A3B</td><td class="quant">82,4</td><td class="quant">61,5</td><td class="quant">43,6</td><td>−47 %</td></tr>
+            <tr><td>Tiel Coder 35B A3B</td><td class="quant">76,3</td><td class="quant">56,3</td><td class="quant">44,2</td><td>−42 %</td></tr>
+            <tr><td>Gemma 4 12B QAT · MTP</td><td class="quant">246,4</td><td class="quant">143,8</td><td class="quant">143,7</td><td>−42 %</td></tr>
+            <tr><td>Apex 35B V1.0</td><td class="quant">70,8 <span>31K</span></td><td class="quant">58,2 <span>113K</span></td><td class="quant">43,2 <span>221K</span></td><td>−39 %</td></tr>
+            <tr><td>Nemotron 3.5 Lightning 30B A3B</td><td class="quant">91,6</td><td class="quant">70,3</td><td class="quant">56,8</td><td>−38 %</td></tr>
+            <tr><td>Gemma 4 12B QAT</td><td class="quant">84,0</td><td class="quant">64,5</td><td class="quant">65,4</td><td>−23 %</td></tr>
+            <tr><td>Ornith 1.5 9B</td><td class="quant">117</td><td class="quant">92</td><td class="quant">92</td><td>−21 %</td></tr>
+            <tr><td>Gemma 4 26B A4B sin censura <span>retirado</span></td><td class="quant">66–72</td><td class="quant">58,1</td><td class="quant">48,6</td><td>−25 %</td></tr>
+            <tr><td>Qwen3.8 Flash Next <span>Strata</span></td><td class="quant">106 <span>0–20K</span></td><td class="quant">129 <span>80–100K</span></td><td class="quant">115 <span>100–103K</span></td><td>sin caída</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tight">
+        La caída es la que predice la KV: pasado el KV que cabe en la VRAM (32.768 tokens en Flash Next), el motor
+        llega a leer 20–100 MiB de KV desde la RAM por token generado. Flash Next es la excepción medida: con
+        <code>--vram-reserve-mib 1536</code> sus medianas se mantienen entre 104 y 129 tok/s en todas las bandas de
+        0 a 103K. Sin esa reserva había caído de 100–169 a 53–68 tok/s, y el escalón coincidió con la VRAM agotada.
+      </p>
+
+      <h3>Lo que cambia el borrador y el runtime</h3>
+      <div class="table-wrap">
+        <table>
+          <caption>Comparaciones publicadas en fichas y changelogs</caption>
+          <thead><tr><th scope="col">Comparación</th><th scope="col">Resultado medido</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Gemma 4 12B QAT con MTP, código</td>
+              <td>84,0 → 246,4 tok/s (≈2,7 veces); aceptación de borradores 76–79 %</td>
+            </tr>
+            <tr>
+              <td>Gemma 4 12B QAT con MTP, prompt de 57K</td>
+              <td>64,5 → 143,8 tok/s (2,2 veces); aceptación 67 %</td>
+            </tr>
+            <tr>
+              <td>Apex 35B con un borrador MTP temporal</td>
+              <td>código +17 %, razonamiento +21 % y +25 %, prosa −29 % (aceptación 28 %)</td>
+            </tr>
+            <tr>
+              <td>Runtime b12359 frente a b11981 en Qwen3.6 35B-A3B sin MTP</td>
+              <td>decode 6–9 % más rápido y prefill 6–8 % más rápido</td>
+            </tr>
+            <tr>
+              <td>6 hilos frente a 8 en Cyber Tiel Coder 131K</td>
+              <td>prefill 2.286 frente a 2.187 tok/s y generación 71,9 frente a 68,9 tok/s</td>
+            </tr>
+            <tr>
+              <td>Strata frente a llama.cpp en Qwen3.6 35B-A3B a 131K</td>
+              <td>llama.cpp: prefill 2.311 tok/s y decode 68–73 tok/s; Strata se retiró ese día</td>
+            </tr>
+            <tr>
+              <td>Inkling 2 Mini, retirado el 22 nov <span>maya-ik2 frente a llama.cpp</span></td>
+              <td>35,9–41,6 tok/s con prompt corto y 27,4 tras 203.659 tokens, frente a 45,6 a 65K y ~9 a 131K en llama.cpp</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Sin medición documentada</h3>
+      <p class="tight">
+        <code>gemma-4-26b-a4b-it-qat</code> y <code>gemma-4-12b-uncensored-balanced</code> tienen sus perfiles sin
+        ejecutar por petición del usuario; de la familia LFM3 solo hay smoke y picos de VRAM; los perfiles de visión
+        de <code>ornith-1.5-9b</code> no llegaron a arrancar porque la GPU estaba ocupada. En esos casos la ficha
+        declara el trabajo pendiente en lugar de prestar cifras de otros modelos.
+      </p>
+    </section>
+
+    <section id="subarbola">
+      <h2><i data-lucide="folder-tree" aria-hidden="true"></i>Cuatro raíces, un mismo par de scripts</h2>
+      <p>
+        El catálogo de llama.cpp no lo abarca todo. Cada raíz aparte conserva la misma estructura
+        (<code>config/</code>, <code>scripts/models/</code>) para que los scripts comunes funcionen con
+        <code>-RootDirectory</code>, y reutiliza runtimes y pesos sin copiarlos.
+      </p>
+
+      <div class="sub strata">
+        <h3>strata/ · Qwen3.8 Flash Next sobre Strata</h3>
+        <p>
+          MoE de 512 expertos por capa en 48 capas, 10 activos por token, contexto nativo 262.144, cuantizado en
+          GSQ-RCO IQ3_XXS por ISTA-DASLab. Lo sirve Strata (Terminal y motor 0.1.65), no llama.cpp. Solo texto,
+          en el mismo puerto 8080. Fuera de <code>Test-Llm.ps1</code> y del contrato de grupos de ADR-0001, pero
+          dentro de la propagación a clientes desde que se adoptó el 22 nov 2026.
+        </p>
+        <dl>
+          <dt>Pesos</dt><dd>IQ3_XXS-00001 (47,04 GB) + shard 2 de tabla n-gram (28,80 GB)</dd>
+          <dt>Preparación</dt><dd>pack iq3_xxs (1.079 tensores) y borrador DFlash2 de 1,21 GB</dd>
+          <dt>Perfiles</dt><dd>start-text-131k.cmd (131.072) · start-text-200k.cmd (204.800, sin arrancar)</dd>
+          <dt>Motor</dt><dd>runtimes/strata/0.2.19/ · se conserva 0.2.18 para volver atrás</dd>
+          <dt>Medido</dt><dd>104–129 tok/s de media por banda de contexto tras reservar 1.536 MiB de VRAM</dd>
+          <dt>Ficha</dt><dd><a href="local-inference-setup/docs/overview/models/qwen3.8-flash-next-gsq-rco.md">docs/overview/models/qwen3.8-flash-next-gsq-rco.md</a></dd>
+        </dl>
+        <p class="tight">
+          La variante Coder (IQ1_M, expertos recortados a 256) se dio de alta y se retiró el mismo día: dio
+          resultados sustancialmente peores. Su ficha queda como registro y las rutas que cita ya no existen.
+        </p>
+      </div>
+
+      <div class="sub speech">
+        <h3>speech/ · transcripción de voz</h3>
+        <p>
+          NeMo-Speech.cpp, aparte del catálogo de chat y sin registro en clientes: lo consume el plugin
+          <code>video-workbench</code> por HTTP en el puerto 8090 (loopback).
+        </p>
+        <dl>
+          <dt>Modelo</dt><dd>nemotron-3.5-transcribe-30b-a4b</dd>
+          <dt>Lanzador</dt><dd>start-transcribe-hybrid-32k.cmd</dd>
+          <dt>Runtime</dt><dd>runtimes/nemo-speech/nightly-e790e46-cuda/</dd>
+        </dl>
+      </div>
+
+      <div class="sub exp">
+        <h3>experimental/ · asistente de terminal</h3>
+        <p>
+          Raíz fuera del catálogo y sin registrar en clientes, en el puerto 8081. Un doble clic en
+          <code>Start-Assistant.cmd</code> comprueba el puerto, arranca el modelo en segundo plano, responde cada
+          línea como petición independiente sin historial, copia la respuesta al portapapeles y detiene todo el
+          árbol de procesos con <code>/exit</code> o <code>Ctrl+C</code>. El prompt de sistema es un archivo de
+          instrucciones obligatorio y solo texto, sin herramientas declaradas.
+        </p>
+      </div>
+
+      <div class="sub llama">
+        <h3>El catálogo principal</h3>
+        <p class="tight">
+          <code>config/catalog.psd1</code>, los manifiestos <code>config/models/&lt;model-id&gt;.psd1</code> (solo
+          descarga e integridad) y los 52 lanzadores <code>scripts/models/&lt;model-id&gt;/start-*.cmd</code>.
+          <code>Test-Llm.ps1</code> valida catálogo, grupos, rutas y alias.
+        </p>
+      </div>
+    </section>
+
+    <section id="lanzadores">
+      <h2><i data-lucide="square-terminal" aria-hidden="true"></i>Un lanzador por perfil, sin argumentos ocultos</h2>
+      <p>
+        Cada <code>.cmd</code> contiene la ruta del runtime, la del modelo y todos los parámetros efectivos de su
+        perfil, repartidos en ocho grupos declarados literalmente: <code>MODEL_ARGS</code>,
+        <code>PERFORMANCE_ARGS</code>, <code>NETWORK_ARGS</code>, <code>REASONING_ARGS</code>,
+        <code>SAMPLING_ARGS</code>, <code>RUNTIME_ARGS</code>, <code>VISION_ARGS</code> y <code>MTP_ARGS</code>;
+        los vacíos también existen. Llama al servidor directamente: no hay motor de arranque común, ni herencia de
+        parámetros, ni <code>%*</code>. (<a href="local-inference-setup/docs/adr/ADR-0001-self-contained-model-launchers.md">ADR-0001</a>)
+      </p>
+
+      <div class="cmd">
+        <p>scripts\models\qwen3.6-35b-a3b\start-agentic-auto-131k-1024.cmd</p>
+        <p>start-agentic-auto<span>-vision</span>-131k-<span>2048</span>.cmd <span>→ el último número es batch, no margen de VRAM</span></p>
+      </div>
+
+      <p>
+        Los perfiles de visión usan <code>--fit-target 2048</code> porque <code>--fit</code> no da por contabilizado
+        el proyector, y los de los Gemma 4 12B fijan la imagen en 1.120 tokens con batch 2048: la atención no causal
+        de la imagen debe caber en un ubatch. No se usa <code>--n-cpu-moe</code>: <code>--fit</code> coloca los pesos
+        con una excepción por capa.
+      </p>
+
+      <h3>El alias es una etiqueta, no una ruta</h3>
+      <p>
+        Cada lanzador declara <code>--alias &lt;model-id&gt;,&lt;perfil&gt;</code>. El id canónico va primero para
+        que los clientes antiguos sigan funcionando y <code>/v1/models</code> devuelva los dos nombres. El segundo
+        alias identifica el perfil ya iniciado: no enruta, no elige contexto y no arranca nada. Todos los perfiles
+        apuntan al mismo punto de conexión, así que hay que elegir la entrada del cliente que corresponde al
+        lanzador que se arrancó. <code>Test-Llm.ps1</code> exige el id canónico primero, alias de perfil únicos en
+        todo el catálogo y rechaza un alias que eclipse un id de modelo.
+      </p>
+
+      <h3>Razonamiento y borradores</h3>
+      <p>
+        Se usa <code>--reasoning auto</code>: con <code>--on</code>, un cliente no podría apagar el razonamiento por
+        petición. Los únicos perfiles activos con decodificación especulativa son los cuatro MTP de los Gemma 4 12B
+        (aceptación del 67–79 % y generación 2,2–2,7 veces más rápida, medido en un denso que entra entero en la
+        GPU). El MTP integrado se retiró el 28 oct 2026: con expertos en CPU, la baja aceptación en prosa y
+        razonamiento lo hacía más lento. Flash Next draftea con DFlash2, que Strata elige por el nombre del perfil.
+      </p>
+    </section>
+
+    <section id="instalacion">
+      <h2><i data-lucide="download" aria-hidden="true"></i>Instalar, descargar, validar</h2>
+      <p>El orden es siempre el mismo: configuración global, runtime si falta, descarga, integridad, puerto libre y prueba funcional por perfil.</p>
+      <div class="cmd">
+        <p>Install-LlamaRuntime.ps1 <span>· instala b12359-cuda13.5; -Version b11981 revierte</span></p>
+        <p>Download-Model.ps1 -Model nail-qwen3.6-35b-a3b <span>· curl.exe, reanuda .partial, comprueba tamaño y SHA-256 antes de instalar</span></p>
+        <p>Test-ModelIntegrity.ps1 -Model nail-qwen3.6-35b-a3b <span>· todos los artefactos del modelo</span></p>
+        <p>Test-Llm.ps1 -ConfigurationOnly <span>· valida catálogo, grupos, rutas y colisiones de alias sin cargar pesos</span></p>
+        <p>Test-Llm.ps1 -Model &lt;id&gt; -Profile &lt;perfil&gt; <span>· smoke de hasta 16 tokens; termina solo el árbol que inicia</span></p>
+      </div>
+      <p class="tight">
+        El smoke no prueba calidad, contexto completo, herramientas ni la ganancia de MTP. Antes de declarar un
+        perfil viable hace falta la calibración mínima bajo carga: memoria durante carga, prefill y generación de una
+        petición representativa. Los resultados se guardan en <code>logs/validation/</code>. Solo 20 perfiles están
+        calibrados bajo carga.
+      </p>
+    </section>
+
+    <section id="red">
+      <h2><i data-lucide="network" aria-hidden="true"></i>Red y API</h2>
+      <div class="table-wrap">
+        <table>
+          <caption>Un perfil por puerto y sin autenticación: solo red privada confiable, sin reglas de firewall</caption>
+          <thead><tr><th scope="col">Endpoint</th><th scope="col">Qué devuelve</th></tr></thead>
+          <tbody>
+            <tr><td class="id">http://localhost:8080</td><td>Interfaz web del servidor de chat y de Strata</td></tr>
+            <tr><td class="id">http://localhost:8080/v1</td><td>API compatible con OpenAI</td></tr>
+            <tr><td class="id">/health</td><td>Responde solo con un lanzador activo; sirve también para saber si el 8080 está libre</td></tr>
+            <tr><td class="id">/v1/models</td><td>Id canónico y alias del perfil en marcha</td></tr>
+            <tr><td class="id">127.0.0.1:8090</td><td>Transcripción de voz (NeMo-Speech.cpp)</td></tr>
+            <tr><td class="id">192.168.1.100:8080/v1</td><td>Dirección histórica de los clientes Pi y OpenCode en WSL</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tight">
+        Los perfiles escuchan en <code>0.0.0.0:8080</code>. Tras cambiar un lanzador hay que reiniciar el servidor;
+        DSH necesita reiniciarse para ver los cambios de su catálogo global. Pi y OpenCode releen la configuración al
+        arrancar.
+      </p>
+    </section>
+
+    <section id="linaje">
+      <h2><i data-lucide="git-branch" aria-hidden="true"></i>Linaje del runtime</h2>
+      <p>
+        Cada build tiene carpeta propia, paquetes verificados y pruebas. Los retirados pueden reinstalarse. Antes de
+        adoptar un build nuevo se compara con el actual en el cliente real del usuario, no solo con pruebas
+        sintéticas.
+      </p>
+      <ol class="lineage">
+        <li><b>b11269-cuda13.4</b><em>retirado 22 oct 2026</em><p>El más antiguo del registro; todos los lanzadores lo usaron antes.</p></li>
+        <li><b>b11827-cuda13.4</b><em>desinstalado 26 oct 2026</em><p>Lo usó <code>flint</code> hasta la retirada del modelo.</p></li>
+        <li><b>b11551-cuda13.4</b><em>13 oct → 30 oct 2026</em><p>Build de catálogo durante dos semanas, con un paréntesis de tres días en b11669.</p></li>
+        <li><b>b11669-cuda13.4</b><em>27 oct → 28 oct 2026</em><p>llama.cpp v0.7.0. Se volvió a b11551 porque iba peor a través de Pi.</p></li>
+        <li><b>b11981-cuda13.4</b><em>30 oct → 15 nov 2026</em><p>Sustituyó a b11551 y se eliminó el día del relevo.</p></li>
+        <li><b>b12359-cuda13.5</b><em>activo desde 15 nov 2026</em><p>Build de la versión estable v1.0.0, commit <code>b1b770d90</code>. En Qwen3.6-35B-A3B sin MTP midió un decode 6–9 % y un prefill 6–8 % más rápidos que b11981.</p></li>
+      </ol>
+      <p class="tight">
+        Aparte: Strata pasó de 0.2.18 a 0.2.19 el 22 nov 2026 (motor 0.1.65, los mismos argumentos para este
+        hardware) y NeMo-Speech.cpp está en <code>nightly-e790e46-cuda</code>. Un runtime compilado desde fuente para
+        LFM3 se usó del 29 oct al 1 nov 2026 y se eliminó con esos modelos.
+      </p>
+    </section>
+
+    <section id="docs">
+      <h2><i data-lucide="book-open" aria-hidden="true"></i>Documentación</h2>
+      <p>El changelog va del 7 ago al 22 nov de 2026: 83 entradas que registran altas, retiradas y cambios de runtime con su medición.</p>
+      <div class="docs">
+        <div>
+          <h3>Guías y decisión</h3>
+          <ul>
+            <li><a href="local-inference-setup/docs/overview/inference-backend.md">docs/overview/inference-backend.md</a></li>
+            <li><a href="local-inference-setup/docs/overview/model-management.md">docs/overview/model-management.md</a></li>
+            <li><a href="local-inference-setup/docs/overview/adding-a-model.md">docs/overview/adding-a-model.md</a></li>
+            <li><a href="local-inference-setup/docs/adr/ADR-0001-self-contained-model-launchers.md">ADR-0001 · lanzadores autocontenidos</a></li>
+            <li><a href="local-inference-setup/AGENTS.md">AGENTS.md · procedimiento desde un enlace de Hugging Face</a></li>
+            <li><a href="local-inference-setup/handoff.md">handoff.md · estado actual y copias de seguridad</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Últimas entradas del changelog</h3>
+          <ul>
+            <li>22 nov · vuelven a los clientes los 18 alias de los cuatro Gemma 4</li>
+            <li>22 nov · los clientes solo registran cuatro modelos</li>
+            <li>22 nov · retirada completa de Inkling 2 Mini</li>
+            <li>22 nov · Flash Next pasa a Strata 0.2.19</li>
+            <li>22 nov · perfil de 200K para Flash Next</li>
+            <li>22 nov · reserva de 1.536 MiB de VRAM para Flash Next</li>
+            <li>21 nov · alta de gemma-4-12b-uncensored-balanced</li>
+            <li>15 nov · runtime b12359 (llama.cpp v1.0.0)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Fichas de modelo · 23 archivos</h3>
+          <ul>
+            <li>Una por modelo en <a href="local-inference-setup/docs/overview/models">docs/overview/models/</a></li>
+            <li>Procedencia con revisión fijada, tamaños y SHA-256</li>
+            <li>Perfiles, alias, argumentos y su justificación</li>
+            <li>Pruebas realizadas y pendientes, límites de memoria</li>
+            <li>Dos fichas quedan como registro de modelos retirados</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Qué no está aquí</h3>
+          <ul>
+            <li>Pesos GGUF, runtimes y paquetes descargados</li>
+            <li>Las carpetas <code>logs/</code> y <code>models/</code> de <code>D:\LLM</code></li>
+            <li>Los catálogos de clientes, en <code>dotfiles-dsh</code>, <code>dotfiles-opencode</code> y <code>dotfiles-pi</code></li>
+            <li>La fuente de verdad operativa: los GGUF instalados y los argumentos de los lanzadores en <code>D:\LLM</code></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Página de índice generada a partir del contenido de <a href="local-inference-setup/README.md">local-inference-setup</a> (espejo git del despliegue de <code>D:\LLM</code>, rama <code>main</code>, 22 nov 2026).</p>
+      <p>Los recuentos cambian con cada alta o retirada: la fuente de verdad es el inventario actual, no este resumen.</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  function init() {
+    if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+
+    var rail = document.querySelector('.rail');
+    if (!rail) return;
+    var links = Array.prototype.slice.call(rail.querySelectorAll('a[href^="#"]'));
+    var targets = links.map(function (link) {
+      return document.getElementById(link.getAttribute('href').slice(1));
+    });
+
+    function setActive(id) {
+      links.forEach(function (link) {
+        var on = link.getAttribute('href') === '#' + id;
+        link.classList.toggle('is-active', on);
+        if (on) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
+    }
+
+    // La navegación por fragmento se resuelve aquí con scrollIntoView: funciona
+    // también cuando la página se muestra dentro de un marco que bloquea el hash.
+    links.forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        var target = document.getElementById(link.getAttribute('href').slice(1));
+        if (!target) return;
+        event.preventDefault();
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+        if (window.history && history.replaceState) {
+          history.replaceState(null, '', link.getAttribute('href'));
+        }
+        target.setAttribute('tabindex', '-1');
+        target.focus({ preventScroll: true });
+        setActive(target.id);
+      });
+    });
+
+    if (!('IntersectionObserver' in window)) return;
+    var visible = {};
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        visible[entry.target.id] = entry.isIntersecting;
+      });
+      for (var i = targets.length - 1; i >= 0; i--) {
+        if (targets[i] && visible[targets[i].id]) { setActive(targets[i].id); return; }
+      }
+    }, { rootMargin: '0px 0px -78% 0px', threshold: 0 });
+    targets.forEach(function (target) { if (target) observer.observe(target); });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>
