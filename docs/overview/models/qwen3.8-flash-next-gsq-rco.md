@@ -12,7 +12,7 @@ cuantización GSQ-RCO IQ3_XXS de ISTA-DASLab. Servido por Strata, no por llama.c
 | Shard 1 | `IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf`, 47.039.860.096 bytes, SHA-256 `219ea929900dfa9ef091f3aa473fdba6874b65fcb36526d7d851ac9e95856d15` |
 | Shard 2 (tabla n-gram) | `IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00002-of-00002.gguf`, 28.800.138.432 bytes, SHA-256 `316b46f3a2dbd68c900f43136ab9449f9dcc3725dfd8c794847c204bc161e113` |
 | Licencia | La tarjeta declara Apache 2.0 y dice que los pesos heredan la del modelo base (Qwen3.8 Flash Next) |
-| Motor | Strata 0.2.19 (Terminal y motor 0.1.65, `windows-x86_64-cuda-cuda13`), feed firmado (secuencia 131), desde el 2026-11-22; antes 0.2.18 (0.1.64, secuencia 130), que se conserva en `runtimes/strata/0.2.18/` |
+| Motor | Strata 0.2.20 (Terminal y motor 0.1.66, `windows-x86_64-cuda-cuda13`), feed firmado (secuencia 132), desde el 2026-11-23; antes 0.2.19 (0.1.65, secuencia 131), que se conserva en `runtimes/strata/0.2.19/`, y 0.2.18 (0.1.64) |
 
 SHA-256 del LFS de Hugging Face, comprobados por `Download-Model.ps1` y por `Test-ModelIntegrity.ps1`.
 
@@ -135,3 +135,18 @@ A 262K, sin arrancar todavía:
   `qwen3.8-flash-next-dflash2.q4_0.pack`, pero todos los arranques registrados en los logs (131K y
   200K) cargaron la variante `q4_0-selq4.pack`.
 - Pendiente: arrancarlo y comprobar la RAM disponible con prompts por encima de 205K.
+
+## Strata 0.2.20 (2026-11-23)
+
+Los tres lanzadores pasaron a `runtimes/strata/0.2.20/`. El instalador de 0.2.20 escribió para este equipo los mismos
+argumentos que 0.2.19; solo cambian las rutas del Terminal y del perfil de expertos, que es idéntico (mismo
+SHA-256). Se reutilizan el paquete y el borrador DFlash2 sin cambios.
+
+`serve --plan` de 0.2.19 y 0.2.20 sobre los mismos JSON: la única diferencia es la ventana del borrador, que el
+servidor sube de `--spec 6` a `--spec 8` a 131K y 200K; a 262K sigue en `--spec 6 --draft-conf 0.8`.
+
+Según las notas de la versión: corrige una regresión de 0.2.15 a 0.2.19 en Windows (WDDM) con tarjetas de 16 GB e
+`IQ3_XXS` (citan una RTX 4070 Ti SUPER), corrige salidas `NaN` con prompts de 24K a 45K y unifica el planificador
+de expertos GPU, RAM, CPU y SSD. La regresión coincide con este equipo y abarca 0.2.18, así que podría estar
+relacionada con el escalón de la sesión 2 (ver «Velocidad observada»), que desapareció con `--vram-reserve-mib`; es
+una hipótesis. La reserva se mantiene. Sin arrancar: el usuario lo prueba desde Pi.

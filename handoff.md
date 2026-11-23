@@ -189,6 +189,13 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 - 2026-11-23: DSH (repositorio `dotfiles-dsh` y global) apunta a `http://192.168.1.100:8080/v1` en vez de
   `127.0.0.1`, como Pi y OpenCode, para usar los modelos de este equipo desde el del trabajo. Copia:
   `cordis.patch.yml.bak-20261123-144152-llama-cpp-lan-url`.
+- 2026-11-23: Strata 0.2.20 (Terminal y motores 0.1.66) en `runtimes/strata/0.2.20/`; los tres lanzadores de
+  Flash-Next apuntan a él (mismos argumentos y alias; 0.2.19 se conserva para volver atrás). Alta de
+  `inkling-2-mini-ud-q4_k_xl` (GGUF `UD-Q4_K_XL` de Unsloth con borrador DSpark, sobre `strata-inkling`; texto a
+  131K, 262K y 1M, sin razonamiento), **sin arrancar**: el usuario lo prueba desde Pi. Los clientes listan 36 alias.
+  Copias: `cordis.patch.yml.bak-20261123-221219-inkling-ud-q4-strata-0.2.20` (DSH global) y
+  `*.bak-<timestamp>-inkling-ud-q4` en WSL (Pi, OpenCode y `model.json`)
+  ([changelog](docs/changelog/2026-11-23-strata-0.2.20-inkling-ud-q4_k_xl.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
@@ -263,8 +270,8 @@ grep -ho '"model_name": "[^"]*"' /d/LLM/strata/scripts/models/*/*.json | sed 's/
 sort -o served.txt served.txt
 # LFM3 Audio no se registra en ningún cliente (ninguno envía audio)
 sed -i '/^lfm3-audio-2b-audio-32k$/d' served.txt
-# Desde el 2026-11-22 los clientes solo registran estos ocho modelos (decisión del usuario; ver AGENTS.md)
-grep -E '^(cyber-tiel-coder-35b-a3b|occult-nail-1\.0-35b-a3b|qwen3\.6-35b-a3b|qwen3\.8-flash-next-gsq-rco|gemma-4-26b-a4b-it-qat|gemma-4-12b-it-qat|gemma-4-12b-uncensored-balanced|gemma-4-e4b-it-qat)-' served.txt > served.keep && mv served.keep served.txt
+# Desde el 2026-11-22 los clientes solo registran estos nueve modelos (decisión del usuario; ver AGENTS.md)
+grep -E '^(cyber-tiel-coder-35b-a3b|occult-nail-1\.0-35b-a3b|qwen3\.6-35b-a3b|qwen3\.8-flash-next-gsq-rco|gemma-4-26b-a4b-it-qat|gemma-4-12b-it-qat|gemma-4-12b-uncensored-balanced|gemma-4-e4b-it-qat|inkling-2-mini-ud-q4_k_xl)-' served.txt > served.keep && mv served.keep served.txt
 node -e "
 const fs=require('fs');const srv=fs.readFileSync('served.txt','utf8').trim().split('\n');
 const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');

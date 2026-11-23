@@ -4,8 +4,8 @@ for %%I in ("%~dp0..\..\..\..") do set "LLM_ROOT=%%~fI"
 
 rem Qwen3.8 Flash Next GSQ-RCO IQ3_XXS, text only, served by Strata instead of llama-server.
 rem The run config beside this file holds the engine arguments (pack, shards, context, KV); its paths are absolute under D:\LLM.
-set "STRATA_ROOT=%LLM_ROOT%\runtimes\strata\0.2.19"
-set "TERMINAL=%STRATA_ROOT%\appdata\Local\Strata\terminal\0.1.65"
+set "STRATA_ROOT=%LLM_ROOT%\runtimes\strata\0.2.20"
+set "TERMINAL=%STRATA_ROOT%\appdata\Local\Strata\terminal\0.1.66"
 set "PYTHON=%TERMINAL%\python\python.exe"
 set "SERVER_SCRIPT=%TERMINAL%\serve\server.py"
 set "ENGINE_CONFIG=%~dp0text-200k.json"
