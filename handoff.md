@@ -179,6 +179,13 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   12B Uncensored Balanced y E4B QAT), idénticos a los de antes de la poda: los clientes listan 32 alias. Copias:
   `cordis.patch.yml.bak-20261122-212307-gemma-restore` (DSH global) y `*.bak-20261122-212627-gemma-restore` en WSL (Pi, OpenCode y
   `model.json`) ([changelog](docs/changelog/2026-11-22-client-catalog-gemma-restore.md)).
+- 2026-11-23: vuelve el perfil de 262K de Flash-Next (`start-text-262k.cmd`, alias
+  `qwen3.8-flash-next-gsq-rco-262k`), creado por el usuario a partir del de 200K. Su JSON solo cambiaba el contexto
+  en `args_written`, así que la prueba de la mañana se hizo a 204.800 tokens con el alias `-200k`; se corrigieron
+  `args`, `model_name` y `log` (comprobado con `serve --plan`, sin arrancar a 262K). Los clientes listan 33 alias.
+  Copias: `cordis.patch.yml.bak-20261123-143129-qwen3.8-flash-next-262k` (DSH global) y
+  `*.bak-20261123-143309-qwen3.8-flash-next-262k` en WSL (Pi, OpenCode y `model.json`)
+  ([changelog](docs/changelog/2026-11-23-qwen3.8-flash-next-gsq-rco-262k.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

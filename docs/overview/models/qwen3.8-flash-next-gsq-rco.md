@@ -30,12 +30,14 @@ SHA-256 del LFS de Hugging Face, comprobados por `Download-Model.ps1` y por `Tes
 | --- | ---: | --- | --- |
 | `start-text-131k.cmd` | 131.072 | `qwen3.8-flash-next-gsq-rco-131k` | `0.0.0.0:8080` |
 | `start-text-200k.cmd` | 204.800 | `qwen3.8-flash-next-gsq-rco-200k` | `0.0.0.0:8080` |
+| `start-text-262k.cmd` | 262.144 | `qwen3.8-flash-next-gsq-rco-262k` | `0.0.0.0:8080` |
 
 El perfil de 262K se retiró el 2026-11-22, a petición del usuario: a 131K el modelo ya llena la RAM y la VRAM. El
 mismo día se añadió el de 200K (204.800 tokens, el paso de 200K del menú de Strata), con los mismos argumentos que el
-de 131K salvo `--max-context`. Estimación, sin medir: unos 2,4 GiB de KV en RAM fija (+0,9 GiB sobre 131K) y la
-misma VRAM (misma ventana de 32.768 tokens y misma reserva). Strata recomienda 128K como máximo con 64 GB; el perfil
-no se ha arrancado.
+de 131K salvo `--max-context`: 2,42 GiB de KV en RAM fija según el log (+0,9 GiB sobre 131K) y la misma VRAM (misma
+ventana de 32.768 tokens y misma reserva). Strata recomienda 128K como máximo con 64 GB.
+
+El 2026-11-23 el usuario volvió a añadir el de 262K (nativo), copiado del de 200K. Ver «Perfil de 262K».
 
 Argumentos del motor: los que escribe el instalador de Strata para este equipo (`--expert-cache auto`,
 `--prefill auto`, `--kv int8`, `--kv-resident 32768` con KV en RAM, perfil de expertos incluido), sin visión ni
@@ -109,3 +111,27 @@ por contexto: 106 tok/s a 0–20K, 104 a 20–40K, 123 a 40–60K, 119 a 60–80
 (mínimo 92, máximo 143). El escalón no apareció, lo que confirma en la práctica la hipótesis de la VRAM agotada. La
 pérdida en los picos no se puede aislar: la aceptación de borradores fue mayor (71–86 %) que en las sesiones
 anteriores.
+
+## Perfil de 262K (2026-11-23)
+
+El usuario creó `start-text-262k.cmd` y `text-262k.json` copiando los de 200K, pero el JSON solo cambió
+`--max-context` en `args_written`: `args`, que es lo que lee el servidor, seguía en 204.800, y `model_name` y `log`,
+en `-200k`. El arranque de las 10:26 (el JSON se guardó a las 10:25) sirvió por tanto 204.800 tokens con el alias
+`-200k` y escribió en `qwen3.8-flash-next-gsq-rco-200k.log`. Se corrigieron `args`, `model_name` y `log`;
+`serve --plan` confirma `--max-context 262144` y el alias `-262k`.
+
+Sesión de esa mañana (10:26–14:19, 538 peticiones desde Pi, hasta 161.863 tokens de prompt), **a 204.800 tokens**:
+caché de expertos de 4.454 ranuras (7,24 GiB), KV en RAM fija de 2,42 GiB y ningún aviso de VRAM por debajo de
+1 GiB. Según el usuario, con el equipo dedicado a la inferencia, la RAM en uso se mantuvo en unos 54 de 61,9 GB
+durante toda la mañana. Medianas de generación por contexto: 135 tok/s a 0–20K, 130 a 20–40K, 125 a 40–60K, 120 a 60–80K, 116 a
+80–100K, 120 a 100–130K y 115 a 130–162K (mínimo 86). La caché de conversaciones (2.304 MiB, calculada con la RAM
+libre) dejó de aparcar 14 conversaciones de 1,2–3 GiB por falta de presupuesto.
+
+A 262K, sin arrancar todavía:
+
+- Estimación: unos 3,1 GiB de KV en RAM fija (+0,7 GiB sobre 200K), es decir, unos 55 de 61,9 GB de RAM en uso
+  con la carga de esta mañana; la misma VRAM y menos RAM libre para la caché de conversaciones.
+- `serve --plan` elige `--draft-conf 0.8` (0,7 a 131K y 200K); el resto del borrador es igual. El plan nombra
+  `qwen3.8-flash-next-dflash2.q4_0.pack`, pero todos los arranques registrados en los logs (131K y
+  200K) cargaron la variante `q4_0-selq4.pack`.
+- Pendiente: arrancarlo y comprobar la RAM disponible con prompts por encima de 205K.

@@ -52,7 +52,8 @@ New-Item -ItemType Directory "$root\appdata\Local\Strata\install" -Force
 ```
 
 Los JSON de los lanzadores son copias de `install\strata-iq3_xxs.json` con `model_name` y `log` cambiados, más
-`--vram-reserve-mib 1536` en `args` y, en el de 200K, `--max-context 204800`.
+`--vram-reserve-mib 1536` en `args` y, en los de 200K y 262K, `--max-context 204800` o `262144`. El servidor lee
+`args`, no `args_written`: un cambio de contexto va en ambos, junto con `model_name` y `log`.
 
 ## Uso
 
