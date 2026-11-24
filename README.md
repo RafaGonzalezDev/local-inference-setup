@@ -26,7 +26,7 @@ All profiles are automatic: every launcher declares `--gpu-layers auto --fit on`
 and lets the runtime resolve the device placement. The hand-tuned profiles that
 pinned `--gpu-layers 999` with `--n-cpu-moe` were retired on 2026-09-30. Their
 reference copy and the `b10502-cuda13.3` runtime were deleted on 2026-10-01. Every
-launcher except those of `ternary-bonsai-2.5-27b` (PrismML fork, see below) pins `b12359-cuda13.5` (the build behind llama.cpp v1.0.0) since 2026-11-15,
+launcher pins `b12359-cuda13.5` (the build behind llama.cpp v1.0.0) since 2026-11-15,
 when it replaced `b11981-cuda13.4` after measuring faster without MTP on Qwen3.6-35B-A3B;
 `b11981` was removed the same day
 ([changelog](docs/changelog/2026-11-15-llama-runtime-b12359-v1.0.0.md)). `b11981` had
@@ -81,7 +81,7 @@ On 2026-11-23 Strata moved to 0.2.20, and `inkling-2-mini-ud-q4_k_xl` (the Unslo
 
 On 2026-11-24 Strata 0.2.21 was installed next to 0.2.20, and `inkling-2-mini-ud-q4_k_xl` came back on it with the same three profiles: Unsloth's re-uploaded `UD-Q4_K_XL` GGUF, Thinking Machines' `mtp.safetensors` as the DSpark drafter (0.2.21 loads it) and reasoning, which 0.2.21 now serves. The Qwen3.8 Flash Next launchers stay on 0.2.20 ([changelog](docs/changelog/2026-11-24-strata-0.2.21-inkling-ud-q4_k_xl.md)). Both were ruled out the same day and removed: Inkling generated about 45-50 tok/s at 262K and half that at 131K, with very slow prompt processing, and Flash Next on 0.2.21 did not pass 65-70 tok/s where 0.2.20 stays above 100 tok/s ([changelog](docs/changelog/2026-11-24-inkling-2-mini-ud-q4_k_xl-strata-0.2.21-removal.md)).
 
-On 2026-11-25 `ternary-bonsai-2.5-27b` (PrismML's ternary build of Qwen3.8-27B, 1.76 bits per weight) joined with its `PTQ1_0` files with and without the integrated MTP head and a BF16 projector, in text, MTP and vision profiles at 131K; 262K does not fit in VRAM with a `q8_0` KV cache. It is the only model on the PrismML fork runtime `prism-b12178-cuda13.3`, since stock llama.cpp rejects `PTQ1_0` ([changelog](docs/changelog/2026-11-25-ternary-bonsai-2.5-27b.md)).
+On 2026-11-25 `ternary-bonsai-2.5-27b` (PrismML's ternary build of Qwen3.8-27B) joined on the PrismML llama.cpp fork and was removed the same day, together with the fork, because its answers were poor, especially in Spanish ([changelog](docs/changelog/2026-11-25-ternary-bonsai-2.5-27b-removal.md)).
 
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
@@ -105,7 +105,6 @@ manifest pins the exact repository and revision.
 | `gemma-4-12b-it-qat` | `unsloth` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-vision-131k-2048`, `agentic-auto-vision-262k-2048` | `gemma-4-12b-it-qat-131k`, `gemma-4-12b-it-qat-262k`, `gemma-4-12b-it-qat-mtp-131k`, `gemma-4-12b-it-qat-mtp-262k`, `gemma-4-12b-it-qat-vision-131k`, `gemma-4-12b-it-qat-vision-262k` |
 | `gemma-4-12b-uncensored-balanced` | `HauhauCS` | `agentic-auto-131k-1024`, `agentic-auto-262k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-mtp-262k-1024`, `agentic-auto-vision-131k-2048`, `agentic-auto-vision-262k-2048` | `gemma-4-12b-uncensored-balanced-131k`, `gemma-4-12b-uncensored-balanced-262k`, `gemma-4-12b-uncensored-balanced-mtp-131k`, `gemma-4-12b-uncensored-balanced-mtp-262k`, `gemma-4-12b-uncensored-balanced-vision-131k`, `gemma-4-12b-uncensored-balanced-vision-262k` |
 | `gemma-4-e4b-it-qat` | `google` | `agentic-auto-131k-1024`, `agentic-auto-vision-131k-1024` | `gemma-4-e4b-it-qat-131k`, `gemma-4-e4b-it-qat-vision-131k` |
-| `ternary-bonsai-2.5-27b` | `prism-ml` | `agentic-auto-131k-1024`, `agentic-auto-mtp-131k-1024`, `agentic-auto-vision-131k-1024` | `ternary-bonsai-2.5-27b-131k`, `ternary-bonsai-2.5-27b-mtp-131k`, `ternary-bonsai-2.5-27b-vision-131k` |
 
 ## Repository Structure
 
@@ -134,9 +133,8 @@ manifest pins the exact repository and revision.
 powershell -NoProfile -ExecutionPolicy RemoteSigned -File scripts/setup/Install-LlamaRuntime.ps1
 ```
 
-The default is `b12359`, the build every launcher uses except Ternary Bonsai; `-Version b11981` reinstalls
-the previous pinned build if a rollback is needed. `-Version prism-b12178` installs the PrismML fork
-release that `ternary-bonsai-2.5-27b` needs.
+The default is `b12359`, the build every launcher uses; `-Version b11981` reinstalls
+the previous pinned build if a rollback is needed.
 
 2. Download a model:
 

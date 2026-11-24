@@ -219,7 +219,12 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `prism-b12178-cuda13.3` (fork de PrismML, solo para este modelo), con perfiles de texto, MTP y visión a 131K,
   calibrados bajo carga; 262K no cabe en VRAM con KV `q8_0`. Los clientes listan 36 alias. Copias:
   `cordis.patch.yml.bak-20261125-001332-ternary-bonsai` (DSH global) y `*.bak-20261125-001419-ternary-bonsai`
-  en WSL (Pi, OpenCode y `model.json`) ([changelog](docs/changelog/2026-11-25-ternary-bonsai-2.5-27b.md)).
+  en WSL (Pi, OpenCode y `model.json`). Eliminado el mismo día con el fork (respuestas de baja calidad, sobre
+  todo en español; decisión del usuario): pesos, runtime, paquetes, lanzadores, manifiesto y ficha borrados;
+  alias quitados de Pi, OpenCode, DSH (repositorio y global, copia
+  `cordis.patch.yml.bak-20261125-004453-ternary-bonsai-removal`), el espejo y WSL
+  (`*.bak-20261125-004548-ternary-bonsai-removal`).
+  Los clientes listan 33 alias ([changelog](docs/changelog/2026-11-25-ternary-bonsai-2.5-27b-removal.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

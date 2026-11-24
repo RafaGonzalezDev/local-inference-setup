@@ -18,6 +18,5 @@
         'gemma-4-12b-it-qat'
         'gemma-4-12b-uncensored-balanced'
         'gemma-4-e4b-it-qat'
-        'ternary-bonsai-2.5-27b'
     )
 }
