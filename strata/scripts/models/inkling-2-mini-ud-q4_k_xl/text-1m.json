@@ -1,0 +1,40 @@
+{
+  "exe": "component:strata-inkling",
+  "args": [
+    "--native",
+    "D:\\LLM\\models\\inkling-2-mini-ud-q4_k_xl\\Inkling-2-Mini-UD-Q4_K_XL.gguf",
+    "--max-context",
+    "1048576",
+    "--dspark",
+    "D:\\LLM\\models\\inkling-2-mini-ud-q4_k_xl\\mtp.safetensors",
+    "--vram-experts-gb",
+    "3.72",
+    "--ram-experts-gb",
+    "11.00"
+  ],
+  "cwd": "D:\\LLM\\runtimes\\strata\\0.2.21\\appdata\\Local\\Strata\\terminal\\0.1.67",
+  "tokenizer": "D:\\LLM\\models\\inkling-2-mini-ud-q4_k_xl\\strata-data\\packs\\inkling-2-mini-ud-q4_k_xl\\tokenizer",
+  "model_name": "inkling-2-mini-ud-q4_k_xl-1m",
+  "arch": "inkling2_loop",
+  "log": "D:\\LLM\\logs\\strata\\inkling-2-mini-ud-q4_k_xl-1m.log",
+  "lib_dirs": [],
+  "port": 8080,
+  "drafting": "dspark",
+  "parallel": 1,
+  "gpu": 0,
+  "gpus_asked": true,
+  "host": "0.0.0.0",
+  "open_browser": false,
+  "args_written": [
+    "--native",
+    "D:\\LLM\\models\\inkling-2-mini-ud-q4_k_xl\\Inkling-2-Mini-UD-Q4_K_XL.gguf",
+    "--max-context",
+    "1048576",
+    "--dspark",
+    "D:\\LLM\\models\\inkling-2-mini-ud-q4_k_xl\\mtp.safetensors",
+    "--vram-experts-gb",
+    "3.72",
+    "--ram-experts-gb",
+    "11.00"
+  ]
+}

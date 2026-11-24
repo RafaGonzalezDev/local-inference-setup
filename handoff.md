@@ -201,6 +201,13 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   quitados de Pi, OpenCode, DSH (repositorio y global, copia `cordis.patch.yml.bak-20261123-231646-inkling-ud-q4-removal`),
   el espejo y WSL (`*.bak-20261123-231727-inkling-ud-q4-removal`). Los clientes listan 33 alias
   ([changelog](docs/changelog/2026-11-23-inkling-2-mini-ud-q4_k_xl-removal.md)).
+- 2026-11-24: Strata 0.2.21 (Terminal y motores 0.1.67) en `runtimes/strata/0.2.21/`, junto a 0.2.20 (Flash-Next
+  sigue en 0.2.20). Vuelve `inkling-2-mini-ud-q4_k_xl` sobre 0.2.21 (GGUF reeditado de Unsloth, borrador
+  `mtp.safetensors` de Thinking Machines, `"drafting": "dspark"`, con razonamiento; texto a 131K, 262K y 1M, mismos
+  alias), **sin arrancar**: el usuario lo prueba desde Pi. Los clientes listan 36 alias. Copias:
+  `cordis.patch.yml.bak-20261124-150952-inkling-ud-q4-strata-0.2.21` (DSH global) y
+  `*.bak-20261124-151425-inkling-ud-q4-strata-0.2.21` en WSL (Pi, OpenCode y `model.json`)
+  ([changelog](docs/changelog/2026-11-24-strata-0.2.21-inkling-ud-q4_k_xl.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.

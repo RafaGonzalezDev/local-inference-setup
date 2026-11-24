@@ -1,8 +1,9 @@
 # inkling-2-mini-ud-q4_k_xl (Strata)
 
-> **Retirado el 2026-11-23**, el mismo día de su alta, a petición del usuario: pesos, manifiesto, lanzadores, el
-> componente `strata-inkling` y los alias de todos los clientes se borraron. Ver «Prueba del usuario» al final y el
-> [changelog](../../changelog/2026-11-23-inkling-2-mini-ud-q4_k_xl-removal.md).
+> **De vuelta el 2026-11-24 con Strata 0.2.21**, a petición del usuario: GGUF reeditado de Unsloth, borrador
+> `mtp.safetensors` de Thinking Machines y razonamiento activo. Lo vigente está en «Strata 0.2.21 (2026-11-24)», al
+> final; el resto de la ficha describe la prueba con 0.2.20 (retirada el 2026-11-23, ver el
+> [changelog](../../changelog/2026-11-23-inkling-2-mini-ud-q4_k_xl-removal.md)).
 
 Inkling 2 Mini de Thinking Machines (transformer en bucle de 24 capas, las 12 centrales recorridas tres veces;
 MoE de 128 expertos, 8 activos por token; 26,2B parámetros, 3,4B activos y unos 5,4B efectivos por token; contexto
@@ -106,3 +107,65 @@ con `exit code 3`.
    del tope de 4,21–4,74 GiB que calculó el instalador; todo el KV global en RAM (0 tokens en VRAM, con 1,46 GiB
    libres); el bucle recorre tres veces las 12 capas centrales por token; y sin borrador. A 1M, el motor recortó el
    contexto a 454.528 tokens por la RAM disponible.
+
+## Strata 0.2.21 (2026-11-24)
+
+Vuelve con el mismo ID y los mismos tres alias. Motor `strata-inkling` 0.1.67 (`windows-x86_64-cuda-cuda13`) de Strata
+0.2.21, instalado en `runtimes/strata/0.2.21/` (feed firmado, secuencia 133). Los lanzadores de Flash-Next siguen en
+0.2.20.
+
+| Artefacto | Dato |
+| --- | --- |
+| Modelo | `Inkling-2-Mini-UD-Q4_K_XL.gguf` de la raíz de [unsloth/Inkling-2-Mini-GGUF](https://huggingface.co/unsloth/Inkling-2-Mini-GGUF), revisión `8078d149286eec7193795413b9e0643da6d11fa1`; 17.629.760.736 bytes, SHA-256 `e64276656f072e9b2197a61723667cbdb71da66a716ffd966e572c21088f3cd3` |
+| Borrador DSpark | `mtp.safetensors` de [thinkingmachines/Inkling-2-Mini](https://huggingface.co/thinkingmachines/Inkling-2-Mini), revisión `1fb4134b9a74f9681054f4ef82e4bf1f458a2337`; 635.801.416 bytes (BF16), SHA-256 `7c3b651317f01f73bcf4e1dceba66ef8b7e1a1eac6bc171e882e690a4b10a1d2`; Apache 2.0 |
+| Tokenizador | Extraído del GGUF por `strata-inkling --export-tokenizer` (plantilla de 6.868 bytes) |
+
+SHA-256 del LFS de Hugging Face, comprobados por `Download-Model.ps1` y `Test-ModelIntegrity.ps1`.
+
+**Por qué estos archivos.** El GGUF es la versión reeditada por Unsloth el 2026-11-23 (disposición de llama.cpp
+oficial, +1.280 bytes). Strata 0.2.21 lo acepta junto al que fija (`ALT_GGUF_FILES` en
+`strata_control/inkling_family.py`: el motor lo carga y responde con él), aunque sus propias descargas sigan en el
+archivo antiguo. El borrador reeditado por Unsloth (503.889.952 bytes, disposición `dflash`) no lo lee el motor
+todavía; 0.2.21 usa por defecto el `mtp.safetensors` original, que según Strata tiene los mismos tensores que el Q8_0
+antiguo (sin cuantizar). El motor lo admite: `--info` declara `drafter=dspark spec_opts=1 dspark_f32_widen=1`.
+Corrige el fallo de 0.2.20 (`missing tensor 'dspark.layers.0...'`).
+
+### Perfiles
+
+| Lanzador | Contexto | Modelo en la API (`model_name`) | Expertos en VRAM / RAM | Puerto |
+| --- | ---: | --- | --- | --- |
+| `start-text-131k.cmd` | 131.072 | `inkling-2-mini-ud-q4_k_xl-131k` | 7,47 / 7,25 GB | `0.0.0.0:8080` |
+| `start-text-262k.cmd` | 262.144 | `inkling-2-mini-ud-q4_k_xl-262k` | 6,65 / 8,08 GB | `0.0.0.0:8080` |
+| `start-text-1m.cmd` | 1.048.576 | `inkling-2-mini-ud-q4_k_xl-1m` | 3,72 / 11,00 GB | `0.0.0.0:8080` |
+
+- JSON: copias de `install\strata-inkling-2-mini-ud-q4_k_xl.json` que escribe `strata install` de 0.2.21 para cada
+  contexto, con `model_name` y `log` cambiados y `"drafting": "dspark"` en lugar de `"auto"`. El instalador ya añade
+  `--dspark <mtp.safetensors>`. El reparto de 0.2.21 deja menos expertos en VRAM que el de 0.2.20 (7,47 frente a
+  11,27 GB a 131K): reserva antes el KV, el prefill y el borrador. Sin medir bajo carga.
+- **Por qué `dspark` y no `auto`.** Con `auto`, `strata launch` mide al primer arranque de cada reparto si el borrador
+  compensa (dos arranques del motor, con y sin borrador; unos 3 minutos) y lo guarda en el JSON. Esa medición la hace
+  el lanzador de Strata (`strata_cli/launch/runner.py`), no `serve/server.py`, que es lo que ejecutan estos
+  lanzadores: con `auto` y sin medición, el servidor arranca con `--draft off` (lo muestra `serve --plan`). Con
+  `dspark`, el servidor pasa `--draft dspark --draft-beam 1 --draft-adapt`; `--draft-adapt` apaga el borrador
+  durante 40 pasos de una petición cuando la ganancia medida baja de 0,93. Strata documenta un caso en que el
+  borrador fue 2 veces más lento (RTX 4060 con este mismo GGUF), así que su efecto aquí está por medir.
+- **Razonamiento.** El servidor de 0.2.21 (commit `39b8407c4`) pasa a la plantilla el nivel de cada petición
+  (`none` 0, `minimal` 0,1, `low` 0,2, `medium` 0,7, `high` 0,9, `xhigh`/`max` 0,99), con `low` por defecto
+  (`STRATA_INKLING_EFFORT`), y devuelve el razonamiento como `reasoning_content`. Presupuesto por nivel: 1.024
+  (`none` y `minimal`), 2.048, 4.096, 8.192 y 16.384 tokens (`xhigh` y `max`); `reasoning_budget_tokens` de la
+  petición manda. Si una respuesta termina sin texto visible, el servidor reintenta una vez abriendo la respuesta.
+  `strata_control/inkling_family.py` sigue declarando `HAS_THINKING = False`, aparentemente solo para la app.
+  En Pi, OpenCode y DSH los alias usan el mismo contrato que Flash-Next (`reasoning_effort`; Pi también envía
+  `minimal`).
+- Con herramientas y nivel 0, el servidor repite el turno de razonamiento vacío en el historial para que los turnos
+  de agente reutilicen el prompt (#6733, commit `45e86f7c1`).
+
+### Pruebas
+
+- `Download-Model.ps1` y `Test-ModelIntegrity.ps1 -RootDirectory .\strata`: los 4 artefactos del subárbol.
+- `strata install` para 131K, 262K y 1M (componente `strata-inkling` 0.1.67 con firma y archivos comprobados,
+  tokenizador extraído, `drafter: DSpark (mtp.safetensors)`).
+- `strata-inkling.exe --info` con el GGUF y el borrador; `serve --plan` de los tres JSON; `inkling_kind.engine_args`
+  de cada JSON (`--draft dspark --draft-beam 1 --draft-adapt`).
+- Sin arranque, inferencia ni calibración: el usuario lo prueba desde Pi. Pendiente: velocidad con y sin borrador,
+  memoria real a 262K y 1M, razonamiento por nivel y tool calling.
