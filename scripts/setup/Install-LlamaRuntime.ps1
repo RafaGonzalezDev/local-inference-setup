@@ -2,7 +2,7 @@
 param(
     [string]$RootDirectory,
 
-    [ValidateSet('b11269', 'b11551', 'b11669', 'b11827', 'b11981', 'b12359')]
+    [ValidateSet('b11269', 'b11551', 'b11669', 'b11827', 'b11981', 'b12359', 'prism-b12178')]
     [string]$Version = 'b12359'
 )
 
@@ -47,9 +47,20 @@ $releases = @{
         Cuda = '13.5'
         CudartSha256 = 'c2bf4cc202bfbaaa7a0b75f5082457c3811326947bb216059b72839d844e9cba'
     }
+    # PrismML fork release with the PTQ1_0/PQ2_0 ternary kernels and the Bonsai MTP head; used only by Ternary Bonsai launchers.
+    'prism-b12178' = @{
+        Commit = '03ec600'
+        Sha256 = 'a34bdb817e797243f86c5e2dd1bdf118d17ea32b6eaa4e6f32c41533b13bc2d8'
+        Cuda = '13.3'
+        CudartSha256 = '1462a050eb4c684921ba51dcc4cc488a036674c3e73e9945ee705b854808d03e'
+        Repository = 'PrismML-Eng/llama.cpp'
+        Tag = 'prism-b12178-03ec600'
+    }
 }
-$versionNumber = $Version.Substring(1)
+$versionNumber = $Version -replace '^(prism-)?b', ''
 $commitPrefix = $releases[$Version].Commit
+$repository = if ($releases[$Version].ContainsKey('Repository')) { $releases[$Version].Repository } else { 'ggml-org/llama.cpp' }
+$tag = if ($releases[$Version].ContainsKey('Tag')) { $releases[$Version].Tag } else { $Version }
 # Releases up to b11981 ship CUDA 13.4 builds.
 $cuda = if ($releases[$Version].ContainsKey('Cuda')) { $releases[$Version].Cuda } else { '13.4' }
 $cudartSha256 = if ($releases[$Version].ContainsKey('CudartSha256')) { $releases[$Version].CudartSha256 } else { '738f8c251ac22b70c3ae6f83a10cf222725df0395246a2cf58f32bdb85fbe668' }
@@ -58,13 +69,13 @@ $packageDirectory = Join-Path $RootDirectory "packages\llama.cpp\$Version"
 
 $assets = @(
     @{
-        Name = "llama-$Version-bin-win-cuda-$cuda-x64.zip"
-        Url = "https://github.com/ggml-org/llama.cpp/releases/download/$Version/llama-$Version-bin-win-cuda-$cuda-x64.zip"
+        Name = "llama-$tag-bin-win-cuda-$cuda-x64.zip"
+        Url = "https://github.com/$repository/releases/download/$tag/llama-$tag-bin-win-cuda-$cuda-x64.zip"
         Sha256 = $releases[$Version].Sha256
     },
     @{
         Name = "cudart-llama-bin-win-cuda-$cuda-x64.zip"
-        Url = "https://github.com/ggml-org/llama.cpp/releases/download/$Version/cudart-llama-bin-win-cuda-$cuda-x64.zip"
+        Url = "https://github.com/$repository/releases/download/$tag/cudart-llama-bin-win-cuda-$cuda-x64.zip"
         Sha256 = $cudartSha256
     }
 )

@@ -215,6 +215,11 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `cordis.patch.yml.bak-20261124-153433-inkling-ud-q4-0.2.21-removal`), el espejo y WSL
   (`*.bak-20261124-153553-inkling-ud-q4-0.2.21-removal`). Los clientes listan 33 alias
   ([changelog](docs/changelog/2026-11-24-inkling-2-mini-ud-q4_k_xl-strata-0.2.21-removal.md)).
+- 2026-11-25: alta de `ternary-bonsai-2.5-27b` (`PTQ1_0` con y sin MTP, proyector BF16) sobre el runtime nuevo
+  `prism-b12178-cuda13.3` (fork de PrismML, solo para este modelo), con perfiles de texto, MTP y visión a 131K,
+  calibrados bajo carga; 262K no cabe en VRAM con KV `q8_0`. Los clientes listan 36 alias. Copias:
+  `cordis.patch.yml.bak-20261125-001332-ternary-bonsai` (DSH global) y `*.bak-20261125-001419-ternary-bonsai`
+  en WSL (Pi, OpenCode y `model.json`) ([changelog](docs/changelog/2026-11-25-ternary-bonsai-2.5-27b.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
