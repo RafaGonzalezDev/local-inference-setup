@@ -1,9 +1,10 @@
 # inkling-2-mini-ud-q4_k_xl (Strata)
 
-> **De vuelta el 2026-11-24 con Strata 0.2.21**, a petición del usuario: GGUF reeditado de Unsloth, borrador
-> `mtp.safetensors` de Thinking Machines y razonamiento activo. Lo vigente está en «Strata 0.2.21 (2026-11-24)», al
-> final; el resto de la ficha describe la prueba con 0.2.20 (retirada el 2026-11-23, ver el
-> [changelog](../../changelog/2026-11-23-inkling-2-mini-ud-q4_k_xl-removal.md)).
+> **Descartado el 2026-11-24**, junto con Strata 0.2.21 (decisión del usuario): se probó dos veces, con 0.2.20
+> (retirado el 2026-11-23, ver el [changelog](../../changelog/2026-11-23-inkling-2-mini-ud-q4_k_xl-removal.md)) y con
+> 0.2.21 (ver «Strata 0.2.21 (2026-11-24)» y «Resultado y retirada», al final, y el
+> [changelog](../../changelog/2026-11-24-inkling-2-mini-ud-q4_k_xl-strata-0.2.21-removal.md)). No volver a proponerlo
+> sin un cambio de fondo en Strata o en el modelo. Pesos, lanzadores, manifiesto y alias de clientes borrados.
 
 Inkling 2 Mini de Thinking Machines (transformer en bucle de 24 capas, las 12 centrales recorridas tres veces;
 MoE de 128 expertos, 8 activos por token; 26,2B parámetros, 3,4B activos y unos 5,4B efectivos por token; contexto
@@ -169,3 +170,18 @@ Corrige el fallo de 0.2.20 (`missing tensor 'dspark.layers.0...'`).
   de cada JSON (`--draft dspark --draft-beam 1 --draft-adapt`).
 - Sin arranque, inferencia ni calibración: el usuario lo prueba desde Pi. Pendiente: velocidad con y sin borrador,
   memoria real a 262K y 1M, razonamiento por nivel y tool calling.
+
+### Resultado y retirada (2026-11-24)
+
+Prueba del usuario desde Pi, con el equipo y los lanzadores descritos arriba:
+
+- Perfil de 262K: unos 45-50 tok/s de generación. Perfil de 131K: aproximadamente la mitad. Procesamiento del
+  prompt "lentísimo" (sin cifra). El log del motor solo registra la carga, no las peticiones: confirma que el
+  borrador DSpark cargó (78 MiB en un arranque y 255 MiB en otro) y que quedaron 0,9-1,1 GiB de VRAM libres.
+  Que 131K vaya más lento que 262K no se ha explicado (los repartos de expertos son distintos); no se investigó.
+- Flash-Next con 0.2.21 (prueba puntual, los mismos JSON y el mismo plan): no pasó de 65-70 tok/s, frente a más de
+  100 tok/s con 0.2.20 (cifras del usuario).
+
+Decisión del usuario: se descartan por completo Strata 0.2.21 y los modelos de Inkling. Se borraron
+`runtimes/strata/0.2.21/`, `downloads/strata-0.2.21/`, `models/inkling-2-mini-ud-q4_k_xl/` (17 GB), el manifiesto,
+la entrada del catálogo, los lanzadores y los alias de Pi, OpenCode y DSH. Flash-Next sigue en 0.2.20.

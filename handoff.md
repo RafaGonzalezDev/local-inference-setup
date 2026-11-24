@@ -208,6 +208,13 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `cordis.patch.yml.bak-20261124-150952-inkling-ud-q4-strata-0.2.21` (DSH global) y
   `*.bak-20261124-151425-inkling-ud-q4-strata-0.2.21` en WSL (Pi, OpenCode y `model.json`)
   ([changelog](docs/changelog/2026-11-24-strata-0.2.21-inkling-ud-q4_k_xl.md)).
+- 2026-11-24: descartados por completo Strata 0.2.21 e Inkling 2 Mini (decisión del usuario: Inkling a 45-50 tok/s
+  a 262K y la mitad a 131K, prefill muy lento; Flash-Next con 0.2.21 a 65-70 tok/s frente a más de 100 con 0.2.20).
+  Borrados `runtimes/strata/0.2.21/`, `downloads/strata-0.2.21/`, los pesos, manifiesto, catálogo y lanzadores de
+  Inkling; Flash-Next sigue en 0.2.20. Alias quitados de Pi, OpenCode, DSH (repositorio y global, copia
+  `cordis.patch.yml.bak-20261124-153433-inkling-ud-q4-0.2.21-removal`), el espejo y WSL
+  (`*.bak-20261124-153553-inkling-ud-q4-0.2.21-removal`). Los clientes listan 33 alias
+  ([changelog](docs/changelog/2026-11-24-inkling-2-mini-ud-q4_k_xl-strata-0.2.21-removal.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
