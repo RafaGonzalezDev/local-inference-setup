@@ -83,6 +83,8 @@ On 2026-11-24 Strata 0.2.21 was installed next to 0.2.20, and `inkling-2-mini-ud
 
 On 2026-11-25 `ternary-bonsai-2.5-27b` (PrismML's ternary build of Qwen3.8-27B) joined on the PrismML llama.cpp fork and was removed the same day, together with the fork, because its answers were poor, especially in Spanish ([changelog](docs/changelog/2026-11-25-ternary-bonsai-2.5-27b-removal.md)).
 
+On 2026-11-25 Inkling 2 Mini came back at the user's request on a new engine, [Basalt](basalt/README.md) 0.5.7 (a Blackwell-only fork of Strata), as `inkling-2-mini-nvfp4-mx8`: the author's `.basalt` pack with the release's NVFP4 and MXFP8 experts, in one text profile at 262K. Measured here: about 70 tok/s on a short chat, 60 after a 41K prompt and 49 after a 132K prompt ([changelog](docs/changelog/2026-11-25-basalt-0.5.7-inkling-2-mini-nvfp4-mx8.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 
@@ -122,6 +124,7 @@ manifest pins the exact repository and revision.
 │   └── changelog/                # Change history
 ├── experimental/                 # Separate root outside the catalog (see its README)
 ├── strata/                       # Qwen3.8 Flash Next on Strata, outside the llama.cpp catalog but registered in the clients (see its README)
+├── basalt/                       # Inkling 2 Mini on Basalt, outside the llama.cpp catalog but registered in the clients (see its README)
 ├── speech/                       # Speech models on NeMo-Speech.cpp, outside the catalog and its clients (see its README)
 ```
 
@@ -221,5 +224,6 @@ Functional tests control and close only the process tree they initiate.
 - [Model cards](docs/overview/models)
 - [Speech transcription (Nemotron 3.5 Transcribe, port 8090)](speech/README.md)
 - [Qwen3.8 Flash Next on Strata (port 8080)](strata/README.md)
+- [Inkling 2 Mini on Basalt (port 8080)](basalt/README.md)
 - [Self-contained launcher ADR](docs/adr/ADR-0001-self-contained-model-launchers.md)
 - [Architecture change](docs/changelog/2026-08-07-self-contained-launchers.md)

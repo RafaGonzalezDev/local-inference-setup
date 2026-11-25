@@ -225,6 +225,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   `cordis.patch.yml.bak-20261125-004453-ternary-bonsai-removal`), el espejo y WSL
   (`*.bak-20261125-004548-ternary-bonsai-removal`).
   Los clientes listan 33 alias ([changelog](docs/changelog/2026-11-25-ternary-bonsai-2.5-27b-removal.md)).
+- 2026-11-25: runtime nuevo Basalt 0.5.7 (`runtimes/basalt/0.5.7/`) y subárbol `basalt/` con `inkling-2-mini-nvfp4-mx8` (paquete `.basalt` de `jesdga`, un perfil de texto a 262K con KV `int8`). Probado por el agente con el escritorio cerrado: unos 70 tok/s en chat corto, 60 tras 41K y 49 tras 132K; prefill de 2.758 a 3.261 tok/s; tool calling correcto. Clientes: 34 alias; copias `cordis.patch.yml.bak-20261125-130632-inkling-basalt` (DSH global) y `*.bak-20261125-130800-inkling-basalt` (WSL) ([changelog](docs/changelog/2026-11-25-basalt-0.5.7-inkling-2-mini-nvfp4-mx8.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
