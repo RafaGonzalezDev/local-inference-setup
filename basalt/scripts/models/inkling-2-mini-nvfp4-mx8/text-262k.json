@@ -5,7 +5,8 @@
       "model": "../../../../models/inkling-2-mini-nvfp4-mx8/Inkling-2-Mini-NVFP4-MX8.basalt",
       "alias": "inkling-2-mini-nvfp4-mx8-262k",
       "max-context": 262144,
-      "kv": "int8"
+      "kv": "int8",
+      "spec": 1
     }
   ]
 }

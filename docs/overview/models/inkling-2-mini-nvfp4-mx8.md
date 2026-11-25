@@ -43,7 +43,10 @@ expertos descuantizados a BF16 (no comparable con los KLD de Unsloth). Sin verif
 - `kv int8`: según las mediciones del autor, KLD 0,00343 frente a 0,00452 con `fp8` y 0,00304 con `fp16`, con 18 KiB
   por posición frente a 16 y 32. La tabla de configuración de 0.5.7 solo cita `fp16` y `fp8` para Inkling, pero el
   motor arrancó con `int8` (`kv=int8` en el log).
-- Resto por defecto: borrador DSpark (`spec=8`), 7 hilos de CPU para los expertos en RAM, `ram-reserve-mib` 2048,
+- **Sin borrador** (`"spec": 1`) desde el 2026-11-25, decisión del usuario para todos los perfiles de este modelo:
+  DSpark acierta poco en prosa, ocupa 0,48 GiB de VRAM que pasan a expertos y el prefill es más rápido sin él (ver
+  «Comparación de variantes»).
+- Resto por defecto: 7 hilos de CPU para los expertos en RAM, `ram-reserve-mib` 2048,
   razonamiento por petición (`reasoning_effort` `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`; sin él, el
   `high` de la plantilla). Ni siquiera `none` desactiva del todo el razonamiento: escribe un bloque corto, devuelto
   como `reasoning_content`.
@@ -75,3 +78,28 @@ Con las aplicaciones del escritorio cerradas, un arranque del perfil y peticione
 - Tool calling: `tool_calls` válido con `finish_reason: tool_calls`.
 - Respuestas en español coherentes en todas las peticiones. Sin pruebas de visión, 1M ni calidad sistemática.
 - Parada: puerto libre y VRAM de vuelta al valor previo.
+
+Estas pruebas se hicieron con el borrador DSpark activado (`spec=8`, el valor por defecto del motor).
+
+## Comparación de variantes (2026-11-25)
+
+Un arranque por variante con el escritorio cerrado, escuchando en `127.0.0.1`, y las mismas cuatro peticiones sin
+streaming: prosa (`none`, 1.024 tokens como máximo), código (`none`, 1.500), una llamada a herramienta (`low`) y el
+prompt de 41.081 tokens (`none`, 2.048). Una sola medición por variante y respuestas de longitud distinta: diferencias
+de pocos tok/s pueden ser ruido. Velocidades en tok/s, del `done` del servidor.
+
+| Variante | Prosa | Código | Herramienta | Prefill 41K | Generación tras 41K | VRAM libre tras cargar |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 262K `int8`, con borrador | 67,5 | 89,2 | 95,9 | 3.255 | 67,5 | 1.022 MiB |
+| 262K `int8`, sin borrador | 83,6 | 80,9 | 78,5 | 3.766 | 62,4 | 1.153 MiB |
+| 262K `fp8`, con borrador | 71,1 | 94,6 | 91,2 | 3.413 | 65,5 | 921 MiB |
+| 131K `int8`, con borrador | 75,5 | 104,2 | 103,6 | 4.124 | 76,0 | 1.043 MiB |
+
+- Sin borrador quedan 1.959 expertos en RAM al inicio, frente a 2.339 con él, y los aciertos en VRAM suben del 77-81 %
+  al 85-88 %. La aceptación del borrador fue del 37-49 % en prosa y del 75-100 % en código, herramientas y el prompt
+  largo.
+- `fp8` deja menos de 1 GB libre y empeora la calidad según el autor; se descarta.
+- 131K deja 6,86 GiB de expertos fijos en la GPU (4,11 a 262K) y es la más rápida, pero el usuario prefiere 262K.
+- Sin medir: 131K sin borrador.
+- Las configuraciones deben estar en una carpeta donde el servidor pueda escribir: guarda `<config>.totals.json` al
+  terminar cada petición, y con la configuración en la carpeta temporal del agente se quedó bloqueado sin responder.
