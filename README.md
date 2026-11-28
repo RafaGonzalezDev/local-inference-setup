@@ -85,6 +85,8 @@ On 2026-11-25 `ternary-bonsai-2.5-27b` (PrismML's ternary build of Qwen3.8-27B) 
 
 On 2026-11-25 Inkling 2 Mini came back at the user's request on a new engine, [Basalt](basalt/README.md) 0.5.7 (a Blackwell-only fork of Strata), as `inkling-2-mini-nvfp4-mx8`: the author's `.basalt` pack with the release's NVFP4 and MXFP8 experts, in one text profile at 262K. Measured here: about 70 tok/s on a short chat, 60 after a 41K prompt and 49 after a 132K prompt ([changelog](docs/changelog/2026-11-25-basalt-0.5.7-inkling-2-mini-nvfp4-mx8.md)).
 
+On 2026-11-28 Strata moved to 0.2.23: the Qwen3.8 Flash Next launchers without a suffix run it, the `-0.2.22` launchers stay as a fallback, and 0.2.20 was removed after the user measured 0.2.22 clearly ahead of it. The same day `inkling-2-mini-gsq-rco-iq3_s` (ISTA-DASLab's GSQ-RCO IQ3_S GGUF of Inkling 2 Mini, which 0.2.23 runs with its own kernels and the DFlash 2 drafter) joined the `strata/` sub-root in text and vision profiles at 131K and 262K, next to the Basalt build. Its profiles were not run, at the user's request ([changelog](docs/changelog/2026-11-28-strata-0.2.23-inkling-2-mini-gsq-rco-iq3_s.md)).
+
 The publisher is the Hugging Face organization whose GGUF files are installed; each
 manifest pins the exact repository and revision.
 
@@ -123,7 +125,7 @@ manifest pins the exact repository and revision.
 │   ├── overview/                 # General documentation and model cards
 │   └── changelog/                # Change history
 ├── experimental/                 # Separate root outside the catalog (see its README)
-├── strata/                       # Qwen3.8 Flash Next on Strata, outside the llama.cpp catalog but registered in the clients (see its README)
+├── strata/                       # Qwen3.8 Flash Next and Inkling 2 Mini on Strata, outside the llama.cpp catalog but registered in the clients (see its README)
 ├── basalt/                       # Inkling 2 Mini on Basalt, outside the llama.cpp catalog but registered in the clients (see its README)
 ├── speech/                       # Speech models on NeMo-Speech.cpp, outside the catalog and its clients (see its README)
 ```
@@ -223,7 +225,7 @@ Functional tests control and close only the process tree they initiate.
 - [How to add a model](docs/overview/adding-a-model.md)
 - [Model cards](docs/overview/models)
 - [Speech transcription (Nemotron 3.5 Transcribe, port 8090)](speech/README.md)
-- [Qwen3.8 Flash Next on Strata (port 8080)](strata/README.md)
+- [Qwen3.8 Flash Next and Inkling 2 Mini on Strata (port 8080)](strata/README.md)
 - [Inkling 2 Mini on Basalt (port 8080)](basalt/README.md)
 - [Self-contained launcher ADR](docs/adr/ADR-0001-self-contained-model-launchers.md)
 - [Architecture change](docs/changelog/2026-08-07-self-contained-launchers.md)

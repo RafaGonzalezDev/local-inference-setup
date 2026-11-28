@@ -12,7 +12,7 @@ cuantización GSQ-RCO IQ3_XXS de ISTA-DASLab. Servido por Strata, no por llama.c
 | Shard 1 | `IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf`, 47.039.860.096 bytes, SHA-256 `219ea929900dfa9ef091f3aa473fdba6874b65fcb36526d7d851ac9e95856d15` |
 | Shard 2 (tabla n-gram) | `IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00002-of-00002.gguf`, 28.800.138.432 bytes, SHA-256 `316b46f3a2dbd68c900f43136ab9449f9dcc3725dfd8c794847c204bc161e113` |
 | Licencia | La tarjeta declara Apache 2.0 y dice que los pesos heredan la del modelo base (Qwen3.8 Flash Next) |
-| Motor | Strata 0.2.20 (Terminal y motor 0.1.66, `windows-x86_64-cuda-cuda13`), feed firmado (secuencia 132), desde el 2026-11-23; antes 0.2.19 (0.1.65, secuencia 131) y 0.2.18 (0.1.64), desinstalados el 2026-11-23 |
+| Motor | Strata 0.2.23 (Terminal y motor 0.1.70, `windows-x86_64-cuda-cuda13`), feed firmado (secuencia 138), desde el 2026-11-28, con 0.2.22 (0.1.69) de respaldo en los lanzadores `-0.2.22`; antes 0.2.20 (0.1.66, secuencia 132, del 2026-11-23 al 2026-11-28, borrado), 0.2.19 (0.1.65) y 0.2.18 (0.1.64), desinstalados el 2026-11-23 |
 
 SHA-256 del LFS de Hugging Face, comprobados por `Download-Model.ps1` y por `Test-ModelIntegrity.ps1`.
 
@@ -161,3 +161,17 @@ arrancar por falta de VRAM) y aciertos del 74 % frente al 77 %. No separa el efe
 Windows: 1,2 GiB. Pendiente: una sesión a 200K con el equipo dedicado para comparar versiones.
 
 El 2026-11-23 se desinstalaron 0.2.18 y 0.2.19 (decisión del usuario): 0.2.20 es el único runtime de Strata.
+
+## Strata 0.2.22 y 0.2.23 (2026-11-26 y 2026-11-28)
+
+0.2.22 se instaló en paralelo el 2026-11-26 (lanzadores `-0.2.22`, ver el
+[changelog](../../changelog/2026-11-26-strata-0.2.22-parallel.md)). El usuario lo probó en el uso diario y obtuvo
+resultados «bastante superiores» a 0.2.20 (sin cifras registradas aquí). El 2026-11-28 los lanzadores sin sufijo
+pasaron a 0.2.23 (Terminal y motor 0.1.70), los `-0.2.22` quedaron de respaldo y 0.2.20 se borró. Para Qwen en
+Windows, 0.2.23 recompila los cinco motores para corregir un cierre al arrancar con modelos GGUF (#7131, #7155,
+#7206) e informa de un fallo del motor como tal y no como falta de RAM (#7245).
+
+Los JSON de 0.2.23 son los de 0.2.22 con las rutas cambiadas; el instalador no se volvió a ejecutar. `serve --plan` de
+0.2.23 da los mismos argumentos que 0.2.22: DFlash2 con `--spec 8 --draft-conf 0.7` a 131K y 200K y con `--spec 6
+--draft-conf 0.8` a 262K, y el vocabulario de borrador `draft_vocab_latin.bin`. Sin arranque ni medición: el usuario
+compara las versiones desde Pi.

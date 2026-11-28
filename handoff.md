@@ -227,6 +227,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
   Los clientes listan 33 alias ([changelog](docs/changelog/2026-11-25-ternary-bonsai-2.5-27b-removal.md)).
 - 2026-11-25: runtime nuevo Basalt 0.5.7 (`runtimes/basalt/0.5.7/`) y subárbol `basalt/` con `inkling-2-mini-nvfp4-mx8` (paquete `.basalt` de `jesdga`, un perfil de texto a 262K con KV `int8`). Probado por el agente con el escritorio cerrado: unos 70 tok/s en chat corto, 60 tras 41K y 49 tras 132K; prefill de 2.758 a 3.261 tok/s; tool calling correcto. Clientes: 34 alias; copias `cordis.patch.yml.bak-20261125-130632-inkling-basalt` (DSH global) y `*.bak-20261125-130800-inkling-basalt` (WSL) ([changelog](docs/changelog/2026-11-25-basalt-0.5.7-inkling-2-mini-nvfp4-mx8.md)).
 - 2026-11-25: el perfil de Inkling en Basalt pasa a `"spec": 1` (sin borrador DSpark), decisión del usuario para todos los perfiles del modelo: más rápido en prosa y prefill, algo más lento en código y herramientas ([changelog](docs/changelog/2026-11-25-inkling-2-mini-nvfp4-mx8-no-draft.md)).
+- 2026-11-28: Strata 0.2.23 (`runtimes/strata/0.2.23/`, Terminal y motores 0.1.70) en los lanzadores sin sufijo de Flash-Next, con los `-0.2.22` de respaldo; 0.2.20 borrado. Alta de `inkling-2-mini-gsq-rco-iq3_s` (GGUF GSQ-RCO IQ3_S de ISTA-DASLab con DFlash 2) en texto y visión a 131K y 262K, sin arrancar (lo prueba el usuario desde Pi). Clientes: 38 alias; copia `cordis.patch.yml.bak-20261128-124139-inkling-iq3s-strata-0.2.23` (DSH global) y `*.bak-<WSL_TS>-inkling-iq3s-strata-0.2.23` (WSL) ([changelog](docs/changelog/2026-11-28-strata-0.2.23-inkling-2-mini-gsq-rco-iq3_s.md)).
 - Los 20 perfiles calibrados bajo carga (los 12 de `UD-Q4_K_XL` nuevos el 2026-10-28, los 2 de Nemotron el
   2026-10-29 y los 2 de Flint el 2026-10-30). El contrato de razonamiento completo solo se verificó en Occult Nail, Nemotron y en las versiones
   anteriores de Tiel y Nail.
@@ -280,7 +281,7 @@ Cada commit anterior del mismo tipo sirve de plantilla: `git log -3 --stat` en c
 
 # Espejo: solo deben diferir archivos ignorados (.gitignore, LICENSE, logs, packages, tests)
 git -C C:\Users\rafat\Desktop\Code\local-inference-setup status -sb
-foreach ($d in 'AGENTS.md','README.md','handoff.md','config','docs','scripts','strata') { git diff --no-index --stat "D:\LLM\$d" "C:\Users\rafat\Desktop\Code\local-inference-setup\$d" }
+foreach ($d in 'AGENTS.md','README.md','handoff.md','config','docs','scripts','strata','basalt') { git diff --no-index --stat "D:\LLM\$d" "C:\Users\rafat\Desktop\Code\local-inference-setup\$d" }
 ```
 
 ```bash
@@ -298,11 +299,13 @@ diff /c/Users/rafat/.dsh/profiles/desktop/cordis.patch.yml dotfiles-dsh/config/p
 grep -ho -- '--alias [^ "]*' /d/LLM/scripts/models/*/*.cmd | sed 's/--alias [^,]*,//' > served.txt
 # Strata profiles: the alias is the model_name of each engine config
 grep -ho '"model_name": "[^"]*"' /d/LLM/strata/scripts/models/*/*.json | sed 's/.*: "//;s/"$//' >> served.txt
+# Basalt profiles: the alias is the `alias` of each config
+grep -ho '"alias": "[^"]*"' /d/LLM/basalt/scripts/models/*/*.json | sed 's/.*: "//;s/"$//' >> served.txt
 sort -o served.txt served.txt
 # LFM3 Audio no se registra en ningún cliente (ninguno envía audio)
 sed -i '/^lfm3-audio-2b-audio-32k$/d' served.txt
-# Desde el 2026-11-22 los clientes solo registran estos ocho modelos (decisión del usuario; ver AGENTS.md)
-grep -E '^(cyber-tiel-coder-35b-a3b|occult-nail-1\.0-35b-a3b|qwen3\.6-35b-a3b|qwen3\.8-flash-next-gsq-rco|gemma-4-26b-a4b-it-qat|gemma-4-12b-it-qat|gemma-4-12b-uncensored-balanced|gemma-4-e4b-it-qat)-' served.txt > served.keep && mv served.keep served.txt
+# Desde el 2026-11-22 los clientes solo registran estos modelos (decisión del usuario; ver AGENTS.md)
+grep -E '^(cyber-tiel-coder-35b-a3b|occult-nail-1\.0-35b-a3b|qwen3\.6-35b-a3b|qwen3\.8-flash-next-gsq-rco|inkling-2-mini-nvfp4-mx8|inkling-2-mini-gsq-rco-iq3_s|gemma-4-26b-a4b-it-qat|gemma-4-12b-it-qat|gemma-4-12b-uncensored-balanced|gemma-4-e4b-it-qat)-' served.txt > served.keep && mv served.keep served.txt
 node -e "
 const fs=require('fs');const srv=fs.readFileSync('served.txt','utf8').trim().split('\n');
 const Y=require('C:/Users/rafat/.dsh/audit-dsh/extracted/dsh/node_modules/yaml');

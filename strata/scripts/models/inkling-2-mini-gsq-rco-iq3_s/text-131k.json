@@ -1,0 +1,36 @@
+{
+  "exe": "component:strata-inkling",
+  "args": [
+    "--native",
+    "D:\\LLM\\models\\inkling-2-mini-gsq-rco-iq3_s\\Inkling-2-Mini-GSQ-RCO-IQ3_S.gguf",
+    "--max-context",
+    "131072",
+    "--vram-experts-gb",
+    "8.03",
+    "--ram-experts-gb",
+    "0.84"
+  ],
+  "cwd": "D:\\LLM\\runtimes\\strata\\0.2.23\\appdata\\Local\\Strata\\terminal\\0.1.70",
+  "tokenizer": "D:\\LLM\\models\\inkling-2-mini-gsq-rco-iq3_s\\strata-data\\packs\\inkling-2-mini-gsq-rco-iq3_s\\tokenizer",
+  "model_name": "inkling-2-mini-gsq-rco-iq3_s-131k",
+  "arch": "inkling2_loop",
+  "log": "D:\\LLM\\logs\\strata\\inkling-2-mini-gsq-rco-iq3_s-131k.log",
+  "lib_dirs": [],
+  "port": 8080,
+  "drafting": "dflash2",
+  "parallel": 1,
+  "gpu": 0,
+  "gpus_asked": true,
+  "host": "0.0.0.0",
+  "open_browser": false,
+  "args_written": [
+    "--native",
+    "D:\\LLM\\models\\inkling-2-mini-gsq-rco-iq3_s\\Inkling-2-Mini-GSQ-RCO-IQ3_S.gguf",
+    "--max-context",
+    "131072",
+    "--vram-experts-gb",
+    "8.03",
+    "--ram-experts-gb",
+    "0.84"
+  ]
+}
